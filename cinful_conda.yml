@@ -1,0 +1,13 @@
+name: cinful
+channels:
+  - defaults
+  - anaconda
+  - conda-forge
+  - bioconda
+
+dependencies:
+  - seqkit=0.15.0
+  - iqtree=2.0.3
+  - mafft=7.475
+  - hmmer=3.3.1
+  
