@@ -40,3 +40,11 @@ All subroutines contain the same basic homology search at the beginning, where a
   - putative homologs will be added to the verified MSA to see if the highly conserved catalyitic triad (C_32 H_105 D_121)
 
 ### CvaA
+
+# Installing dependencies
+
+Set up the conda environment from ```cinful_conda.yml``` using ```scripts/build_conda_env.sh``` or simply run the following command 
+
+```bash
+conda env create -f cinful_conda.yml
+```
