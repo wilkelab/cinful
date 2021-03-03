@@ -1,49 +1,35 @@
+SAMPLES, = glob_wildcards("{sample}.faa")
 rule final:
 	input:
-		"putative_microcins.txt"
-
-
-rule input_seqs:
-	input:
-		"input_seqs"
-	output:
-		"input_seqs.fa"
-	shell:
-		"touch {output}"
-
-rule verified_microcins:
-	input:
-		"verified_microcins"
-	output:
-		"verified_microcins.fa"
-	shell:	
-		"touch {output}"
+		expand("{sample}_duomolog.blast_intersect_hmmer.fa", sample = SAMPLES)
 
 rule filter_input:
 	input:
-		"input_seqs.fa"
+		"{sample}.faa"
 	output:
-		"input_seqs.short.fa"
+		"{sample}.30_150.fa"
 	shell:
-		"seqkit fx2tab -l {input} | awk '$3 < 150' > {output}"
+		"seqkit seq -M 150 -m 30 -M 150 {input} > {output}"
 
 rule blast:
 	input:
-		verified_microcins = "verified_microcins.fa",
-		input_seqs = "input_seqs.short.fa"
+		verified_microcins = "verified_microcins.pep",
+		input_seqs = "{sample}.30_150.fa"
 	output:
-		"verified_microcins.blast.txt"
+		"{sample}.verified_microcins.blast.txt"
 	shell:
 		"""
-		makeblastdb -in {input.verified_microcins}
-		blastp -db {input.verified_microcins} -query {input.input_seqs} -outfmt 6 -out {output}
+		makeblastdb -dbtype prot -in {input.verified_microcins}
+		blastp -db {input.verified_microcins} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1
 		"""
 
 rule verified_microcinsMSA:
 	input:
-		"verified_microcins.fa"
+		"verified_microcins.pep"
 	output:
 		"verified_microcins.aln"
+	shell:
+		"mafft --auto {input} > {output}"
 
 
 rule buildhmm:
@@ -52,12 +38,30 @@ rule buildhmm:
 	output:
 		"verified_microcins.hmm"
 	shell:
-		"hmmbuild {input} {output}"
+		"hmmbuild {output} {input}"
+
+
+rule duomolog:
+	input:
+		verified_microcins = "verified_microcins.pep",
+		input_seqs = "{sample}.30_150.fa",
+		blastout="{sample}.verified_microcins.blast.txt",
+		hmm="verified_microcins.hmm"
+	output:
+		"{sample}_duomolog.blast_intersect_hmmer.fa"
+	shell:
+		"""duomolog blast_v_hmmer -i {input.verified_microcins} -q {input.input_seqs} \
+			--intersect_only \
+			--blastout {input.blastout} \
+			--hmm {input.hmm}	\
+			-o {output}
+		"""
+
 
 rule hmmsearch:
 	input:
 		verified_microcinsHMM = "verified_microcins.hmm",
-		input_seqs = "input_seqs.short.fa"
+		input_seqs = "{sample}.30_150.fa"
 	output:
 		hmmerAlignment = "verified_microcins.hmmerAlignment.txt",
 		hmmerResults = "verified_microcins.hmmerOut.txt"
@@ -66,9 +70,9 @@ rule hmmsearch:
 
 rule getBestHits:
 	input:
-		blast_hits = "verified_microcins.blast.txt",
+		blast_hits = "{sample}.verified_microcins.blast.txt",
 		hmmer_hits = "verified_microcins.hmmerOut.txt",
-		seq = "input_seqs.short.fa"
+		seq = "{sample}.30_150.fa"
 	output:
 		"verified_microcins.bestHits.fa"
 	shell:
