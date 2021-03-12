@@ -1,7 +1,7 @@
 SAMPLES, = glob_wildcards("{sample}.faa")
 rule final:
 	input:
-		expand("{sample}_duomolog.blast_intersect_hmmer.fa", sample = SAMPLES)
+		expand("{sample}_duomolog_out.txt", sample = SAMPLES)
 
 rule filter_input:
 	input:
