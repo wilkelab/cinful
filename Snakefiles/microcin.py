@@ -48,10 +48,9 @@ rule duomolog:
 		blastout="{sample}.verified_microcins.blast.txt",
 		hmm="verified_microcins.hmm"
 	output:
-		"{sample}_duomolog.blast_intersect_hmmer.fa"
+		"{sample}_duomolog_out.txt"
 	shell:
 		"""duomolog blast_v_hmmer -i {input.verified_microcins} -q {input.input_seqs} \
-			--intersect_only \
 			--blastout {input.blastout} \
 			--hmm {input.hmm}	\
 			-o {output}
