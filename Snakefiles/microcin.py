@@ -58,6 +58,7 @@ rule duomolog:
 	shell:
 		"""duomolog blast_v_hmmer -i {input.verified_microcins} -q {input.input_seqs} \
 			--blastout {input.blastout} \
+			--intersect_only \
 			--hmm {input.hmm}	\
 			-o {output}
 		"""
