@@ -11,17 +11,23 @@ rule filter_input:
 	shell:
 		"seqkit seq -M 150 -m 30 -M 150 {input} | seqkit rmdup -s > {output}"
 
+rule makeblastdb:
+	input:
+		"verified_microcins.pep"
+	output:
+		"verified_microcins.pep.phr"
+	shell:
+		"makeblastdb -dbtype prot -in {input.verified_microcins}"
+
 rule blast:
 	input:
 		verified_microcins = "verified_microcins.pep",
+		blastdb = "verified_microcins.pep.phr",
 		input_seqs = "{sample}.30_150.fa"
 	output:
 		"{sample}.verified_microcins.blast.txt"
 	shell:
-		"""
-		makeblastdb -dbtype prot -in {input.verified_microcins}
-		blastp -db {input.verified_microcins} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1
-		"""
+		"blastp -db {input.verified_microcins} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
 
 rule verified_microcinsMSA:
 	input:
