@@ -9,7 +9,7 @@ rule filter_input:
 	output:
 		"{sample}.30_150.fa"
 	shell:
-		"seqkit seq -M 150 -m 30 -M 150 {input} > {output}"
+		"seqkit seq -M 150 -m 30 -M 150 {input} | seqkit rmdup -s > {output}"
 
 rule blast:
 	input:
