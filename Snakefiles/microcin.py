@@ -17,7 +17,7 @@ rule makeblastdb:
 	output:
 		"verified_microcins.pep.phr"
 	shell:
-		"makeblastdb -dbtype prot -in {input.verified_microcins}"
+		"makeblastdb -dbtype prot -in {input}"
 
 rule blast:
 	input:
