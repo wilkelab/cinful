@@ -54,13 +54,13 @@ rule duomolog:
 		blastout="{sample}.verified_microcins.blast.txt",
 		hmm="verified_microcins.hmm"
 	output:
-		"{sample}_duomolog_out.txt"
+		"{sample}_duomolog/summary_out.txt"
 	shell:
-		"""duomolog blast_v_hmmer -i {input.verified_microcins} -q {input.input_seqs} \
-			--blastout {input.blastout} \
-			--intersect_only \
-			--hmm {input.hmm}	\
-			-o {output}
+		"""duomolog blast_v_hmmer --inFile {input.verified_microcins} --queryFile {input.input_seqs} \
+			--blastFile {input.blastout} \
+			--intersectOnly \
+			--hmmFile {input.hmm}	\
+			--summaryOut {output}
 		"""
 
 
