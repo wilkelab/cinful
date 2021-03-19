@@ -30,6 +30,13 @@ rule blast:
 	shell:
 		"blastp -db {input.verified_immunity_proteins} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
 
+rule verified_immunity_proteinsMSA:
+	input:
+		"verified_immunity_proteins.pep"
+	output:
+		"verified_immunity_proteins.aln"
+	shell:
+		"mafft --auto {input} > {output}"
 
 rule buildhmm:
 	input:
