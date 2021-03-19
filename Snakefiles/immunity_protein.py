@@ -7,9 +7,9 @@ rule filter_input:
 	input:
 		"{sample}.faa"
 	output:
-		"{sample}.30_150.fa"
+		"{sample}.30_250.fa"
 	shell:
-		"seqkit seq -M 150 -m 30 -M 150 {input} | seqkit rmdup -s > {output}"
+		"seqkit seq -m 30 -M 250  {input} | seqkit rmdup -s > {output}"
 
 
 rule makeblastdb:
