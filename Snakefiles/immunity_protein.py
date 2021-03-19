@@ -1,50 +1,35 @@
+SAMPLES, = glob_wildcards("{sample}.faa")
 rule final:
 	input:
-		"putative_immunity_proteins.txt"
-
-rule input_seqs:
-	input:
-		"input_seqs"
-	output:
-		"input_seqs.fa"
-	shell:
-		"touch {output}"
-
-rule verified_immunity_proteins:
-	input:
-		"verified_immunity_proteins"
-	output:
-		"verified_immunity_proteins.fa"
-	shell:	
-		"touch {output}"
-
-rule verified_immunity_proteinsMSA:
-	input:
-		"verified_immunity_proteins.fa"
-	output:
-		"verified_immunity_proteins.aln"
-	shell:
-		"mafft --auto {input} > {output}"
+		expand("{sample}_duomolog_immunity_protein/summary_out.txt", sample = SAMPLES)
 
 rule filter_input:
 	input:
-		"input_seqs.fa"
+		"{sample}.faa"
 	output:
-		"input_seqs.short.fa"
+		"{sample}.30_150.fa"
 	shell:
-		"seqkit fx2tab -l {input} | awk '$3 < 150' > {output}"
+		"seqkit seq -M 150 -m 30 -M 150 {input} | seqkit rmdup -s > {output}"
+
+
+rule makeblastdb:
+	input:
+		"verified_immunity_proteins.pep"
+	output:
+		"verified_immunity_proteins.pep.phr"
+	shell:
+		"makeblastdb -dbtype prot -in {input}"
 
 rule blast:
 	input:
-		verified_immunity_proteins = "verified_immunity_proteins.fa",
-		input_seqs = "input_seqs.short.fa"
+		verified_immunity_proteins = "verified_immunity_proteins.pep",
+		blastdb = "verified_immunity_proteins.pep.phr",
+		input_seqs = "{sample}.30_150.fa"
 	output:
-		"verified_immunity_proteins.blast.txt"
+		"{sample}.verified_immunity_proteins.blast.txt"
 	shell:
-		"""
-		makeblastdb -in {input.verified_immunity_proteins}
-		blastp -db {input.verified_immunity_proteins} -query {input.input_seqs} -outfmt 6 -out {output}
-		"""
+		"blastp -db {input.verified_immunity_proteins} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
+
 
 rule buildhmm:
 	input:
@@ -52,17 +37,27 @@ rule buildhmm:
 	output:
 		"verified_immunity_proteins.hmm"
 	shell:
-		"hmmbuild {input} {output}"
+		"hmmbuild {output} {input}"
 
-rule hmmsearch:
+rule duomolog:
 	input:
-		verified_immunity_proteinsHMM = "verified_immunity_proteins.hmm",
-		input_seqs = "input_seqs.short.fa"
+		verified_immunity_proteins = "verified_immunity_proteins.pep",
+		input_seqs = "{sample}.30_150.fa",
+		blastout="{sample}.verified_immunity_proteins.blast.txt",
+		hmm="verified_immunity_proteins.hmm"
 	output:
-		hmmerAlignment = "verified_immunity_proteins.hmmerAlignment.txt",
-		hmmerResults = "verified_immunity_proteins.hmmerOut.txt"
+		"{sample}_duomolog_immunity_protein/summary_out.txt"
 	shell:
-		"hmmsearch -hmm {input.verified_immunity_proteinsHMM} -tblout {output.hmmerResults} > {output.hmmerAlignment}"
+		"""duomolog blast_v_hmmer --inFile {input.verified_immunity_proteins} --queryFile {input.input_seqs} \
+			--blastFile {input.blastout} \
+			--intersectOnly \
+			--hmmFile {input.hmm}	\
+			--summaryOut {output}
+		"""		"seqkit fx2tab -l {input} | awk '$3 < 150' > {output}"
+
+
+
+
 
 rule getBestHits:
 	input:
