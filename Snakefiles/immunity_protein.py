@@ -57,6 +57,7 @@ rule duomolog:
 	shell:
 		"""duomolog blast_v_hmmer --inFile {input.verified_immunity_proteins} --queryFile {input.input_seqs} \
 			--blastFile {input.blastout} \
+			--intersectOnly \
 			--hmmFile {input.hmm}	\
 			--summaryOut {output}
 		"""		
