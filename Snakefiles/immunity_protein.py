@@ -60,7 +60,7 @@ rule duomolog:
 			--intersectOnly \
 			--hmmFile {input.hmm}	\
 			--summaryOut {output}
-		"""		"seqkit fx2tab -l {input} | awk '$3 < 150' > {output}"
+		"""		
 
 
 
