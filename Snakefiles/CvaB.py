@@ -1,15 +1,19 @@
+SAMPLES, = glob_wildcards("{sample}.faa")
+
 rule final:
 	input:
-		"putative_CvaB.txt"
+		expand("{sample}.cvaB_diamond.txt", sample = SAMPLES)
 
-rule input_seqs:
+rule cvaB_diamond:
 	input:
-		"input_seqs"
+		cvaB = "cvaB.fa",
+		db = "{sample}.faa"
 	output:
-		"input_seqs.fa"
-	shell:
-		"touch {output}"
-
+		"{sample}.cvaB_diamond.txt"
+	shell:"""
+		diamond makedb --in {input.db} --out {input.db}.seq.db -d {input.db}
+        diamond blastp -d {input.db}.dmnd -q {input.cvaB} -o {output} -p {threads} -e 1E-5
+	"""
 rule verified_CvaB:
 	input:
 		"verified_CvaB"
