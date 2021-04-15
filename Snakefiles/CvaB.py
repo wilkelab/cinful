@@ -12,7 +12,7 @@ rule cvaB_diamond:
 		"{sample}.cvaB_diamond.txt"
 	shell:"""
 		diamond makedb --in {input.db} --out {input.db}.seq.db -d {input.db}
-        diamond blastp -d {input.db}.dmnd -q {input.cvaB} -o {output} -p {threads} -e 1E-5
+        diamond blastp -d {input.db}.dmnd -q {input.cvaB} -o {output} -p {threads} -e 1E-5 -k 1
 	"""
 rule verified_CvaB:
 	input:
