@@ -26,13 +26,13 @@ rule makeblastdb:
 rule blast:
 	input:
 		verified_CvaB = "verified_CvaB.fa",
+		blastdb = "verified_CvaB.pep.phr",
 		input_seqs = "{sample}.faa"
 	output:
 		"{sample}.verified_CvaB.blast.txt"
 	shell:
-		"""
-		blastp -db {input.verified_CvaB} -query {input.input_seqs} -outfmt 6 -out {output}
-		"""
+		"blastp -db {input.verified_CvaB} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
+		
 
 
 rule verified_CvaBMSA:
