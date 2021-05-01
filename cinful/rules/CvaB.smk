@@ -26,7 +26,7 @@ rule makeblastdb:
 rule blast:
 	input:
 		verified_CvaB = "verified_CvaB.fa",
-		blastdb = "verified_CvaB.pep.phr",
+		blastdb = "verified_CvaB.fa.phr",
 		input_seqs = "{sample}.faa"
 	output:
 		"{sample}.verified_CvaB.blast.txt"
