@@ -49,7 +49,7 @@ rule buildhmm:
 	output:
 		"verified_CvaB.hmm"
 	shell:
-		"hmmbuild {input} {output}"
+		"hmmbuild {output} {input}"
 
 rule duomolog:
 	input:
