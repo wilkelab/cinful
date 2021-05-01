@@ -19,7 +19,7 @@ rule makeblastdb:
 	input:
 		"verified_CvaB.fa"
 	output:
-		"verified_CvaB.pep.phr"		
+		"verified_CvaB.fa.phr"		
 	shell:
 		"makeblastdb -dbtype prot -in {input}"
 
