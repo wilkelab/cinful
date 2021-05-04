@@ -37,18 +37,18 @@ verified_microcins_SeqIO = SeqIO.parse(StringIO(verified_microcins), "fasta")
 with open("verified_microcins.pep","w") as seq_out:
   SeqIO.write(verified_microcins_SeqIO, seq_out,"fasta")
 
-SAMPLES, = glob_wildcards("{sample}.faa")
+SAMPLES, = glob_wildcards("{sample}_cinfulOut/")
 
 print(SAMPLES)
 rule final:
 	input:
-		expand("{sample}_duomolog_microcin/summary_out.txt", sample = SAMPLES)
+		expand("{sample}_cinfulOut/duomolog_microcin/summary_out.txt", sample = SAMPLES)
 
 rule filter_input:
 	input:
-		"{sample}.faa"
+		"{sample}_cinfulOut/{sample}.faa"
 	output:
-		"{sample}.30_150.fa"
+		"{sample}_cinfulOut/{sample}.30_150.fa"
 	shell:
 		"seqkit seq -m 30 -M 150 {input} | seqkit rmdup -s > {output}"
 
@@ -64,9 +64,9 @@ rule blast:
 	input:
 		verified_microcins = "verified_microcins.pep",
 		blastdb = "verified_microcins.pep.phr",
-		input_seqs = "{sample}.30_150.fa"
+		input_seqs = "{sample}_cinfulOut/{sample}.30_150.fa"
 	output:
-		"{sample}.verified_microcins.blast.txt"
+		"{sample}_cinfulOut/{sample}.verified_microcins.blast.txt"
 	shell:
 		"blastp -db {input.verified_microcins} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
 
@@ -91,11 +91,11 @@ rule buildhmm:
 rule duomolog:
 	input:
 		verified_microcins = "verified_microcins.pep",
-		input_seqs = "{sample}.30_150.fa",
-		blastout="{sample}.verified_microcins.blast.txt",
+		input_seqs = "{sample}_cinfulOut/{sample}.30_150.fa",
+		blastout="{sample}_cinfulOut/{sample}.verified_microcins.blast.txt",
 		hmm="verified_microcins.hmm"
 	output:
-		"{sample}_duomolog_microcin/summary_out.txt"
+		"{sample}_cinfulOut/duomolog_microcin/summary_out.txt"
 	shell:
 		"""duomolog blast_v_hmmer --inFile {input.verified_microcins} --queryFile {input.input_seqs} \
 			--blastFile {input.blastout} \
@@ -105,61 +105,61 @@ rule duomolog:
 		"""
 
 
-rule hmmsearch:
-	input:
-		verified_microcinsHMM = "verified_microcins.hmm",
-		input_seqs = "{sample}.30_150.fa"
-	output:
-		hmmerAlignment = "verified_microcins.hmmerAlignment.txt",
-		hmmerResults = "verified_microcins.hmmerOut.txt"
-	shell:
-		"hmmsearch -hmm {input.verified_microcinsHMM} -tblout {output.hmmerResults} > {output.hmmerAlignment}"
+# rule hmmsearch:
+# 	input:
+# 		verified_microcinsHMM = "verified_microcins.hmm",
+# 		input_seqs = "{sample}.30_150.fa"
+# 	output:
+# 		hmmerAlignment = "verified_microcins.hmmerAlignment.txt",
+# 		hmmerResults = "verified_microcins.hmmerOut.txt"
+# 	shell:
+# 		"hmmsearch -hmm {input.verified_microcinsHMM} -tblout {output.hmmerResults} > {output.hmmerAlignment}"
 
-rule getBestHits:
-	input:
-		blast_hits = "{sample}.verified_microcins.blast.txt",
-		hmmer_hits = "verified_microcins.hmmerOut.txt",
-		seq = "{sample}.30_150.fa"
-	output:
-		"verified_microcins.bestHits.fa"
-	shell:
-		"touch {output}"
+# rule getBestHits:
+# 	input:
+# 		blast_hits = "{sample}.verified_microcins.blast.txt",
+# 		hmmer_hits = "verified_microcins.hmmerOut.txt",
+# 		seq = "{sample}.30_150.fa"
+# 	output:
+# 		"verified_microcins.bestHits.fa"
+# 	shell:
+# 		"touch {output}"
 
-rule bestHitsMSA:
-	input:
-		"verified_microcins.bestHits.fa"
-	output:
-		"verified_microcins.bestHits.aln"
-	shell:
-		"touch {output}"
+# rule bestHitsMSA:
+# 	input:
+# 		"verified_microcins.bestHits.fa"
+# 	output:
+# 		"verified_microcins.bestHits.aln"
+# 	shell:
+# 		"touch {output}"
 
-rule evaluateMSA:
-	input:
-		"verified_microcins.bestHits.aln"
-	output:
-		"verified_microcins.evaluateMSA.txt"
-rule checkSignalSeq:
-	input:
-		"verified_microcins.bestHits.aln"
-	output:
-		"verified_microcins.signalCheck.txt"
+# rule evaluateMSA:
+# 	input:
+# 		"verified_microcins.bestHits.aln"
+# 	output:
+# 		"verified_microcins.evaluateMSA.txt"
+# rule checkSignalSeq:
+# 	input:
+# 		"verified_microcins.bestHits.aln"
+# 	output:
+# 		"verified_microcins.signalCheck.txt"
 
-rule neuBI:
-	input:
-		"verified_microcins.bestHits.fa"
-	output:
-		"verified_microcins.bestHits.neuBI.txt"
-	shell:
-		"neuBI {input} {output}"
+# rule neuBI:
+# 	input:
+# 		"verified_microcins.bestHits.fa"
+# 	output:
+# 		"verified_microcins.bestHits.neuBI.txt"
+# 	shell:
+# 		"neuBI {input} {output}"
 
-rule putative_microcins:
-	input:
-		seqs = "verified_microcins.bestHits.fa",
-		evaluateMSA = "verified_microcins.evaluateMSA.txt",
-		signalCheck = "verified_microcins.signalCheck.txt",
-		neuBI = "verified_microcins.bestHits.neuBI.txt"
-	output:
-		"putative_microcins.txt"
+# rule putative_microcins:
+# 	input:
+# 		seqs = "verified_microcins.bestHits.fa",
+# 		evaluateMSA = "verified_microcins.evaluateMSA.txt",
+# 		signalCheck = "verified_microcins.signalCheck.txt",
+# 		neuBI = "verified_microcins.bestHits.neuBI.txt"
+# 	output:
+# 		"putative_microcins.txt"
 
 
 
