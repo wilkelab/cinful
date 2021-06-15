@@ -95,83 +95,85 @@ IEIVADMGPISLETNGLSYRYDSQSAPIFSALSLSVAPGESVAITGASGAGKTTLMKVLC
 GLFEPDSGRVLINGIDIRQIGINNYHRMIACVMQDDRLFSGSIRENICGFAEEMDEEWMV
 ECARASHIHDVIMNMPMGYETLIGELGEGLSGGQKQRIFIARALYRKPGILFMDEATSAL
 DSESEHFVNVAIKNMNITRVIIAHRETTLRTVDRVISI
-
 """
 
 verified_CvaB_SeqIO = SeqIO.parse(StringIO(verified_CvaB), "fasta")
-with open("verified_CvaB.pep","w") as seq_out:
+with open("CvaB.verified.pep","w") as seq_out:
   SeqIO.write(verified_CvaB_SeqIO, seq_out,"fasta")
 
 
-SAMPLES, = glob_wildcards("{sample}_cinfulOut/")
+SAMPLES, = glob_wildcards("cinfulOut/01_orf_homology/{sample}_prodigal/")
 
 
 rule final:
 	input:
-		expand("{sample}_cinfulOut/duomolog_CvaB/summary_out.txt", sample = SAMPLES)
+		expand("cinfulOut/01_orf_homology/{sample}_prodigal/CvaB/{sample}.filtered.fa", sample = SAMPLES)
 
 
 
 
-# rule filter_input:
+
+rule filter_input:
+	input:
+		"cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.faa"
+	output:
+		"cinfulOut/01_orf_homology/{sample}_prodigal/CvaB/{sample}.filtered.fa"
+	shell:
+		"seqkit rmdup -s {input} > {output}" 
+
+
+
+# rule makeblastdb:
 # 	input:
-# 		"input_seqs.fa"
+# 		"verified_CvaB.pep"
 # 	output:
-# 		"input_seqs.short.fa"
+# 		"verified_CvaB.pep.phr"		
 # 	shell:
-# 		"seqkit fx2tab -l {input} | awk '$3 < 150' > {output}"
+# 		"makeblastdb -dbtype prot -in {input}"
 
-rule makeblastdb:
-	input:
-		"verified_CvaB.pep"
-	output:
-		"verified_CvaB.pep.phr"		
-	shell:
-		"makeblastdb -dbtype prot -in {input}"
-
-rule blast:
-	input:
-		verified_CvaB = "verified_CvaB.pep",
-		blastdb = "verified_CvaB.pep.phr",
-		input_seqs = "{sample}_cinfulOut/{sample}.faa"
-	output:
-		"{sample}_cinfulOut/{sample}.verified_CvaB.blast.txt"
-	shell:
-		"blastp -db {input.verified_CvaB} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
+# rule blast:
+# 	input:
+# 		verified_CvaB = "verified_CvaB.pep",
+# 		blastdb = "verified_CvaB.pep.phr",
+# 		input_seqs = "{sample}_cinfulOut/{sample}.faa"
+# 	output:
+# 		"{sample}_cinfulOut/{sample}.verified_CvaB.blast.txt"
+# 	shell:
+# 		"blastp -db {input.verified_CvaB} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
 		
 
 
-rule verified_CvaBMSA:
-	input:
-		"verified_CvaB.pep"
-	output:
-		"verified_CvaB.aln"
-	shell:
-		"mafft --auto {input} > {output}"
+# rule verified_CvaBMSA:
+# 	input:
+# 		"verified_CvaB.pep"
+# 	output:
+# 		"verified_CvaB.aln"
+# 	shell:
+# 		"mafft --auto {input} > {output}"
 		
-rule buildhmm:
-	input:
-		"verified_CvaB.aln"
-	output:
-		"verified_CvaB.hmm"
-	shell:
-		"hmmbuild {output} {input}"
+# rule buildhmm:
+# 	input:
+# 		"verified_CvaB.aln"
+# 	output:
+# 		"verified_CvaB.hmm"
+# 	shell:
+# 		"hmmbuild {output} {input}"
 
-rule duomolog:
-	input:
-		verified_CvaB = "verified_CvaB.pep",
-		input_seqs = "{sample}_cinfulOut/{sample}.faa",
-		blastout = "{sample}_cinfulOut/{sample}.verified_CvaB.blast.txt",
-		hmm = "verified_CvaB.hmm"
-	output:
-		"{sample}_cinfulOut/duomolog_CvaB/summary_out.txt"
-	shell:
-		"""duomolog blast_v_hmmer --inFile {input.verified_CvaB} --queryFile {input.input_seqs} \
-			--blastFile {input.blastout} \
-			--intersectOnly \
-			--hmmFile {input.hmm}	\
-			--summaryOut {output}
-		"""
+# rule duomolog:
+# 	input:
+# 		verified_CvaB = "verified_CvaB.pep",
+# 		input_seqs = "{sample}_cinfulOut/{sample}.faa",
+# 		blastout = "{sample}_cinfulOut/{sample}.verified_CvaB.blast.txt",
+# 		hmm = "verified_CvaB.hmm"
+# 	output:
+# 		"{sample}_cinfulOut/duomolog_CvaB/summary_out.txt"
+# 	shell:
+# 		"""duomolog blast_v_hmmer --inFile {input.verified_CvaB} --queryFile {input.input_seqs} \
+# 			--blastFile {input.blastout} \
+# 			--intersectOnly \
+# 			--hmmFile {input.hmm}	\
+# 			--summaryOut {output}
+# 		"""
 
 # rule getBestHits:
 # 	input:

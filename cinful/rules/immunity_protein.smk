@@ -31,74 +31,74 @@ MDERSSQFRYSKYSAIIFLAVVIISTIVTLSPTFTLRYVGLDIAFFIVFITEILISTLVYLFYLKEFPECRIKIRTDSAT
 """
 
 verified_immunity_proteins_SeqIO = SeqIO.parse(StringIO(verified_immunity_proteins), "fasta")
-with open("verified_immunity_proteins.pep","w") as seq_out:
+with open("immunity_proteins.verified.pep","w") as seq_out:
   SeqIO.write(verified_immunity_proteins_SeqIO, seq_out,"fasta")
 
 
-SAMPLES, = glob_wildcards("{sample}_cinfulOut/")
+SAMPLES, = glob_wildcards("cinfulOut/01_orf_homology/{sample}_prodigal/")
 
 rule final:
 	input:
-		expand("{sample}_cinfulOut/duomolog_immunity_protein/summary_out.txt", sample = SAMPLES)
+		expand("cinfulOut/01_orf_homology/{sample}_prodigal/immunity_proteins/{sample}.filtered.fa", sample = SAMPLES)
 
 rule filter_input:
 	input:
-		"{sample}_cinfulOut/{sample}.faa"
+		"cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.faa"
 	output:
-		"{sample}_cinfulOut/{sample}.30_250.fa"
+		"cinfulOut/01_orf_homology/{sample}_prodigal/immunity_proteins/{sample}.filtered.fa"
 	shell:
 		"seqkit seq -m 30 -M 250  {input} | seqkit rmdup -s > {output}"
 
 
-rule makeblastdb:
-	input:
-		"verified_immunity_proteins.pep"
-	output:
-		"verified_immunity_proteins.pep.phr"
-	shell:
-		"makeblastdb -dbtype prot -in {input}"
+# rule makeblastdb:
+# 	input:
+# 		"verified_immunity_proteins.pep"
+# 	output:
+# 		"verified_immunity_proteins.pep.phr"
+# 	shell:
+# 		"makeblastdb -dbtype prot -in {input}"
 
-rule blast:
-	input:
-		verified_immunity_proteins = "verified_immunity_proteins.pep",
-		blastdb = "verified_immunity_proteins.pep.phr",
-		input_seqs = "{sample}_cinfulOut/{sample}.30_150.fa"
-	output:
-		"{sample}_cinfulOut/{sample}.verified_immunity_proteins.blast.txt"
-	shell:
-		"blastp -db {input.verified_immunity_proteins} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
+# rule blast:
+# 	input:
+# 		verified_immunity_proteins = "verified_immunity_proteins.pep",
+# 		blastdb = "verified_immunity_proteins.pep.phr",
+# 		input_seqs = "{sample}_cinfulOut/{sample}.30_150.fa"
+# 	output:
+# 		"{sample}_cinfulOut/{sample}.verified_immunity_proteins.blast.txt"
+# 	shell:
+# 		"blastp -db {input.verified_immunity_proteins} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
 
-rule verified_immunity_proteinsMSA:
-	input:
-		"verified_immunity_proteins.pep"
-	output:
-		"verified_immunity_proteins.aln"
-	shell:
-		"mafft --auto {input} > {output}"
+# rule verified_immunity_proteinsMSA:
+# 	input:
+# 		"verified_immunity_proteins.pep"
+# 	output:
+# 		"verified_immunity_proteins.aln"
+# 	shell:
+# 		"mafft --auto {input} > {output}"
 
-rule buildhmm:
-	input:
-		"verified_immunity_proteins.aln"
-	output:
-		"verified_immunity_proteins.hmm"
-	shell:
-		"hmmbuild {output} {input}"
+# rule buildhmm:
+# 	input:
+# 		"verified_immunity_proteins.aln"
+# 	output:
+# 		"verified_immunity_proteins.hmm"
+# 	shell:
+# 		"hmmbuild {output} {input}"
 
-rule duomolog:
-	input:
-		verified_immunity_proteins = "verified_immunity_proteins.pep",
-		input_seqs = "{sample}_cinfulOut/{sample}.30_150.fa",
-		blastout="{sample}_cinfulOut/{sample}.verified_immunity_proteins.blast.txt",
-		hmm="verified_immunity_proteins.hmm"
-	output:
-		"{sample}_cinfulOut/duomolog_immunity_protein/summary_out.txt"
-	shell:
-		"""duomolog blast_v_hmmer --inFile {input.verified_immunity_proteins} --queryFile {input.input_seqs} \
-			--blastFile {input.blastout} \
-			--intersectOnly \
-			--hmmFile {input.hmm}	\
-			--summaryOut {output}
-		"""		
+# rule duomolog:
+# 	input:
+# 		verified_immunity_proteins = "verified_immunity_proteins.pep",
+# 		input_seqs = "{sample}_cinfulOut/{sample}.30_150.fa",
+# 		blastout="{sample}_cinfulOut/{sample}.verified_immunity_proteins.blast.txt",
+# 		hmm="verified_immunity_proteins.hmm"
+# 	output:
+# 		"{sample}_cinfulOut/duomolog_immunity_protein/summary_out.txt"
+# 	shell:
+# 		"""duomolog blast_v_hmmer --inFile {input.verified_immunity_proteins} --queryFile {input.input_seqs} \
+# 			--blastFile {input.blastout} \
+# 			--intersectOnly \
+# 			--hmmFile {input.hmm}	\
+# 			--summaryOut {output}
+# 		"""		
 
 
 

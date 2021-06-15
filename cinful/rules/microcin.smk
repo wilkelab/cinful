@@ -34,75 +34,75 @@ MSNIRELSFDEIALVSGGNANSNYEGGGSRSRNTGARNSLGRNAPTHIYSDPSTVKCANA
 VFSGMVGGAIKGGPVGMTRGTIGGAVIGQCLSGGGNGNGGGNRAGSSNCSGSNVGGTCSR
 """
 verified_microcins_SeqIO = SeqIO.parse(StringIO(verified_microcins), "fasta")
-with open("verified_microcins.pep","w") as seq_out:
+with open("microcins.verified.pep","w") as seq_out:
   SeqIO.write(verified_microcins_SeqIO, seq_out,"fasta")
 
-SAMPLES, = glob_wildcards("{sample}_cinfulOut/")
+SAMPLES, = glob_wildcards("cinfulOut/01_orf_homology/{sample}_prodigal/")
 
 print(SAMPLES)
 rule final:
 	input:
-		expand("{sample}_cinfulOut/duomolog_microcin/summary_out.txt", sample = SAMPLES)
+		expand("cinfulOut/01_orf_homology/{sample}_prodigal/microcins/{sample}.filtered.fa", sample = SAMPLES)
 
 rule filter_input:
 	input:
-		"{sample}_cinfulOut/{sample}.faa"
+		"cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.faa"
 	output:
-		"{sample}_cinfulOut/{sample}.30_150.fa"
+		"cinfulOut/01_orf_homology/{sample}_prodigal/microcins/{sample}.filtered.fa"
 	shell:
 		"seqkit seq -m 30 -M 150 {input} | seqkit rmdup -s > {output}"
 
-rule makeblastdb:
-	input:
-		"verified_microcins.pep"
-	output:
-		"verified_microcins.pep.phr"
-	shell:
-		"makeblastdb -dbtype prot -in {input}"
+# rule makeblastdb:
+# 	input:
+# 		"verified_microcins.pep"
+# 	output:
+# 		"verified_microcins.pep.phr"
+# 	shell:
+# 		"makeblastdb -dbtype prot -in {input}"
 
-rule blast:
-	input:
-		verified_microcins = "verified_microcins.pep",
-		blastdb = "verified_microcins.pep.phr",
-		input_seqs = "{sample}_cinfulOut/{sample}.30_150.fa"
-	output:
-		"{sample}_cinfulOut/{sample}.verified_microcins.blast.txt"
-	shell:
-		"blastp -db {input.verified_microcins} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
+# rule blast:
+# 	input:
+# 		verified_microcins = "verified_microcins.pep",
+# 		blastdb = "verified_microcins.pep.phr",
+# 		input_seqs = "{sample}_cinfulOut/{sample}.30_150.fa"
+# 	output:
+# 		"{sample}_cinfulOut/{sample}.verified_microcins.blast.txt"
+# 	shell:
+# 		"blastp -db {input.verified_microcins} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
 
-rule verified_microcinsMSA:
-	input:
-		"verified_microcins.pep"
-	output:
-		"verified_microcins.aln"
-	shell:
-		"mafft --auto {input} > {output}"
-
-
-rule buildhmm:
-	input:
-		"verified_microcins.aln"
-	output:
-		"verified_microcins.hmm"
-	shell:
-		"hmmbuild {output} {input}"
+# rule verified_microcinsMSA:
+# 	input:
+# 		"verified_microcins.pep"
+# 	output:
+# 		"verified_microcins.aln"
+# 	shell:
+# 		"mafft --auto {input} > {output}"
 
 
-rule duomolog:
-	input:
-		verified_microcins = "verified_microcins.pep",
-		input_seqs = "{sample}_cinfulOut/{sample}.30_150.fa",
-		blastout="{sample}_cinfulOut/{sample}.verified_microcins.blast.txt",
-		hmm="verified_microcins.hmm"
-	output:
-		"{sample}_cinfulOut/duomolog_microcin/summary_out.txt"
-	shell:
-		"""duomolog blast_v_hmmer --inFile {input.verified_microcins} --queryFile {input.input_seqs} \
-			--blastFile {input.blastout} \
-			--intersectOnly \
-			--hmmFile {input.hmm}	\
-			--summaryOut {output}
-		"""
+# rule buildhmm:
+# 	input:
+# 		"verified_microcins.aln"
+# 	output:
+# 		"verified_microcins.hmm"
+# 	shell:
+# 		"hmmbuild {output} {input}"
+
+
+# rule duomolog:
+# 	input:
+# 		verified_microcins = "verified_microcins.pep",
+# 		input_seqs = "{sample}_cinfulOut/{sample}.30_150.fa",
+# 		blastout="{sample}_cinfulOut/{sample}.verified_microcins.blast.txt",
+# 		hmm="verified_microcins.hmm"
+# 	output:
+# 		"{sample}_cinfulOut/duomolog_microcin/summary_out.txt"
+# 	shell:
+# 		"""duomolog blast_v_hmmer --inFile {input.verified_microcins} --queryFile {input.input_seqs} \
+# 			--blastFile {input.blastout} \
+# 			--intersectOnly \
+# 			--hmmFile {input.hmm}	\
+# 			--summaryOut {output}
+# 		"""
 
 
 # rule hmmsearch:
