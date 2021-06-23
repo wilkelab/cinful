@@ -18,6 +18,7 @@ dependencies:
   - biopython=1.76
   - snakemake=6.2.1
   - prodigal=2.6.3
+  - pyhmmer=0.3.0
   # - scikit-learn=0.24.1
   # - matplotlib=3.3.4
  
