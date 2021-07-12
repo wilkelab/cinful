@@ -1,8 +1,8 @@
 SAMPLES, = glob_wildcards("{sample}.fna")
 
-rule final:
-	input:
-		expand("cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.faa", sample = SAMPLES)
+# rule final:
+# 	input:
+# 		expand("cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.faa", sample = SAMPLES)
 
 rule prodigal:
 	input:

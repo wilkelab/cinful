@@ -1,6 +1,69 @@
 from io import StringIO
 from Bio import SeqIO
 
+
+verified_microcins = """
+>E492_sp_Q9Z4N4_MCEA_KLEPN Microcin E492 OS=Klebsiella pneumoniae OX=573 GN=mceA PE=1 SV=2
+MREISQKDLNLAFGAGETDPNTQLLNDLGNNMAWGAALGAPGGLGSAALGAAGGALQTVG
+QGLIDHGPVNVPIPVLIGPSWNGSGSGYNSATSSSGSGS
+>H47_sp_P62530_MCHB_ECOLX Microcin H47 OS=Escherichia coli OX=562 GN=mchB PE=1 SV=1
+MREITESQLRYISGAGGAPATSANAAGAAAIVGALAGIPGGPLGVVVGAVSAGLTTAIGS
+TVGSGSASSSAGGGS
+>I47_tr_Q712Q0_Q712Q0_ECOLX MchS2 protein OS=Escherichia coli OX=562 GN=mchS2 PE=4 SV=1
+MREISDNMLDSVKGGMNLNGLPASTNVIDLRGKDMGTYIDANGACWAPDTPSIIMYPGGS
+GPSYSMSSSTSSANSGS
+>M_tr_Q83TS1_Q83TS1_ECOLX Colicin-V (Microcin-V bacteriocin) OS=Escherichia coli OX=562 GN=mcmA PE=4 SV=1
+MRKLSENEIKQISGGDGNDGQAELIAIGSLAGTFISPGFGSIAGAYIGDKVHSWATTATV
+SPSMSPSGIGLSSQFGSGRGTSSASSSAGSGS
+>G492_tr_B4DCT5_B4DCT5_KLEPN MceL OS=Klebsiella pneumoniae OX=573 PE=4 SV=1
+MRALTENDFFAVSGADRGDAAVAGAVAGGTAGAAAGGWAGAQMGATVGSLAGPVGTVVGF
+VAGAAAGRYGGAFIYDSFSSPSNSSSSGS
+>V_sp_P22522_CEAV_ECOLX Colicin-V OS=Escherichia coli OX=562 GN=cvaC PE=1 SV=1
+MRTLTLNELDSVSGGASGRDIAMAIGTLSGQFVAGGIGAAAGGVAGGAIYDYASTHKPNP
+AMSPSGLGGTIKQKPEGIPSEAWNYAAGRLCNWSPNNLSDVCL
+>L_tr_Q841V4_Q841V4_ECOLX Microcin L OS=Escherichia coli OX=562 GN=mclC PE=4 SV=1
+MREITLNEMNNVSGAGDVNWVDVGKTVATNGAGVIGGAFGAGLCGPVCAGAFAVGSSAAV
+AALYDAAGNSNSAKQKPEGLPPEAWNYAEGRMCNWSPNNLSDVCL
+>N_tr_C3VUZ5_C3VUZ5_ECOLX McnN OS=Escherichia coli OX=562 PE=4 SV=1
+MRELDREELNCVGGAGDPLADPNSQIVRQIMSNAAWGAAFGARGGLGGMAVGAAGGVTQT
+VLQGAAAHMPVNVPIPKVPMGPSWNGSKG
+>PDI_tr_I6ZU90_I6ZU90_ECOLX McpM OS=Escherichia coli OX=562 GN=mcpM PE=4 SV=1
+MANIRELTLDEITLVSGGNANSNFEGGPRNDRSSGARNSLGRNAPTHIYSDPSTVKCANA
+VFSGMIGGAIKGGPIGMARGTIGGAVVGQCLSDHGSGNGSGNRGSSSSCSGNNVGGTCNR
+>S_tr_H9ZMG7_H9ZMG7_ECOLX Microcin S OS=Escherichia coli OX=562 GN=mcsS PE=4 SV=1
+MSNIRELSFDEIALVSGGNANSNYEGGGSRSRNTGARNSLGRNAPTHIYSDPSTVKCANA
+VFSGMVGGAIKGGPVGMTRGTIGGAVIGQCLSGGGNGNGGGNRAGSSNCSGSNVGGTCSR
+"""
+
+verified_immunity_proteins = """
+>classIIb_IP:M_mcmI_tr|Q83TS3|Q83TS3_ECOLX Microcin M imunity protein McmI OS=Escherichia coli OX=562 GN=mcmI PE=4 SV=1
+MGEVKKDIKITVIAFVINYLFFYIPVSLYLSYYYGYNFFNLYMFFLSLVVTFLSLWLNVN
+FYFFTNLIAKVLK
+>classIIb_IP:I47_mchS3_tr|Q712P9|Q712P9_ECOLX MchS3 protein OS=Escherichia coli OX=562 GN=mchS3 PE=4 SV=1
+MYLTKKIIISMMFILPSAAFSSDPPPLQQSLEKTTYFSIGMNGFIGYQSEGEKLYTHILT
+LDNPEEIFKNIIKNRKSTKESKIYAACGLYYLNVENIESLFNENDKQEYVSVLRGDILTK
+IKLNDILNSVIINGCNTKLISEHK
+>classIIb_IP:H47_mchI_sp|O86200|MCHI_ECOLX Microcin H47 immunity protein MchI OS=Escherichia coli OX=562 GN=mchI PE=1 SV=1
+MSYKKLYQLTAIFSLPLTILLVSLSSLRIVGEGNSYVDVFLSFIIFLGFIELIHGIRKIL
+VWSGWKNGS
+>classIIb_IP:E492_mceB_sp|Q9ZHG0|IM92_KLEPN Microcin E492 immunity protein OS=Klebsiella pneumoniae OX=573 GN=mceB PE=1 SV=1
+MTLLSFGFSPVFFSVMAFCIISRSKFYPQRTRNKVIVLILLTFFICFLYPLTKVYLVGSY
+GIFDKFYLFCFISTLIAIAINVVILTINGAKNERN
+>classIIb_IP:G492_mceM_tr|B4DCT4|B4DCT4_KLEPN MceM OS=Klebsiella pneumoniae OX=573 GN=SAMEA4364603_01604 PE=4 SV=1
+MIFLYLDKIPLFILGIGLLTSFALPGSSALDSPKFLCIYSSTILAGISFIYQVFRHGTNT
+EFFLAMLITVSFVVMLPVIKMHFAY
+>classIIa_IP:V_cvi
+MDRKRTKLELLFAFIINATAIYIALAIYDCVFRGKDFLSMHTFCFSALMSAICYFVGDNYYSISDKIKRRSYENSDSK
+>classIIa_IP:L_mclI
+MKTWQVFFIILPISIIISLIVKQLNSSNLVQSVVSGIAIALMISIFFNRGK
+>classIIa_IP:N_mcnI
+MKRNKLTRMSFLNFAFSPVFFSIMACYFIVWRNKRNEFVCNRLLSIIIISFLICFIYPWLNYKIEVKYYIFEQFYLFCFLSSLVAVVINLIVYFILYRRCI
+>classIIa_IP:PDI_mcpI
+MEGATMFIKLLSFICGLLLGFALLSGSSVIDLYWFSLPSEFSKIVVMLITLFSTARFMDYIIEKIRTISAK
+>classIIa_IP:S_mcsI
+MDERSSQFRYSKYSAIIFLAVVIISTIVTLSPTFTLRYVGLDIAFFIVFITEILISTLVYLFYLKEFPECRIKIRTDSATVKFSALSFLIIILIQLAVYCYRDYLYHYEPSQINWITVLVMTLVVPYYEEIVYRACAFGFLRSIFKENIIIPCVITSLFFSLMHFQYYNVLDQSVLFVVSMLLLGVRIKSRSLFYPMLIHSGMNTFVILLNIQNIL
+"""
+
 verified_CvaB = """
 >AAL08400.1 MceG [Klebsiella pneumoniae RYC492]
 MSNGNVRRMINQLDMRWRRRVPVIHQTETSECGLACLAMICGHFGKNIDLISLRRKFNLS
@@ -97,120 +160,14 @@ ECARASHIHDVIMNMPMGYETLIGELGEGLSGGQKQRIFIARALYRKPGILFMDEATSAL
 DSESEHFVNVAIKNMNITRVIIAHRETTLRTVDRVISI
 """
 
+verified_microcins_SeqIO = SeqIO.parse(StringIO(verified_microcins), "fasta")
+with open("microcins.verified.pep", "w") as seq_out:
+  SeqIO.write(verified_microcins_SeqIO, seq_out, "fasta")
+
+verified_immunity_proteins_SeqIO = SeqIO.parse(StringIO(verified_immunity_proteins), "fasta")
+with open("immunity_proteins.verified.pep", "w") as seq_out:
+  SeqIO.write(verified_immunity_proteins_SeqIO, seq_out, "fasta")
+
 verified_CvaB_SeqIO = SeqIO.parse(StringIO(verified_CvaB), "fasta")
-with open("CvaB.verified.pep","w") as seq_out:
-  SeqIO.write(verified_CvaB_SeqIO, seq_out,"fasta")
-
-
-SAMPLES, = glob_wildcards("cinfulOut/01_orf_homology/{sample}_prodigal/")
-
-
-# rule final:
-	# input:
-		# expand("cinfulOut/01_orf_homology/{sample}_prodigal/CvaB/{sample}.filtered.fa", sample = SAMPLES)
-
-
-
-
-
-rule filter_CvaB:
-	input:
-		"cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.faa"
-	output:
-		"cinfulOut/01_orf_homology/{sample}_prodigal/CvaB/{sample}.filtered.fa"
-	shell:
-		"seqkit rmdup -s {input} > {output}" 
-
-
-
-# rule makeblastdb:
-# 	input:
-# 		"verified_CvaB.pep"
-# 	output:
-# 		"verified_CvaB.pep.phr"		
-# 	shell:
-# 		"makeblastdb -dbtype prot -in {input}"
-
-# rule blast:
-# 	input:
-# 		verified_CvaB = "verified_CvaB.pep",
-# 		blastdb = "verified_CvaB.pep.phr",
-# 		input_seqs = "{sample}_cinfulOut/{sample}.faa"
-# 	output:
-# 		"{sample}_cinfulOut/{sample}.verified_CvaB.blast.txt"
-# 	shell:
-# 		"blastp -db {input.verified_CvaB} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
-		
-
-
-# rule verified_CvaBMSA:
-# 	input:
-# 		"verified_CvaB.pep"
-# 	output:
-# 		"verified_CvaB.aln"
-# 	shell:
-# 		"mafft --auto {input} > {output}"
-		
-# rule buildhmm:
-# 	input:
-# 		"verified_CvaB.aln"
-# 	output:
-# 		"verified_CvaB.hmm"
-# 	shell:
-# 		"hmmbuild {output} {input}"
-
-# rule duomolog:
-# 	input:
-# 		verified_CvaB = "verified_CvaB.pep",
-# 		input_seqs = "{sample}_cinfulOut/{sample}.faa",
-# 		blastout = "{sample}_cinfulOut/{sample}.verified_CvaB.blast.txt",
-# 		hmm = "verified_CvaB.hmm"
-# 	output:
-# 		"{sample}_cinfulOut/duomolog_CvaB/summary_out.txt"
-# 	shell:
-# 		"""duomolog blast_v_hmmer --inFile {input.verified_CvaB} --queryFile {input.input_seqs} \
-# 			--blastFile {input.blastout} \
-# 			--intersectOnly \
-# 			--hmmFile {input.hmm}	\
-# 			--summaryOut {output}
-# 		"""
-
-# rule getBestHits:
-# 	input:
-# 		blast_hits = "verified_CvaB.blast.txt",
-# 		hmmer_hits = "verified_CvaB.hmmerOut.txt",
-# 		seq = "input_seqs.short.fa"
-# 	output:
-# 		"verified_CvaB.bestHits.fa"
-# 	shell:
-# 		"touch {output}"
-
-# rule bestHitsMSA:
-# 	input:
-# 		"verified_CvaB.bestHits.fa"
-# 	output:
-# 		"verified_CvaB.bestHits.aln"
-# 	shell:
-# 		"touch {output}"
-
-# rule evaluateMSA:
-# 	input:
-# 		"verified_CvaB.bestHits.aln"
-# 	output:
-# 		"verified_CvaB.evaluateMSA.txt"
-
-# rule catalytic_triad:
-# 	input:
-# 		"verified_CvaB.evaluateMSA.txt"
-# 	output:
-# 		"verified_CvaB.catalytic_triad.txt"
-
-
-# rule putative_CvaB:
-# 	input:
-# 		seqs = "verified_CvaB.bestHits.fa",
-# 		evaluateMSA = "verified_CvaB.evaluateMSA.txt",
-# 		catalytic_triad = "verified_CvaB.catalytic_triad.txt"
-
-# 	output:
-# 		"putative_CvaB.txt"
+with open("CvaB.verified.pep", "w") as seq_out:
+  SeqIO.write(verified_CvaB_SeqIO, seq_out, "fasta")
