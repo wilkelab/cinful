@@ -37,11 +37,11 @@ with open("immunity_proteins.verified.pep","w") as seq_out:
 
 SAMPLES, = glob_wildcards("cinfulOut/01_orf_homology/{sample}_prodigal/")
 
-rule final:
-	input:
-		expand("cinfulOut/01_orf_homology/{sample}_prodigal/immunity_proteins/{sample}.filtered.fa", sample = SAMPLES)
+# rule final:
+	# input:
+		# expand("cinfulOut/01_orf_homology/{sample}_prodigal/immunity_proteins/{sample}.filtered.fa", sample = SAMPLES)
 
-rule filter_input:
+rule filter_immunity_protein:
 	input:
 		"cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.faa"
 	output:

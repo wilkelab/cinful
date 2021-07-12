@@ -33,6 +33,7 @@ VFSGMIGGAIKGGPIGMARGTIGGAVVGQCLSDHGSGNGSGNRGSSSSCSGNNVGGTCNR
 MSNIRELSFDEIALVSGGNANSNYEGGGSRSRNTGARNSLGRNAPTHIYSDPSTVKCANA
 VFSGMVGGAIKGGPVGMTRGTIGGAVIGQCLSGGGNGNGGGNRAGSSNCSGSNVGGTCSR
 """
+
 verified_microcins_SeqIO = SeqIO.parse(StringIO(verified_microcins), "fasta")
 with open("microcins.verified.pep","w") as seq_out:
   SeqIO.write(verified_microcins_SeqIO, seq_out,"fasta")
@@ -40,11 +41,11 @@ with open("microcins.verified.pep","w") as seq_out:
 SAMPLES, = glob_wildcards("cinfulOut/01_orf_homology/{sample}_prodigal/")
 
 print(SAMPLES)
-rule final:
-	input:
-		expand("cinfulOut/01_orf_homology/{sample}_prodigal/microcins/{sample}.filtered.fa", sample = SAMPLES)
+# rule final:
+# 	# input:
+	# 	expand("cinfulOut/01_orf_homology/{sample}_prodigal/microcins/{sample}.filtered.fa", sample = SAMPLES)
 
-rule filter_input:
+rule filter_microcin:
 	input:
 		"cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.faa"
 	output:

@@ -29,9 +29,9 @@ def run_hmmsearch(queryFile, hmmFile):
 	return hits , hmm.name.decode() # [hit.name.decode() for hit in hmmerOut]
 
 
-rule final:
-	input:
-		expand("cinfulOut/02_homology_results/{sample}.all_merged.csv", sample = SAMPLES)
+# rule final:
+# 	input:
+# 		expand("cinfulOut/02_homology_results/{sample}.all_merged.csv", sample = SAMPLES)
 		# expand("cinfulOut/01_orf_homology/{sample}_prodigal/{component}/blast_v_hmmer.csv", sample = SAMPLES, component = COMPONENTS)
 		# expand("{sample}_cinfulOut/{component}/{sample}.hmmerOut.txt", sample = SAMPLES, component = COMPONENTS)
 		# expand("{sample}_cinfulOut/{component}/blast.txt", sample = SAMPLES, component = COMPONENTS)
@@ -104,7 +104,8 @@ rule blast_v_hmmer:
 
 rule merged_results:
 	input:
-		blast_v_hmmer = expand("cinfulOut/01_orf_homology/{sample}_prodigal/{component}/blast_v_hmmer.csv", sample = SAMPLES, component = COMPONENTS),
+		blast_v_hmmer = expand("cinfulOut/01_orf_homology/{sample}_prodigal/{component}/blast_v_hmmer.csv",
+		                       sample=SAMPLES, component=["microcins", "CvaB", "immunity_proteins"]),
 		prodigalGFF = "cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.gff3"
 	output:
 		"cinfulOut/02_homology_results/{sample}.all_merged.csv"

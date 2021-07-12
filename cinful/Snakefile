@@ -4,57 +4,82 @@ rule final:
 	input:
 		expand("cinfulOut/02_homology_results/{sample}.all_merged.csv", sample = SAMPLES)
 
-rule prodigal:
-	input:
-		"{sample}.fna"
-	output:
-		"cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.faa"
-	shell:
-		"""
-		snakemake --snakefile ../cinful/rules/prodigal.smk --unlock
-		snakemake --snakefile ../cinful/rules/prodigal.smk --cores 1 -p
-		"""
 
-rule microcin:
-	input:
-		"cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.faa"
-	output:
-		"cinfulOut/01_orf_homology/{sample}_prodigal/microcins/{sample}.filtered.fa"
-	shell:
-		"""
-		snakemake --snakefile ../cinful/rules/microcin.smk --unlock
-		snakemake --snakefile ../cinful/rules/microcin.smk --cores 1 -p
-		"""
+include: "rules/verified_input.smk"
+include: "rules/filter_input.smk"
+include: "rules/prodigal.smk"
+# include: "rules/microcin.smk"
+# include: "rules/immunity_protein.smk"
+# include: "rules/CvaB.smk"
+include: "rules/duomolog.smk"
 
-rule immunity_protein:
+rule XXX:
 	input:
-		"cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.faa"
-	output:
-		"cinfulOut/01_orf_homology/{sample}_prodigal/immunity_proteins/{sample}.filtered.fa"
-	shell:
-		"""
-		snakemake --snakefile ../cinful/rules/immunity_protein.smk --unlock
-		snakemake --snakefile ../cinful/rules/immunity_protein.smk --cores 1 -p
-		"""
-
-rule CvaB:
-	input:
-		"cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.faa"
-	output:
-		"cinfulOut/01_orf_homology/{sample}_prodigal/CvaB/{sample}.filtered.fa"
-	shell:
-		"""
-		snakemake --snakefile ../cinful/rules/CvaB.smk --unlock
-		snakemake --snakefile ../cinful/rules/CvaB.smk --cores 1 -p
-		"""
-
-rule duomolog:
-	input:
-		expand("cinfulOut/01_orf_homology/{sample}_prodigal/{component}/{sample}.filtered.fa", sample = SAMPLES, component = ["microcins","CvaB","immunity_proteins"])
-	output:
 		"cinfulOut/02_homology_results/{sample}.all_merged.csv"
-	shell:
+	output:
+		"cinfulOut/02_homology_results/{sample}.bestHits.csv"
+	run:
 		"""
-		snakemake  --snakefile ../cinful/rules/duomolog.smk --unlock
-		snakemake  --snakefile ../cinful/rules/duomolog.smk --cores 1 -p
+		Okay, so I think bestHits, will sometimes return an empty file
+
+		This rule will attempt to edit SAMPLES, and drop them from samples
+
+		I don't know if that matters?? I feel like the final rule would have
+		already been put in play. Maybe I can add nonEmpty things to an external list??
+
+		I think this may have to just be dynamic!! :(
 		"""
+# rule prodigal:
+# 	input:
+# 		"{sample}.fna"
+# 	output:
+# 		"cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.faa"
+# 	shell:
+# 		"""
+# 		snakemake --snakefile ../cinful/rules/prodigal.smk --unlock
+# 		snakemake --snakefile ../cinful/rules/prodigal.smk --cores 1 -p
+# 		"""
+
+# rule microcin:
+# 	input:
+# 		"cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.faa"
+# 	output:
+# 		"cinfulOut/01_orf_homology/{sample}_prodigal/microcins/{sample}.filtered.fa"
+# 	shell:
+# 		"""
+# 		snakemake --snakefile ../cinful/rules/microcin.smk --unlock
+# 		snakemake --snakefile ../cinful/rules/microcin.smk --cores 1 -p
+# 		"""
+# 
+# rule immunity_protein:
+	# input:
+		# "cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.faa"
+	# output:
+		# "cinfulOut/01_orf_homology/{sample}_prodigal/immunity_proteins/{sample}.filtered.fa"
+	# shell:
+		# """
+		# snakemake --snakefile ../cinful/rules/immunity_protein.smk --unlock
+		# snakemake --snakefile ../cinful/rules/immunity_protein.smk --cores 1 -p
+		# """
+
+# rule CvaB:
+	# input:
+		# "cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.faa"
+	# output:
+		# "cinfulOut/01_orf_homology/{sample}_prodigal/CvaB/{sample}.filtered.fa"
+	# shell:
+		# """
+		# snakemake --snakefile ../cinful/rules/CvaB.smk --unlock
+		# snakemake --snakefile ../cinful/rules/CvaB.smk --cores 1 -p
+		# """
+
+# rule duomolog:
+	# input:
+		# expand("cinfulOut/01_orf_homology/{sample}_prodigal/{component}/{sample}.filtered.fa", sample = SAMPLES, component = ["microcins","CvaB","immunity_proteins"])
+	# output:
+		# "cinfulOut/02_homology_results/{sample}.all_merged.csv"
+	# shell:
+		# """
+		# snakemake  --snakefile ../cinful/rules/duomolog.smk --unlock
+		# snakemake  --snakefile ../cinful/rules/duomolog.smk --cores 1 -p
+		# """
