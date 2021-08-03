@@ -41,13 +41,65 @@ SAMPLES, = glob_wildcards("cinfulOut/01_orf_homology/{sample}_prodigal/")
 	# input:
 		# expand("cinfulOut/01_orf_homology/{sample}_prodigal/immunity_proteins/{sample}.filtered.fa", sample = SAMPLES)
 
-rule filter_immunity_protein:
+# rule filter_immunity_protein:
+# 	input:
+# 		"cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.faa"
+# 	output:
+# 		"cinfulOut/01_orf_homology/{sample}_prodigal/immunity_proteins/{sample}.filtered.fa"
+# 	shell:
+# 		"seqkit seq -m 30 -M 250  {input} | seqkit rmdup -s > {output}"
+
+rule makeblastdb_immunity_protein:
 	input:
-		"cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.faa"
+		"immunity_proteins.verified.pep"
 	output:
-		"cinfulOut/01_orf_homology/{sample}_prodigal/immunity_proteins/{sample}.filtered.fa"
+		"immunity_proteins.verified.pep.phr"
 	shell:
-		"seqkit seq -m 30 -M 250  {input} | seqkit rmdup -s > {output}"
+		"makeblastdb -dbtype prot -in {input}"
+
+rule blast_immunity_protein:
+	input:
+		verified_component = "immunity_proteins.verified.pep",
+		blastdb = "immunity_proteins.verified.pep.phr",
+		input_seqs = "cinfulOut/01_orf_homology/{sample}_prodigal/immunity_proteins/{sample}.filtered.fa"
+	output:
+		"cinfulOut/01_orf_homology/{sample}_prodigal/immunity_proteins/blast.txt"
+	shell:
+		"blastp -db {input.verified_component} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
+
+rule msa_immunity_protein:
+	input:
+		"immunity_proteins.verified.pep"
+	output:
+		"immunity_proteins.verified.aln"
+	shell:
+		"mafft --auto {input} > {output}"
+
+rule buildhmm_immunity_protein:
+	input:
+		"immunity_proteins.verified.aln"
+	output:
+		"immunity_proteins.verified.hmm"
+	shell:
+		"hmmbuild {output} {input}"
+
+
+
+rule blast_v_hmmer_immunity_protein:
+	input:
+		verifiedHMM = "immunity_proteins.verified.hmm",
+		input_seqs = "cinfulOut/01_orf_homology/{sample}_prodigal/immunity_proteins/{sample}.filtered.fa",
+		blastOut = "cinfulOut/01_orf_homology/{sample}_prodigal/immunity_proteins/blast.txt"
+	output:
+		"cinfulOut/01_orf_homology/{sample}_prodigal/immunity_proteins/blast_v_hmmer.csv"
+	run:
+		blastDF = load_blast(input.blastOut)
+		hmmer_hits, hmm_name = run_hmmsearch(input.input_seqs, input.verifiedHMM)
+		hmmer_hitsHeaders = [hit.name.decode() for hit in hmmer_hits]
+		blastDF["component"] = hmm_name
+		blastDF["hmmerHit"] = blastDF["qseqid"].isin(hmmer_hitsHeaders)#hmmer_hitsHeaders in blastDF["qseqid"]
+		blastDF.to_csv(output[0], index = False)
+
 
 
 # rule makeblastdb:

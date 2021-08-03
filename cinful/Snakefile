@@ -1,34 +1,48 @@
+import pandas as pd
+import pyhmmer
+from functools import reduce
+
+def load_blast(blastout, hasHeaders=False):
+	if hasHeaders:
+		blastpDF = pd.read_csv(blastout, sep = "\t")
+	else:
+		blastpDF = pd.read_csv(blastout, sep = "\t", names = ["qseqid","sseqid","pident","length","mismatch",			"gapopen","qstart","qend","sstart","send","evalue","bitscore"])
+	return blastpDF
+
+def load_hmm(hmmFile):
+    with pyhmmer.plan7.HMMFile(hmmFile) as h:
+        hmm = next(h)
+    return hmm
+
+def run_hmmsearch(queryFile, hmmFile):
+	hmm = load_hmm(hmmFile)
+	with pyhmmer.easel.SequenceFile(queryFile) as seq_file:
+		sequences = [ seq.digitize(hmm.alphabet) for seq in seq_file ]
+	pipeline = pyhmmer.plan7.Pipeline(hmm.alphabet)
+	hits = pipeline.search_hmm(hmm, sequences) # Has lots of goodies!
+	
+	return hits , hmm.name.decode() # [hit.name.decode() for hit in hmmerOut]
+
+
 SAMPLES, = glob_wildcards("{sample}.fna")
 
 rule final:
 	input:
-		expand("cinfulOut/02_homology_results/{sample}.all_merged.csv", sample = SAMPLES)
+		"cinfulOut/03_best_hits/best_hits.csv"
+		# expand("cinfulOut/02_homology_results/{sample}.best_hits.csv", sample = SAMPLES)
+		# expand("cinfulOut/02_homology_results/{sample}.all_merged.csv", sample = SAMPLES)
 
 
 include: "rules/verified_input.smk"
 include: "rules/filter_input.smk"
 include: "rules/prodigal.smk"
-# include: "rules/microcin.smk"
-# include: "rules/immunity_protein.smk"
-# include: "rules/CvaB.smk"
-include: "rules/duomolog.smk"
+include: "rules/microcin.smk"
+include: "rules/immunity_protein.smk"
+include: "rules/CvaB.smk"
+include: "rules/duomolog_components.smk"
+include: "rules/best_hits.smk"
 
-rule XXX:
-	input:
-		"cinfulOut/02_homology_results/{sample}.all_merged.csv"
-	output:
-		"cinfulOut/02_homology_results/{sample}.bestHits.csv"
-	run:
-		"""
-		Okay, so I think bestHits, will sometimes return an empty file
 
-		This rule will attempt to edit SAMPLES, and drop them from samples
-
-		I don't know if that matters?? I feel like the final rule would have
-		already been put in play. Maybe I can add nonEmpty things to an external list??
-
-		I think this may have to just be dynamic!! :(
-		"""
 # rule prodigal:
 # 	input:
 # 		"{sample}.fna"

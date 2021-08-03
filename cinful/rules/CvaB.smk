@@ -113,15 +113,66 @@ SAMPLES, = glob_wildcards("cinfulOut/01_orf_homology/{sample}_prodigal/")
 
 
 
-rule filter_CvaB:
+# rule filter_CvaB:
+# 	input:
+# 		"cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.faa"
+# 	output:
+# 		"cinfulOut/01_orf_homology/{sample}_prodigal/CvaB/{sample}.filtered.fa"
+# 	shell:
+# 		"seqkit rmdup -s {input} > {output}" 
+
+
+
+rule makeblastdb_CvaB:
 	input:
-		"cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.faa"
+		"CvaB.verified.pep"
 	output:
-		"cinfulOut/01_orf_homology/{sample}_prodigal/CvaB/{sample}.filtered.fa"
+		"CvaB.verified.pep.phr"
 	shell:
-		"seqkit rmdup -s {input} > {output}" 
+		"makeblastdb -dbtype prot -in {input}"
+
+rule blast_CvaB:
+	input:
+		verified_component = "CvaB.verified.pep",
+		blastdb = "CvaB.verified.pep.phr",
+		input_seqs = "cinfulOut/01_orf_homology/{sample}_prodigal/CvaB/{sample}.filtered.fa"
+	output:
+		"cinfulOut/01_orf_homology/{sample}_prodigal/CvaB/blast.txt"
+	shell:
+		"blastp -db {input.verified_component} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
+
+rule msa_CvaB:
+	input:
+		"CvaB.verified.pep"
+	output:
+		"CvaB.verified.aln"
+	shell:
+		"mafft --auto {input} > {output}"
+
+rule buildhmm_CvaB:
+	input:
+		"CvaB.verified.aln"
+	output:
+		"CvaB.verified.hmm"
+	shell:
+		"hmmbuild {output} {input}"
 
 
+
+rule blast_v_hmmer_CvaB:
+	input:
+		verifiedHMM = "CvaB.verified.hmm",
+		input_seqs = "cinfulOut/01_orf_homology/{sample}_prodigal/CvaB/{sample}.filtered.fa",
+		blastOut = "cinfulOut/01_orf_homology/{sample}_prodigal/CvaB/blast.txt"
+	output:
+		"cinfulOut/01_orf_homology/{sample}_prodigal/CvaB/blast_v_hmmer.csv"
+	run:
+		blastDF = load_blast(input.blastOut)
+		hmmer_hits, hmm_name = run_hmmsearch(input.input_seqs, input.verifiedHMM)
+		hmmer_hitsHeaders = [hit.name.decode() for hit in hmmer_hits]
+		blastDF["component"] = hmm_name
+		blastDF["hmmerHit"] = blastDF["qseqid"].isin(hmmer_hitsHeaders)#hmmer_hitsHeaders in blastDF["qseqid"]
+		blastDF.to_csv(output[0], index = False)
 
 # rule makeblastdb:
 # 	input:

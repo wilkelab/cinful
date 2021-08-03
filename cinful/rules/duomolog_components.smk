@@ -29,81 +29,19 @@ def run_hmmsearch(queryFile, hmmFile):
 	return hits , hmm.name.decode() # [hit.name.decode() for hit in hmmerOut]
 
 
-# rule final:
-# 	input:
-# 		expand("cinfulOut/02_homology_results/{sample}.all_merged.csv", sample = SAMPLES)
-		# expand("cinfulOut/01_orf_homology/{sample}_prodigal/{component}/blast_v_hmmer.csv", sample = SAMPLES, component = COMPONENTS)
-		# expand("{sample}_cinfulOut/{component}/{sample}.hmmerOut.txt", sample = SAMPLES, component = COMPONENTS)
-		# expand("{sample}_cinfulOut/{component}/blast.txt", sample = SAMPLES, component = COMPONENTS)
-		# expand("{sample}blast_intersect_hmmer.fa", sample = SAMPLES, component = COMPONENTS)
-
-rule makeblastdb:
-	input:
-		"{component}.verified.pep"
-	output:
-		"{component}.verified.pep.phr"
-	shell:
-		"makeblastdb -dbtype prot -in {input}"
-
-rule blast:
-	input:
-		verified_component = "{component}.verified.pep",
-		blastdb = "{component}.verified.pep.phr",
-		input_seqs = "cinfulOut/01_orf_homology/{sample}_prodigal/{component}/{sample}.filtered.fa"
-	output:
-		"cinfulOut/01_orf_homology/{sample}_prodigal/{component}/blast.txt"
-	shell:
-		"blastp -db {input.verified_component} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
-
-rule msa:
-	input:
-		"{component}.verified.pep"
-	output:
-		"{component}.verified.aln"
-	shell:
-		"mafft --auto {input} > {output}"
-
-rule buildhmm:
-	input:
-		"{component}.verified.aln"
-	output:
-		"{component}.verified.hmm"
-	shell:
-		"hmmbuild {output} {input}"
 
 
-
-rule blast_v_hmmer:
-	input:
-		verifiedHMM = "{component}.verified.hmm",
-		input_seqs = "cinfulOut/01_orf_homology/{sample}_prodigal/{component}/{sample}.filtered.fa",
-		blastOut = "cinfulOut/01_orf_homology/{sample}_prodigal/{component}/blast.txt"
-	output:
-		"cinfulOut/01_orf_homology/{sample}_prodigal/{component}/blast_v_hmmer.csv"
-	run:
-		print(input.verifiedHMM, input.input_seqs, input.blastOut)
-		
-
-
-		blastDF = load_blast(input.blastOut)
-		hmmer_hits, hmm_name = run_hmmsearch(input.input_seqs, input.verifiedHMM)
-		hmmer_hitsHeaders = [hit.name.decode() for hit in hmmer_hits]
-		print(blastDF.shape)
-		blastDF["component"] = hmm_name
-		blastDF["hmmerHit"] = blastDF["qseqid"].isin(hmmer_hitsHeaders)#hmmer_hitsHeaders in blastDF["qseqid"]
-		blastDF.to_csv(output[0], index = False)
 
 rule merged_results:
 	input:
-		blast_v_hmmer = expand("cinfulOut/01_orf_homology/{sample}_prodigal/{component}/blast_v_hmmer.csv",
-		                       sample=SAMPLES, component=COMPONENTS),
-		prodigalGFF = "cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.gff3"
+		microcins = "cinfulOut/01_orf_homology/{sample}_prodigal/microcins/blast_v_hmmer.csv",
+		immunity_proteins = "cinfulOut/01_orf_homology/{sample}_prodigal/immunity_proteins/blast_v_hmmer.csv",
+		CvaB = "cinfulOut/01_orf_homology/{sample}_prodigal/CvaB/blast_v_hmmer.csv"
 	output:
 		"cinfulOut/02_homology_results/{sample}.all_merged.csv"
 	run:
-		print(len(input.blast_v_hmmer), input.blast_v_hmmer)
 		componentDFs = []
-		for componentHomologFile in input.blast_v_hmmer:
+		for componentHomologFile in [input.microcins, input.immunity_proteins, input.CvaB]:
 			componentDFs.append(pd.read_csv(componentHomologFile))
 		mergedDf = pd.concat(componentDFs)
 		mergedDf.to_csv(output[0], index = None)

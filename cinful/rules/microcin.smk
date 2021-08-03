@@ -45,13 +45,66 @@ print(SAMPLES)
 # 	# input:
 	# 	expand("cinfulOut/01_orf_homology/{sample}_prodigal/microcins/{sample}.filtered.fa", sample = SAMPLES)
 
-rule filter_microcin:
+# rule filter_microcin:
+# 	input:
+# 		"cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.faa"
+# 	output:
+# 		"cinfulOut/01_orf_homology/{sample}_prodigal/microcins/{sample}.filtered.fa"
+# 	shell:
+# 		"seqkit seq -m 30 -M 150 {input} | seqkit rmdup -s > {output}"
+
+
+rule makeblastdb_microcin:
 	input:
-		"cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.faa"
+		"microcins.verified.pep"
 	output:
-		"cinfulOut/01_orf_homology/{sample}_prodigal/microcins/{sample}.filtered.fa"
+		"microcins.verified.pep.phr"
 	shell:
-		"seqkit seq -m 30 -M 150 {input} | seqkit rmdup -s > {output}"
+		"makeblastdb -dbtype prot -in {input}"
+
+rule blast_microcin:
+	input:
+		verified_component = "microcins.verified.pep",
+		blastdb = "microcins.verified.pep.phr",
+		input_seqs = "cinfulOut/01_orf_homology/{sample}_prodigal/microcins/{sample}.filtered.fa"
+	output:
+		"cinfulOut/01_orf_homology/{sample}_prodigal/microcins/blast.txt"
+	shell:
+		"blastp -db {input.verified_component} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
+
+rule msa_microcin:
+	input:
+		"microcins.verified.pep"
+	output:
+		"microcins.verified.aln"
+	shell:
+		"mafft --auto {input} > {output}"
+
+rule buildhmm_microcin:
+	input:
+		"microcins.verified.aln"
+	output:
+		"microcins.verified.hmm"
+	shell:
+		"hmmbuild {output} {input}"
+
+
+
+rule blast_v_hmmer_microcin:
+	input:
+		verifiedHMM = "microcins.verified.hmm",
+		input_seqs = "cinfulOut/01_orf_homology/{sample}_prodigal/microcins/{sample}.filtered.fa",
+		blastOut = "cinfulOut/01_orf_homology/{sample}_prodigal/microcins/blast.txt"
+	output:
+		"cinfulOut/01_orf_homology/{sample}_prodigal/microcins/blast_v_hmmer.csv"
+	run:
+		blastDF = load_blast(input.blastOut)
+		hmmer_hits, hmm_name = run_hmmsearch(input.input_seqs, input.verifiedHMM)
+		hmmer_hitsHeaders = [hit.name.decode() for hit in hmmer_hits]
+		blastDF["component"] = hmm_name
+		blastDF["hmmerHit"] = blastDF["qseqid"].isin(hmmer_hitsHeaders)#hmmer_hitsHeaders in blastDF["qseqid"]
+		blastDF.to_csv(output[0], index = False)
+
 
 # rule makeblastdb:
 # 	input:
