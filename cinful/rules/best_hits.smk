@@ -72,7 +72,7 @@ rule best_hits_combined:
 		
 		for inFile in input:
 			sample = inFile.replace("cinfulOut/02_homology_results/","").replace(".best_hits.csv","")
-			print(f"################\n{sample}\n###############")
+			# print(f"################\n{sample}\n###############")
 			inDF = pd.read_csv(inFile)
 			inDF.insert(0,"sample",sample)
 			inDFs.append(inDF)

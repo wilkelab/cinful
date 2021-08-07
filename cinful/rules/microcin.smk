@@ -40,7 +40,7 @@ with open("microcins.verified.pep","w") as seq_out:
 
 SAMPLES, = glob_wildcards("cinfulOut/01_orf_homology/{sample}_prodigal/")
 
-print(SAMPLES)
+# print(SAMPLES)
 # rule final:
 # 	# input:
 	# 	expand("cinfulOut/01_orf_homology/{sample}_prodigal/microcins/{sample}.filtered.fa", sample = SAMPLES)

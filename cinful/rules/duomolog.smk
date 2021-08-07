@@ -81,14 +81,14 @@ rule blast_v_hmmer:
 	output:
 		"cinfulOut/01_orf_homology/{sample}_prodigal/{component}/blast_v_hmmer.csv"
 	run:
-		print(input.verifiedHMM, input.input_seqs, input.blastOut)
+		# print(input.verifiedHMM, input.input_seqs, input.blastOut)
 		
 
 
 		blastDF = load_blast(input.blastOut)
 		hmmer_hits, hmm_name = run_hmmsearch(input.input_seqs, input.verifiedHMM)
 		hmmer_hitsHeaders = [hit.name.decode() for hit in hmmer_hits]
-		print(blastDF.shape)
+		# print(blastDF.shape)
 		blastDF["component"] = hmm_name
 		blastDF["hmmerHit"] = blastDF["qseqid"].isin(hmmer_hitsHeaders)#hmmer_hitsHeaders in blastDF["qseqid"]
 		blastDF.to_csv(output[0], index = False)
@@ -101,7 +101,7 @@ rule merged_results:
 	output:
 		"cinfulOut/02_homology_results/{sample}.all_merged.csv"
 	run:
-		print(len(input.blast_v_hmmer), input.blast_v_hmmer)
+		# print(len(input.blast_v_hmmer), input.blast_v_hmmer)
 		componentDFs = []
 		for componentHomologFile in input.blast_v_hmmer:
 			componentDFs.append(pd.read_csv(componentHomologFile))
