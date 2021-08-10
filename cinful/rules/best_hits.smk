@@ -14,6 +14,7 @@ def prodigalFa2DF(fa):
     contig = '_'.join(seq_record.id.split("_")[:-1])
 
     prodigalDict["id"].append(seq_record.id)
+	prodigalDict["seq"].append(seq_record.seq)
     prodigalDict["contig"].append(contig)
     prodigalDict["stop"].append(stop)
     prodigalDict["start"].append(start)
