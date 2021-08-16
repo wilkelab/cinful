@@ -4,7 +4,7 @@ from Bio import SeqIO
 SAMPLES, = glob_wildcards("{sample}.fna")
 
 def prodigalFa2DF(fa):
-  prodigalDict = {"id":[],"contig":[],"start":[],"stop":[],"strand":[]}
+  prodigalDict = {"id":[],"seq":[],"contig":[],"start":[],"stop":[],"strand":[]}
   for seq_record in SeqIO.parse(fa,"fasta"):
     descriptionParts = seq_record.description.split("#") 
 
@@ -51,17 +51,22 @@ def bestHits(microcinDF,immunity_proteinDF,CvaBDF):
 
 rule best_hits_sample:
 	input:
-		merged_homology_results = "cinfulOut/02_homology_results/{sample}.all_merged.csv",
+		merged_homology_results = "cinfulOut/02_homology_results/{sample}.all_merged.csv", 
 		prodigal_pep = "cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.faa"
 	output:
 		"cinfulOut/02_homology_results/{sample}.best_hits.csv"
 	run:
-		
-		prodigalDF = prodigalFa2DF(input.prodigal_pep)
-		homology_withProdigalDF = homology_withProdigal(input.merged_homology_results, prodigalDF)
+		print("merged_homology_results:",input.merged_homology_results)
+		# for inFileIndex in range(len(input.merged_homology_results)):
+		homologyFile = input.merged_homology_results #[inFileIndex]
+		prodigalPepFile = input.prodigal_pep #[inFileIndex]
+
+		prodigalDF = prodigalFa2DF(prodigalPepFile)
+		homology_withProdigalDF = homology_withProdigal(homologyFile, prodigalDF)
 		microcinDF, immunity_proteinDF, CvaBDF = componentDFs(homology_withProdigalDF)
-		best_hitsDF = bestHits(microcinDF,immunity_proteinDF,CvaBDF)
-		best_hitsDF.to_csv(output[0], index = False)
+		if not microcinDF.empty:
+			best_hitsDF = bestHits(microcinDF,immunity_proteinDF,CvaBDF)
+			best_hitsDF.to_csv(output[0], index = False)
 
 rule best_hits_combined:
 	input:
@@ -79,3 +84,4 @@ rule best_hits_combined:
 			inDFs.append(inDF)
 		outDF = pd.concat(inDFs)
 		outDF.to_csv(output[0], index=False)
+

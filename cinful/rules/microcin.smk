@@ -1,42 +1,6 @@
 from io import StringIO
 from Bio import SeqIO
 
-verified_microcins ="""
->E492_sp_Q9Z4N4_MCEA_KLEPN Microcin E492 OS=Klebsiella pneumoniae OX=573 GN=mceA PE=1 SV=2
-MREISQKDLNLAFGAGETDPNTQLLNDLGNNMAWGAALGAPGGLGSAALGAAGGALQTVG
-QGLIDHGPVNVPIPVLIGPSWNGSGSGYNSATSSSGSGS
->H47_sp_P62530_MCHB_ECOLX Microcin H47 OS=Escherichia coli OX=562 GN=mchB PE=1 SV=1
-MREITESQLRYISGAGGAPATSANAAGAAAIVGALAGIPGGPLGVVVGAVSAGLTTAIGS
-TVGSGSASSSAGGGS
->I47_tr_Q712Q0_Q712Q0_ECOLX MchS2 protein OS=Escherichia coli OX=562 GN=mchS2 PE=4 SV=1
-MREISDNMLDSVKGGMNLNGLPASTNVIDLRGKDMGTYIDANGACWAPDTPSIIMYPGGS
-GPSYSMSSSTSSANSGS
->M_tr_Q83TS1_Q83TS1_ECOLX Colicin-V (Microcin-V bacteriocin) OS=Escherichia coli OX=562 GN=mcmA PE=4 SV=1
-MRKLSENEIKQISGGDGNDGQAELIAIGSLAGTFISPGFGSIAGAYIGDKVHSWATTATV
-SPSMSPSGIGLSSQFGSGRGTSSASSSAGSGS
->G492_tr_B4DCT5_B4DCT5_KLEPN MceL OS=Klebsiella pneumoniae OX=573 PE=4 SV=1
-MRALTENDFFAVSGADRGDAAVAGAVAGGTAGAAAGGWAGAQMGATVGSLAGPVGTVVGF
-VAGAAAGRYGGAFIYDSFSSPSNSSSSGS
->V_sp_P22522_CEAV_ECOLX Colicin-V OS=Escherichia coli OX=562 GN=cvaC PE=1 SV=1
-MRTLTLNELDSVSGGASGRDIAMAIGTLSGQFVAGGIGAAAGGVAGGAIYDYASTHKPNP
-AMSPSGLGGTIKQKPEGIPSEAWNYAAGRLCNWSPNNLSDVCL
->L_tr_Q841V4_Q841V4_ECOLX Microcin L OS=Escherichia coli OX=562 GN=mclC PE=4 SV=1
-MREITLNEMNNVSGAGDVNWVDVGKTVATNGAGVIGGAFGAGLCGPVCAGAFAVGSSAAV
-AALYDAAGNSNSAKQKPEGLPPEAWNYAEGRMCNWSPNNLSDVCL
->N_tr_C3VUZ5_C3VUZ5_ECOLX McnN OS=Escherichia coli OX=562 PE=4 SV=1
-MRELDREELNCVGGAGDPLADPNSQIVRQIMSNAAWGAAFGARGGLGGMAVGAAGGVTQT
-VLQGAAAHMPVNVPIPKVPMGPSWNGSKG
->PDI_tr_I6ZU90_I6ZU90_ECOLX McpM OS=Escherichia coli OX=562 GN=mcpM PE=4 SV=1
-MANIRELTLDEITLVSGGNANSNFEGGPRNDRSSGARNSLGRNAPTHIYSDPSTVKCANA
-VFSGMIGGAIKGGPIGMARGTIGGAVVGQCLSDHGSGNGSGNRGSSSSCSGNNVGGTCNR
->S_tr_H9ZMG7_H9ZMG7_ECOLX Microcin S OS=Escherichia coli OX=562 GN=mcsS PE=4 SV=1
-MSNIRELSFDEIALVSGGNANSNYEGGGSRSRNTGARNSLGRNAPTHIYSDPSTVKCANA
-VFSGMVGGAIKGGPVGMTRGTIGGAVIGQCLSGGGNGNGGGNRAGSSNCSGSNVGGTCSR
-"""
-
-verified_microcins_SeqIO = SeqIO.parse(StringIO(verified_microcins), "fasta")
-with open("microcins.verified.pep","w") as seq_out:
-  SeqIO.write(verified_microcins_SeqIO, seq_out,"fasta")
 
 SAMPLES, = glob_wildcards("cinfulOut/01_orf_homology/{sample}_prodigal/")
 
@@ -56,16 +20,16 @@ SAMPLES, = glob_wildcards("cinfulOut/01_orf_homology/{sample}_prodigal/")
 
 rule makeblastdb_microcin:
 	input:
-		"microcins.verified.pep"
+		"cinfulOut/00_dbs/microcins.verified.pep"
 	output:
-		"microcins.verified.pep.phr"
+		"cinfulOut/00_dbs/microcins.verified.pep.phr"
 	shell:
 		"makeblastdb -dbtype prot -in {input}"
 
 rule blast_microcin:
 	input:
-		verified_component = "microcins.verified.pep",
-		blastdb = "microcins.verified.pep.phr",
+		verified_component = "cinfulOut/00_dbs/microcins.verified.pep",
+		blastdb = "cinfulOut/00_dbs/microcins.verified.pep.phr",
 		input_seqs = "cinfulOut/01_orf_homology/{sample}_prodigal/microcins/{sample}.filtered.fa"
 	output:
 		"cinfulOut/01_orf_homology/{sample}_prodigal/microcins/blast.txt"
@@ -74,17 +38,17 @@ rule blast_microcin:
 
 rule msa_microcin:
 	input:
-		"microcins.verified.pep"
+		"cinfulOut/00_dbs/microcins.verified.pep"
 	output:
-		"microcins.verified.aln"
+		"cinfulOut/00_dbs/microcins.verified.aln"
 	shell:
 		"mafft --auto {input} > {output}"
 
 rule buildhmm_microcin:
 	input:
-		"microcins.verified.aln"
+		"cinfulOut/00_dbs/microcins.verified.aln"
 	output:
-		"microcins.verified.hmm"
+		"cinfulOut/00_dbs/microcins.verified.hmm"
 	shell:
 		"hmmbuild {output} {input}"
 
@@ -92,7 +56,7 @@ rule buildhmm_microcin:
 
 rule blast_v_hmmer_microcin:
 	input:
-		verifiedHMM = "microcins.verified.hmm",
+		verifiedHMM = "cinfulOut/00_dbs/microcins.verified.hmm",
 		input_seqs = "cinfulOut/01_orf_homology/{sample}_prodigal/microcins/{sample}.filtered.fa",
 		blastOut = "cinfulOut/01_orf_homology/{sample}_prodigal/microcins/blast.txt"
 	output:

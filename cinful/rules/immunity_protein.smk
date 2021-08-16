@@ -1,40 +1,6 @@
 from io import StringIO
 from Bio import SeqIO
 
-verified_immunity_proteins = """
->classIIb_IP:M_mcmI_tr|Q83TS3|Q83TS3_ECOLX Microcin M imunity protein McmI OS=Escherichia coli OX=562 GN=mcmI PE=4 SV=1
-MGEVKKDIKITVIAFVINYLFFYIPVSLYLSYYYGYNFFNLYMFFLSLVVTFLSLWLNVN
-FYFFTNLIAKVLK
->classIIb_IP:I47_mchS3_tr|Q712P9|Q712P9_ECOLX MchS3 protein OS=Escherichia coli OX=562 GN=mchS3 PE=4 SV=1
-MYLTKKIIISMMFILPSAAFSSDPPPLQQSLEKTTYFSIGMNGFIGYQSEGEKLYTHILT
-LDNPEEIFKNIIKNRKSTKESKIYAACGLYYLNVENIESLFNENDKQEYVSVLRGDILTK
-IKLNDILNSVIINGCNTKLISEHK
->classIIb_IP:H47_mchI_sp|O86200|MCHI_ECOLX Microcin H47 immunity protein MchI OS=Escherichia coli OX=562 GN=mchI PE=1 SV=1
-MSYKKLYQLTAIFSLPLTILLVSLSSLRIVGEGNSYVDVFLSFIIFLGFIELIHGIRKIL
-VWSGWKNGS
->classIIb_IP:E492_mceB_sp|Q9ZHG0|IM92_KLEPN Microcin E492 immunity protein OS=Klebsiella pneumoniae OX=573 GN=mceB PE=1 SV=1
-MTLLSFGFSPVFFSVMAFCIISRSKFYPQRTRNKVIVLILLTFFICFLYPLTKVYLVGSY
-GIFDKFYLFCFISTLIAIAINVVILTINGAKNERN
->classIIb_IP:G492_mceM_tr|B4DCT4|B4DCT4_KLEPN MceM OS=Klebsiella pneumoniae OX=573 GN=SAMEA4364603_01604 PE=4 SV=1
-MIFLYLDKIPLFILGIGLLTSFALPGSSALDSPKFLCIYSSTILAGISFIYQVFRHGTNT
-EFFLAMLITVSFVVMLPVIKMHFAY
->classIIa_IP:V_cvi
-MDRKRTKLELLFAFIINATAIYIALAIYDCVFRGKDFLSMHTFCFSALMSAICYFVGDNYYSISDKIKRRSYENSDSK
->classIIa_IP:L_mclI
-MKTWQVFFIILPISIIISLIVKQLNSSNLVQSVVSGIAIALMISIFFNRGK
->classIIa_IP:N_mcnI
-MKRNKLTRMSFLNFAFSPVFFSIMACYFIVWRNKRNEFVCNRLLSIIIISFLICFIYPWLNYKIEVKYYIFEQFYLFCFLSSLVAVVINLIVYFILYRRCI
->classIIa_IP:PDI_mcpI
-MEGATMFIKLLSFICGLLLGFALLSGSSVIDLYWFSLPSEFSKIVVMLITLFSTARFMDYIIEKIRTISAK
->classIIa_IP:S_mcsI
-MDERSSQFRYSKYSAIIFLAVVIISTIVTLSPTFTLRYVGLDIAFFIVFITEILISTLVYLFYLKEFPECRIKIRTDSATVKFSALSFLIIILIQLAVYCYRDYLYHYEPSQINWITVLVMTLVVPYYEEIVYRACAFGFLRSIFKENIIIPCVITSLFFSLMHFQYYNVLDQSVLFVVSMLLLGVRIKSRSLFYPMLIHSGMNTFVILLNIQNIL
-"""
-
-verified_immunity_proteins_SeqIO = SeqIO.parse(StringIO(verified_immunity_proteins), "fasta")
-with open("immunity_proteins.verified.pep","w") as seq_out:
-  SeqIO.write(verified_immunity_proteins_SeqIO, seq_out,"fasta")
-
-
 SAMPLES, = glob_wildcards("cinfulOut/01_orf_homology/{sample}_prodigal/")
 
 # rule final:
@@ -51,16 +17,16 @@ SAMPLES, = glob_wildcards("cinfulOut/01_orf_homology/{sample}_prodigal/")
 
 rule makeblastdb_immunity_protein:
 	input:
-		"immunity_proteins.verified.pep"
+		"cinfulOut/00_dbs/immunity_proteins.verified.pep"
 	output:
-		"immunity_proteins.verified.pep.phr"
+		"cinfulOut/00_dbs/immunity_proteins.verified.pep.phr"
 	shell:
 		"makeblastdb -dbtype prot -in {input}"
 
 rule blast_immunity_protein:
 	input:
-		verified_component = "immunity_proteins.verified.pep",
-		blastdb = "immunity_proteins.verified.pep.phr",
+		verified_component = "cinfulOut/00_dbs/immunity_proteins.verified.pep",
+		blastdb = "cinfulOut/00_dbs/immunity_proteins.verified.pep.phr",
 		input_seqs = "cinfulOut/01_orf_homology/{sample}_prodigal/immunity_proteins/{sample}.filtered.fa"
 	output:
 		"cinfulOut/01_orf_homology/{sample}_prodigal/immunity_proteins/blast.txt"
@@ -69,17 +35,17 @@ rule blast_immunity_protein:
 
 rule msa_immunity_protein:
 	input:
-		"immunity_proteins.verified.pep"
+		"cinfulOut/00_dbs/immunity_proteins.verified.pep"
 	output:
-		"immunity_proteins.verified.aln"
+		"cinfulOut/00_dbs/immunity_proteins.verified.aln"
 	shell:
 		"mafft --auto {input} > {output}"
 
 rule buildhmm_immunity_protein:
 	input:
-		"immunity_proteins.verified.aln"
+		"cinfulOut/00_dbs/immunity_proteins.verified.aln"
 	output:
-		"immunity_proteins.verified.hmm"
+		"cinfulOut/00_dbs/immunity_proteins.verified.hmm"
 	shell:
 		"hmmbuild {output} {input}"
 
@@ -87,7 +53,7 @@ rule buildhmm_immunity_protein:
 
 rule blast_v_hmmer_immunity_protein:
 	input:
-		verifiedHMM = "immunity_proteins.verified.hmm",
+		verifiedHMM = "cinfulOut/00_dbs/immunity_proteins.verified.hmm",
 		input_seqs = "cinfulOut/01_orf_homology/{sample}_prodigal/immunity_proteins/{sample}.filtered.fa",
 		blastOut = "cinfulOut/01_orf_homology/{sample}_prodigal/immunity_proteins/blast.txt"
 	output:
