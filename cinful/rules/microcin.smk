@@ -2,18 +2,17 @@ from io import StringIO
 from Bio import SeqIO
 
 
-SAMPLES, = glob_wildcards("cinfulOut/01_orf_homology/{sample}_prodigal/")
 
 # print(SAMPLES)
 # rule final:
 # 	# input:
-	# 	expand("cinfulOut/01_orf_homology/{sample}_prodigal/microcins/{sample}.filtered.fa", sample = SAMPLES)
+	# 	expand("cinfulOut/01_orf_homology/microcins/filtered_nr.fa", sample = SAMPLES)
 
 # rule filter_microcin:
 # 	input:
 # 		"cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.faa"
 # 	output:
-# 		"cinfulOut/01_orf_homology/{sample}_prodigal/microcins/{sample}.filtered.fa"
+# 		"cinfulOut/01_orf_homology/microcins/filtered_nr.fa"
 # 	shell:
 # 		"seqkit seq -m 30 -M 150 {input} | seqkit rmdup -s > {output}"
 
@@ -30,9 +29,9 @@ rule blast_microcin:
 	input:
 		verified_component = "cinfulOut/00_dbs/microcins.verified.pep",
 		blastdb = "cinfulOut/00_dbs/microcins.verified.pep.phr",
-		input_seqs = "cinfulOut/01_orf_homology/{sample}_prodigal/microcins/{sample}.filtered.fa"
+		input_seqs = "cinfulOut/01_orf_homology/microcins/filtered_nr.fa"
 	output:
-		"cinfulOut/01_orf_homology/{sample}_prodigal/microcins/blast.txt"
+		"cinfulOut/01_orf_homology/microcins/blast.txt"
 	shell:
 		"blastp -db {input.verified_component} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
 
@@ -57,10 +56,10 @@ rule buildhmm_microcin:
 rule blast_v_hmmer_microcin:
 	input:
 		verifiedHMM = "cinfulOut/00_dbs/microcins.verified.hmm",
-		input_seqs = "cinfulOut/01_orf_homology/{sample}_prodigal/microcins/{sample}.filtered.fa",
-		blastOut = "cinfulOut/01_orf_homology/{sample}_prodigal/microcins/blast.txt"
+		input_seqs = "cinfulOut/01_orf_homology/microcins/filtered_nr.fa",
+		blastOut = "cinfulOut/01_orf_homology/microcins/blast.txt"
 	output:
-		"cinfulOut/01_orf_homology/{sample}_prodigal/microcins/blast_v_hmmer.csv"
+		"cinfulOut/01_orf_homology/microcins/blast_v_hmmer.csv"
 	run:
 		blastDF = load_blast(input.blastOut)
 		hmmer_hits, hmm_name = run_hmmsearch(input.input_seqs, input.verifiedHMM)

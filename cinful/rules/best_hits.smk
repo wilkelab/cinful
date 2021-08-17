@@ -26,7 +26,7 @@ def prodigalFa2DF(fa):
 def homology_withProdigal(homology_results_file, prodigalDF):
 	homology_resultsDF = pd.read_csv(homology_results_file)
 
-	return homology_resultsDF.merge(prodigalDF, left_on = "qseqid", right_on = "id")
+	return homology_resultsDF.merge(prodigalDF, left_on="qseqid",right_on="pephash")#, left_on = "qseqid", right_on = "id")
 
 def componentDFs(homology_withProdigalDF):	
 	microcinDF = homology_withProdigalDF[homology_withProdigalDF["component"]=="microcins.verified"]
@@ -49,39 +49,41 @@ def bestHits(microcinDF,immunity_proteinDF,CvaBDF):
 
 
 
-rule best_hits_sample:
+rule best_hits:
 	input:
-		merged_homology_results = "cinfulOut/02_homology_results/{sample}.all_merged.csv", 
-		prodigal_pep = "cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.faa"
+		merged_homology_results = "cinfulOut/02_homology_results/all_merged.csv", 
+		nr_csv = "cinfulOut/01_orf_homology/CvaB/filtered_nr.csv"
 	output:
-		"cinfulOut/02_homology_results/{sample}.best_hits.csv"
+		"cinfulOut/03_best_hits/best_hits.csv"
 	run:
 		print("merged_homology_results:",input.merged_homology_results)
 		# for inFileIndex in range(len(input.merged_homology_results)):
 		homologyFile = input.merged_homology_results #[inFileIndex]
-		prodigalPepFile = input.prodigal_pep #[inFileIndex]
-
-		prodigalDF = prodigalFa2DF(prodigalPepFile)
+		########### will break here ##########
+		# prodigalPepFile = input.nr_csv #[inFileIndex] 
+		prodigalDF =  pd.read_csv(input.nr_csv) #prodigalFa2DF(prodigalPepFile)
+		######################################
+		
 		homology_withProdigalDF = homology_withProdigal(homologyFile, prodigalDF)
 		microcinDF, immunity_proteinDF, CvaBDF = componentDFs(homology_withProdigalDF)
 		if not microcinDF.empty:
 			best_hitsDF = bestHits(microcinDF,immunity_proteinDF,CvaBDF)
 			best_hitsDF.to_csv(output[0], index = False)
 
-rule best_hits_combined:
-	input:
-		expand("cinfulOut/02_homology_results/{sample}.best_hits.csv", sample = SAMPLES)
-	output:
-		"cinfulOut/03_best_hits/best_hits.csv"
-	run:
-		inDFs = []
+# rule best_hits_combined:
+# 	input:
+# 		"cinfulOut/02_homology_results/best_hits.csv", sample = SAMPLES)
+# 	output:
+# 		"cinfulOut/03_best_hits/best_hits.csv"
+# 	run:
+# 		inDFs = []
 		
-		for inFile in input:
-			sample = inFile.replace("cinfulOut/02_homology_results/","").replace(".best_hits.csv","")
-			# print(f"################\n{sample}\n###############")
-			inDF = pd.read_csv(inFile)
-			inDF.insert(0,"sample",sample)
-			inDFs.append(inDF)
-		outDF = pd.concat(inDFs)
-		outDF.to_csv(output[0], index=False)
+# 		for inFile in input:
+# 			sample = inFile.replace("cinfulOut/02_homology_results/","").replace(".best_hits.csv","")
+# 			# print(f"################\n{sample}\n###############")
+# 			inDF = pd.read_csv(inFile)
+# 			inDF.insert(0,"sample",sample)
+# 			inDFs.append(inDF)
+# 		outDF = pd.concat(inDFs)
+# 		outDF.to_csv(output[0], index=False)
 

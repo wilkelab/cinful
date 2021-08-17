@@ -3,12 +3,11 @@ from Bio import SeqIO
 
 
 
-SAMPLES, = glob_wildcards("cinfulOut/01_orf_homology/{sample}_prodigal/")
 
 
 # rule final:
 	# input:
-		# expand("cinfulOut/01_orf_homology/{sample}_prodigal/CvaB/{sample}.filtered.fa", sample = SAMPLES)
+		# expand("cinfulOut/01_orf_homology/CvaB/filtered_nr.fa", sample = SAMPLES)
 
 
 
@@ -16,9 +15,9 @@ SAMPLES, = glob_wildcards("cinfulOut/01_orf_homology/{sample}_prodigal/")
 
 # rule filter_CvaB:
 # 	input:
-# 		"cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.faa"
+# 		"cinfulOut/01_orf_homology/{sample}.faa"
 # 	output:
-# 		"cinfulOut/01_orf_homology/{sample}_prodigal/CvaB/{sample}.filtered.fa"
+# 		"cinfulOut/01_orf_homology/CvaB/filtered_nr.fa"
 # 	shell:
 # 		"seqkit rmdup -s {input} > {output}" 
 
@@ -36,9 +35,9 @@ rule blast_CvaB:
 	input:
 		verified_component = "cinfulOut/00_dbs/CvaB.verified.pep",
 		blastdb = "cinfulOut/00_dbs/CvaB.verified.pep.phr",
-		input_seqs = "cinfulOut/01_orf_homology/{sample}_prodigal/CvaB/{sample}.filtered.fa"
+		input_seqs = "cinfulOut/01_orf_homology/CvaB/filtered_nr.fa"
 	output:
-		"cinfulOut/01_orf_homology/{sample}_prodigal/CvaB/blast.txt"
+		"cinfulOut/01_orf_homology/CvaB/blast.txt"
 	shell:
 		"blastp -db {input.verified_component} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
 
@@ -63,10 +62,10 @@ rule buildhmm_CvaB:
 rule blast_v_hmmer_CvaB:
 	input:
 		verifiedHMM = "cinfulOut/00_dbs/CvaB.verified.hmm",
-		input_seqs = "cinfulOut/01_orf_homology/{sample}_prodigal/CvaB/{sample}.filtered.fa",
-		blastOut = "cinfulOut/01_orf_homology/{sample}_prodigal/CvaB/blast.txt"
+		input_seqs = "cinfulOut/01_orf_homology/CvaB/filtered_nr.fa",
+		blastOut = "cinfulOut/01_orf_homology/CvaB/blast.txt"
 	output:
-		"cinfulOut/01_orf_homology/{sample}_prodigal/CvaB/blast_v_hmmer.csv"
+		"cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.csv"
 	run:
 		blastDF = load_blast(input.blastOut)
 		hmmer_hits, hmm_name = run_hmmsearch(input.input_seqs, input.verifiedHMM)

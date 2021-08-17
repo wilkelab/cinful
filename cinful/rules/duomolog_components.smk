@@ -34,11 +34,11 @@ def run_hmmsearch(queryFile, hmmFile):
 
 rule merged_results:
 	input:
-		microcins = "cinfulOut/01_orf_homology/{sample}_prodigal/microcins/blast_v_hmmer.csv",
-		immunity_proteins = "cinfulOut/01_orf_homology/{sample}_prodigal/immunity_proteins/blast_v_hmmer.csv",
-		CvaB = "cinfulOut/01_orf_homology/{sample}_prodigal/CvaB/blast_v_hmmer.csv"
+		microcins = "cinfulOut/01_orf_homology/microcins/blast_v_hmmer.csv",
+		immunity_proteins = "cinfulOut/01_orf_homology/immunity_proteins/blast_v_hmmer.csv",
+		CvaB = "cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.csv"
 	output:
-		"cinfulOut/02_homology_results/{sample}.all_merged.csv"
+		"cinfulOut/02_homology_results/all_merged.csv"
 	run:
 		componentDFs = []
 		for componentHomologFile in [input.microcins, input.immunity_proteins, input.CvaB]:
