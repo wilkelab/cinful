@@ -75,6 +75,10 @@ rule blast_v_hmmer_CvaB:
 		blastDF["hmmerHit"] = blastDF["qseqid"].isin(hmmer_hitsHeaders)#hmmer_hitsHeaders in blastDF["qseqid"]
 		blastDF.to_csv(output[0], index = False)
 
+# NOTE: at some point I will need to check if the CvaB results actually make sense, and aren't just latching on to
+# ABC transporter domain
+# perhaps just some blast filtering will suffice, based on overlap. 
+
 # rule makeblastdb:
 # 	input:
 # 		"verified_CvaB.pep"

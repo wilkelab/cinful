@@ -33,7 +33,8 @@ rule final:
 		# expand("cinfulOut/02_homology_results/{sample}.all_merged.csv", sample = SAMPLES)
 
 
-include: "rules/verified_input.smk"
+
+include: "rules/setup_dbs.smk"
 include: "rules/filter_input.smk"
 include: "rules/prodigal.smk"
 include: "rules/microcin.smk"
