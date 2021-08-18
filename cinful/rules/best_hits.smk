@@ -47,7 +47,23 @@ def bestHits(microcinDF,immunity_proteinDF,CvaBDF):
   return pd.concat([best_microcinDF, best_immunity_proteinDF,best_CvaBDF])
 
 
+def contigs_wMicrocins(best_hitsFile):
+	best_hitsDF = pd.read_csv(best_hitsFile).rename(columns={"Unnamed: 0":"id"})
+	needed_columns = ["id","contig","start","stop","strand"]
+	renameDict_microcin = {"id":"microcin_id","start":"microcin_start","stop":"microcin_stop","strand":"microcin_strand"}
+	microcin_contigs = best_hitsDF[best_hitsDF["component"] == "microcins.verified"][needed_columns].rename(columns=renameDict_microcin)
+	microcin_contig_componentDF = best_hitsDF[best_hitsDF["contig"].isin(microcin_contigs["contig"])]
 
+	renameDict_CvaB = {"id":"CvaB_id","start":"CvaB_start","stop":"CvaB_stop","strand":"CvaB_strand"}
+	microcin_contig_CvaB = microcin_contig_componentDF[microcin_contig_componentDF["component"] == "CvaB.verified"][needed_columns].rename(columns=renameDict_CvaB)
+
+	return microcin_contigs.merge(microcin_contig_CvaB, left_on="contig",right_on="contig")
+	
+	
+	
+	
+
+	
 
 rule best_hits:
 	input:
@@ -69,7 +85,15 @@ rule best_hits:
 		if not microcinDF.empty:
 			best_hitsDF = bestHits(microcinDF,immunity_proteinDF,CvaBDF)
 			best_hitsDF.to_csv(output[0], index = False)
-
+rule bestHitsContigs:
+	input:
+		"cinfulOut/03_best_hits/best_hits.csv"
+	output:
+		"cinfulOut/03_best_hits/best_hit_contigs.csv"
+	run:
+		microcinContigsDF = contigs_wMicrocins(input[0])
+		microcinContigsDF.to_csv(output[0],index = False)
+		
 # rule best_hits_combined:
 # 	input:
 # 		"cinfulOut/02_homology_results/best_hits.csv", sample = SAMPLES)
