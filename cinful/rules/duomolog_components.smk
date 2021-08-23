@@ -36,13 +36,23 @@ rule merged_results:
 	input:
 		microcins = "cinfulOut/01_orf_homology/microcins/blast_v_hmmer.csv",
 		immunity_proteins = "cinfulOut/01_orf_homology/immunity_proteins/blast_v_hmmer.csv",
-		CvaB = "cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.csv"
+		unfilteredCvaB = "cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.csv",
+		preQC_Cvab="cinfulOut/01_orf_homology/CvaB/preQC.csv"
 	output:
 		"cinfulOut/02_homology_results/all_merged.csv"
 	run:
-		componentDFs = []
-		for componentHomologFile in [input.microcins, input.immunity_proteins, input.CvaB]:
-			componentDFs.append(pd.read_csv(componentHomologFile))
+		# componentDFs = []
+		# for componentHomologFile in [input.microcins, input.immunity_proteins, input.CvaB]:
+		# 	componentDFs.append(pd.read_csv(componentHomologFile))
+		
+		microcinDF = pd.read_csv(input.microcins)
+		immunity_proteinDF = pd.read_csv(input.immunity_proteins)
+		preQC_CvabDF = pd.read_csv(input.preQC_Cvab)
+		unfilteredCvaBDF = pd.read_csv(input.unfilteredCvaB)
+		# filteredCvaBDF = pd.read_csv(input.filteredCvaB)
+		bestCvaB = unfilteredCvaBDF[unfilteredCvaBDF["qseqid"].isin(preQC_CvabDF["id"]) ]
+		
+		componentDFs = [microcinDF, immunity_proteinDF, bestCvaB]
 		mergedDf = pd.concat(componentDFs)
 		mergedDf.to_csv(output[0], index = None)
 		# with open(output[0],"w") as out:
