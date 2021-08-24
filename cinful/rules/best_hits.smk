@@ -1,5 +1,6 @@
 import pandas as pd
 from Bio import SeqIO
+import pyTMHMM
 
 SAMPLES, = glob_wildcards("{sample}.fna")
 
@@ -59,7 +60,24 @@ def contigs_wMicrocins(best_hitsFile):
 
 	return microcin_contigs.merge(microcin_contig_CvaB, left_on="contig",right_on="contig")
 	
-	
+def nearestImmunityProtein(immunityDB, bestMicrocinHits):
+	candidateList = []
+	for row in bestMicrocinHits.to_dict(orient="records"):
+		immunitySubset = immunityDB[immunityDB["sample"] + immunityDB["contig"] == row["sample"]+row["contig"] ].sort_values("start")
+		immunitySubset["microcinHit"] = row["Unnamed: 0"]
+		immunityUpstream = immunitySubset[immunitySubset["start"] < row["start"]].tail(3)
+		immunityDownstream = immunitySubset[immunitySubset["start"] > row["stop"]].head(3)
+		nearestCandidates = pd.concat([immunityUpstream,immunityDownstream])
+		candidateList.append(nearestCandidates)
+	return pd.concat(candidateList)
+
+def tmhmmCol(df,seqCol="seq"):
+  tmhmmAnnotations = []
+  for seq in df["seq"]:
+    tmhmmAnnotation = pyTMHMM.predict(seq.strip("*"), compute_posterior=False)
+    tmhmmAnnotations.append(tmhmmAnnotation)
+  # df["tmhmm"] = tmhmmAnnotations
+  return tmhmmAnnotations	
 	
 	
 
@@ -93,6 +111,30 @@ rule bestHitsContigs:
 	run:
 		microcinContigsDF = contigs_wMicrocins(input[0])
 		microcinContigsDF.to_csv(output[0],index = False)
+
+
+rule candidate_immunity:
+	input:
+		bestHits = "cinfulOut/03_best_hits/best_hits.csv",
+		immunityDB = "cinfulOut/01_orf_homology/immunity_proteins/filtered_nr.csv",
+		immunityHomologs = "cinfulOut/01_orf_homology/immunity_proteins/blast_v_hmmer.csv"
+	output:
+		"cinfulOut/03_best_hits/best_immunity_protein_candidates.csv"
+	run:
+		immunityDB = pd.read_csv(input.immunityDB)
+		bestHits = pd.read_csv(input.bestHits)
+		bestMicrocinHits = bestHits[bestHits["component"] == "microcins.verified"]
+
+		immunityHomologs = pd.read_csv(input.immunityHomologs)
+
+		nearestImmunityDF = nearestImmunityProtein(immunityDB, bestMicrocinHits)
+		nearestImmunityDF["tmhmm"] = tmhmmCol(nearestImmunityDF)
+		nearestImmunityDF["homologyHit"] = nearestImmunityDF["pephash"].isin(immunityHomologs["qseqid"])
+
+		nearestImmunityDF.to_csv(output[0])
+
+
+
 		
 # rule best_hits_combined:
 # 	input:

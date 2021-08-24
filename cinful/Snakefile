@@ -28,7 +28,8 @@ SAMPLES, = glob_wildcards("{sample}.fna")
 
 rule final:
 	input:
-		"cinfulOut/03_best_hits/best_hit_contigs.csv"
+		"cinfulOut/03_best_hits/best_immunity_protein_candidates.csv"
+		# "cinfulOut/03_best_hits/best_hit_contigs.csv"
 		# "cinfulOut/03_best_hits/best_hits.csv"
 		# expand("cinfulOut/02_homology_results/{sample}.best_hits.csv", sample = SAMPLES)
 		# expand("cinfulOut/02_homology_results/{sample}.all_merged.csv", sample = SAMPLES)
