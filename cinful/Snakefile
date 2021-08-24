@@ -14,6 +14,22 @@ def load_hmm(hmmFile):
         hmm = next(h)
     return hmm
 
+def build_hmm(alnFile):
+  abc = pyhmmer.easel.Alphabet.amino()
+  builder = pyhmmer.plan7.Builder(alphabet=abc)
+
+  with pyhmmer.easel.MSAFile(alnFile) as msa_file:
+    msa_file.set_digital(abc)
+    msa = next(msa_file)
+  # MSA must have a name, otherwise building will fail
+  if msa.name is None:
+    msa.name = b"alignment"
+  builder = pyhmmer.plan7.Builder(abc)
+  background = pyhmmer.plan7.Background(abc)
+  hmm, _, _ = builder.build_msa(msa, background)
+
+  return hmm
+
 def run_hmmsearch(queryFile, hmmFile):
 	hmm = load_hmm(hmmFile)
 	with pyhmmer.easel.SequenceFile(queryFile) as seq_file:
@@ -23,13 +39,20 @@ def run_hmmsearch(queryFile, hmmFile):
 	
 	return hits , hmm.name.decode() # [hit.name.decode() for hit in hmmerOut]
 
+def hmmsearch(queryFile, hmm):
+	
+  with pyhmmer.easel.SequenceFile(queryFile) as seq_file:
+    sequences = [ seq.digitize(hmm.alphabet) for seq in seq_file ]
+  pipeline = pyhmmer.plan7.Pipeline(hmm.alphabet)
+  hits = pipeline.search_hmm(hmm, sequences)
+  return hits
 
 SAMPLES, = glob_wildcards("{sample}.fna")
 
 rule final:
 	input:
-		"cinfulOut/03_best_hits/best_immunity_protein_candidates.csv"
-		# "cinfulOut/03_best_hits/best_hit_contigs.csv"
+		"cinfulOut/03_best_hits/best_immunity_protein_candidates.csv",
+		"cinfulOut/03_best_hits/best_hit_contigs.csv"
 		# "cinfulOut/03_best_hits/best_hits.csv"
 		# expand("cinfulOut/02_homology_results/{sample}.best_hits.csv", sample = SAMPLES)
 		# expand("cinfulOut/02_homology_results/{sample}.all_merged.csv", sample = SAMPLES)

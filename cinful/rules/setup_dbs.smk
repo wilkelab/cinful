@@ -1,5 +1,8 @@
 from io import StringIO
 from Bio import SeqIO
+from Bio.Align.Applications import MafftCommandline
+from Bio import AlignIO
+
 
 
 # For now, these will just have sequences hardcoded in them,
@@ -185,4 +188,70 @@ MDERSSQFRYSKYSAIIFLAVVIISTIVTLSPTFTLRYVGLDIAFFIVFITEILISTLVYLFYLKEFPECRIKIRTDSAT
 		with open(output[0],"w") as seq_out:
   			SeqIO.write(verified_immunity_proteins_SeqIO, seq_out,"fasta")
 
+rule:
+	output:
+		"cinfulOut/00_dbs/verified_SP.aln"
+	run:
+		verified_SP = """>V_ECOLX_classIIa
+MRTLTLNELDSVSGG
+>L_ECOLX_classIIa
+MREITLNEMNNVSGA
+>N_ECOLX_classIIa
+MRELDREELNCVGGA
+>PDI_ECOLX_classIIa
+IRELTLDEITLVSGG
+>S_ECOLX_classIIa
+IRELSFDEIALVSGG
+>E492_KLEPN_classIIb
+MREISQKDLNLAFGA
+>H47_ECOLX_classIIb
+MREITESQLRYISGA
+>I47_ECOLX_classIIb
+MREISDNMLDSVKGG
+>M_ECOLX_classIIb
+MRKLSENEIKQISGG
+>G492_KLEPN_classIIb
+MRALTENDFFAVSGA
+>ER14_PAGGL_novel
+MRELNSEEIRNVAGA
+>ER18_MGAVI_novel
+MRMLINNDIKLVTGA
+>ER31_PALLI_novel
+LRELTDSEINIVSGG
+>VC1_VIBCH_novel
+MKELSIEQISLVTGG
+>lactacin-F_GP_classIIb
+FNYLSHKDLAVVVGG
+>amylovorin-L_GP_classIIb
+MKQLNSEQLQNIIGG
+>sakacin-P_GP_classIIa
+FIELSLKEVTAITGG
+>piscicolin-126_GP_classIIa
+VKELSVKEMQLTTGG
+>mesentericin-Y105_GP_classIIa
+YQQLDNQNLKKVVGG
+>sakacin-A_GP_classIIa
+VKELSMTELQTITGG
+>pediocin_PA-1_GP_classIIa
+IEKLTEKEMANIIGG
+>ubericin-A_GP_classIIa
+FENIKLFSLKKIIGG
+>EntA_GP_classIIa
+LKILSIKETQLIYGG
+>leucocin-A_GP_classIIa
+YEQLDNSALEQVVGG
+>Enterocin-HF_GP_classIIa
+MEKLTVKEMSQVVGG
+>carnobacteriocin-B2_GP_classIIa
+VKELNVKEMKQLHGG
+>carnobacteriocin-BM1_GP_classIIa
+VKELNKKEMQQINGG
+>leucocin-B_GP_classIIa
+YQQLDNNALEQVVGG
+>curvacin-A_GP_classIIa
+VKELSMTELQTITGG
+"""
+		verified_SP_msa = AlignIO.read(StringIO(verified_SP), "fasta")
+		with open(output[0],"w") as alignment_out:
+  			AlignIO.write(verified_SP_msa,alignment_out,"fasta")
 
