@@ -19,6 +19,11 @@ dependencies:
   - snakemake=6.2.1
   - prodigal=2.6.3
   - pyhmmer=0.3.0
+  - pip
+  - pip:
+    - pyTMHMM==1.3.2
+    - seqhash==1.0.0
+    - blake3==0.2.0
   # - scikit-learn=0.24.1
   # - matplotlib=3.3.4
  
