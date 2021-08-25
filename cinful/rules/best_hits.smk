@@ -85,8 +85,8 @@ def tmhmmCol(df,seqCol="seq"):
 
 rule best_hits:
 	input:
-		merged_homology_results = "cinfulOut/02_homology_results/all_merged.csv", 
-		nr_csv = "cinfulOut/01_orf_homology/CvaB/filtered_nr.csv"
+		merged_homology_results = "cinfulOut/02_homology_results/all_merged.csv", # fail:0d468e0c6dbc3a2a9ac28501607740c0, pass:0d468e0c6dbc3a2a9ac28501607740c0
+		nr_csv = "cinfulOut/01_orf_homology/prodigal_out.all.nr_expanded.csv" # fail:9e4762453f5c228a450d61503601895f, pass:3bbbb1a51f2461a152dfcafc18779ff7
 	output:
 		"cinfulOut/03_best_hits/best_hits.csv"
 	run:
@@ -96,10 +96,16 @@ rule best_hits:
 		########### will break here ##########
 		# prodigalPepFile = input.nr_csv #[inFileIndex] 
 		prodigalDF =  pd.read_csv(input.nr_csv) #prodigalFa2DF(prodigalPepFile)
+		print(f"prodigalDF:{prodigalDF.shape}")
 		######################################
+		# prodigalDF:(14, 8)
+		# homology_withProdigalDF:(2, 22)
+		# microcinDF:(0, 22)
 		
 		homology_withProdigalDF = homology_withProdigal(homologyFile, prodigalDF)
+		print(f"homology_withProdigalDF:{homology_withProdigalDF.shape}")
 		microcinDF, immunity_proteinDF, CvaBDF = componentDFs(homology_withProdigalDF)
+		print(f"microcinDF:{microcinDF.shape}")
 		if not microcinDF.empty:
 			best_hitsDF = bestHits(microcinDF,immunity_proteinDF,CvaBDF)
 			best_hitsDF.to_csv(output[0], index = False)
@@ -116,12 +122,14 @@ rule bestHitsContigs:
 rule candidate_immunity:
 	input:
 		bestHits = "cinfulOut/03_best_hits/best_hits.csv",
-		immunityDB = "cinfulOut/01_orf_homology/immunity_proteins/filtered_nr.csv",
+		immunityDB = "cinfulOut/01_orf_homology/prodigal_out.all.nr_expanded.csv",
 		immunityHomologs = "cinfulOut/01_orf_homology/immunity_proteins/blast_v_hmmer.csv"
 	output:
 		"cinfulOut/03_best_hits/best_immunity_protein_candidates.csv"
 	run:
 		immunityDB = pd.read_csv(input.immunityDB)
+		seqLen = immunityDB["seq"].str.len()
+		immunityDB = immunityDB[(seqLen <= 250 ) & (seqLen >= 30 )]
 		bestHits = pd.read_csv(input.bestHits)
 		bestMicrocinHits = bestHits[bestHits["component"] == "microcins.verified"]
 

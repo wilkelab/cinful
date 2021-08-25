@@ -30,29 +30,18 @@ def build_hmm(alnFile):
 
   return hmm
 
-rule filter_microcin:
+
+rule nonredundant_prodigal:
 	input:
-		"cinfulOut/01_orf_homology/prodigal_out/{sample}.faa"
+		all_samples=expand("cinfulOut/01_orf_homology/prodigal_out/{sample}.faa",sample=SAMPLES)
 	output:
-		"cinfulOut/01_orf_homology/microcins/all_samples/{sample}.filtered.fa"
-	shell:
-		"seqkit seq -m 30 -M 150 {input} | seqkit rmdup -s > {output}"
-
-
-
-rule nonredundant_microcin:
-	input:
-		all_samples=expand("cinfulOut/01_orf_homology/microcins/all_samples/{sample}.filtered.fa", sample=SAMPLES),
-		signalSeqAln="cinfulOut/00_dbs/verified_SP.aln"
-
-	output:
-		fasta="cinfulOut/01_orf_homology/microcins/filtered_nr.fa",
-		csv="cinfulOut/01_orf_homology/microcins/filtered_nr.csv"
+		fasta="cinfulOut/01_orf_homology/prodigal_out.all.nr.faa",
+		csv="cinfulOut/01_orf_homology/prodigal_out.all.nr_expanded.csv"
 	run:
 		hashDict = {}
 		idDict = {}
 		for file in input.all_samples:
-			sample = file.split("cinfulOut/01_orf_homology/microcins/all_samples/")[1].strip(".filtered.fa")
+			sample = file.split("cinfulOut/01_orf_homology/prodigal_out/")[1].strip(".faa")
 			with open(file) as handle:
 				for seq_record in SeqIO.parse(handle, "fasta"):
 					pephash = seqhash.seqhash(seq_record.seq,dna_type='PROTEIN')
@@ -77,116 +66,45 @@ rule nonredundant_microcin:
 					description=""
 				)
 				SeqIO.write(outRecord, fasta_file, "fasta")
-		signalSeqHMM = build_hmm(input.signalSeqAln)
+		# signalSeqHMM = build_hmm(input.signalSeqAln)
 		
-		signalSeqHits = hmmsearch(output.fasta, signalSeqHMM)
-		signalSeqHitStr = [hit.name.decode('utf-8') for hit in signalSeqHits]
+		# signalSeqHits = hmmsearch(output.fasta, signalSeqHMM)
+		# signalSeqHitStr = [hit.name.decode('utf-8') for hit in signalSeqHits]
 
 		idDF = pd.DataFrame.from_dict(idDict,orient="index")
 		
 		idDF.columns = ["pephash","sample","contig","start","stop","strand","seq"]
-		print("SignalMatch:",len(signalSeqHitStr),signalSeqHitStr)
-		idDF["signalMatch"] = idDF["pephash"].isin(signalSeqHitStr)
+		# print("SignalMatch:",len(signalSeqHitStr),signalSeqHitStr)
+		# idDF["signalMatch"] = idDF["pephash"].isin(signalSeqHitStr)
 									
 		idDF.to_csv(output.csv)
-			
 
 
+rule filter_microcin:
+	input:
+		"cinfulOut/01_orf_homology/prodigal_out.all.nr.faa"
+	output:
+		"cinfulOut/01_orf_homology/microcins/filtered_nr.fa"
+	shell:
+		"seqkit seq -m 30 -M 150 {input} | seqkit rmdup -s > {output}"
 
+
+		
 rule filter_immunity_protein:
 	input:
-		"cinfulOut/01_orf_homology/prodigal_out/{sample}.faa"
+		"cinfulOut/01_orf_homology/prodigal_out.all.nr.faa"
 	output:
-		"cinfulOut/01_orf_homology/immunity_proteins/all_samples/{sample}.filtered.fa"
+		"cinfulOut/01_orf_homology/immunity_proteins/filtered_nr.fa"
 	shell:
 		"seqkit seq -m 30 -M 250  {input} | seqkit rmdup -s > {output}"
 
-rule nonredundant_immunity_protein:
-	input:
-		expand("cinfulOut/01_orf_homology/immunity_proteins/all_samples/{sample}.filtered.fa", sample=SAMPLES)
-	output:
-		fasta="cinfulOut/01_orf_homology/immunity_proteins/filtered_nr.fa",
-		csv="cinfulOut/01_orf_homology/immunity_proteins/filtered_nr.csv"
-	run:
-		hashDict = {}
-		idDict = {}
-		for file in input:
-			sample = file.split("cinfulOut/01_orf_homology/immunity_proteins/all_samples/")[1].strip(".filtered.fa")
-			with open(file) as handle:
-				for seq_record in SeqIO.parse(handle, "fasta"):
-					pephash = seqhash.seqhash(seq_record.seq,dna_type='PROTEIN')
-					sequence = str(seq_record.seq)
-					
-					descriptionParts = seq_record.description.split("#") 
-					start = descriptionParts[1].strip()
-					stop = descriptionParts[2].strip()
-					strand = descriptionParts[3].strip()
-					contig = '_'.join(seq_record.id.split("_")[:-1])
-					hashDict[pephash] = sequence
-					seqID = f"{sample}|{contig}|{start}:{stop}:{strand}"
-					idDict[seqID] = [pephash,sample,contig,start,stop,strand,sequence]
-		idDF = pd.DataFrame.from_dict(idDict,orient="index")
-		idDF.columns = ["pephash","sample","contig","start","stop","strand","seq"]
-									
-		idDF.to_csv(output.csv)
-
-
-		with open(output.fasta,"w") as fasta_file:
-			for pephash in hashDict:
-				outRecord = SeqRecord(
-					Seq(hashDict[pephash]),
-					id=pephash,
-					description=""
-				)
-				SeqIO.write(outRecord, fasta_file, "fasta")
-
-
 rule filter_CvaB:
 	input:
-		"cinfulOut/01_orf_homology/prodigal_out/{sample}.faa"
+		"cinfulOut/01_orf_homology/prodigal_out.all.nr.faa"
 	output:
-		"cinfulOut/01_orf_homology/CvaB/all_samples/{sample}.filtered.fa"
+		"cinfulOut/01_orf_homology/CvaB/filtered_nr.fa"
 	shell:
 		"seqkit seq -m 600 -M 800 {input} | seqkit rmdup -s > {output}"
-
-rule nonredundant_CvaB:
-	input:
-		expand("cinfulOut/01_orf_homology/CvaB/all_samples/{sample}.filtered.fa", sample=SAMPLES)
-	output:
-		fasta="cinfulOut/01_orf_homology/CvaB/filtered_nr.fa",
-		csv="cinfulOut/01_orf_homology/CvaB/filtered_nr.csv"
-	run:
-		hashDict = {}
-		idDict = {}
-		for file in input:
-			sample = file.split("cinfulOut/01_orf_homology/CvaB/all_samples/")[1].strip(".filtered.fa")
-			with open(file) as handle:
-				for seq_record in SeqIO.parse(handle, "fasta"):
-					pephash = seqhash.seqhash(seq_record.seq,dna_type='PROTEIN')
-					sequence = str(seq_record.seq)
-
-					descriptionParts = seq_record.description.split("#") 
-					start = descriptionParts[1].strip()
-					stop = descriptionParts[2].strip()
-					strand = descriptionParts[3].strip()
-					contig = '_'.join(seq_record.id.split("_")[:-1])
-					hashDict[pephash] = sequence
-					seqID = f"{sample}|{contig}|{start}:{stop}:{strand}"
-					idDict[seqID] = [pephash,sample,contig,start,stop,strand,sequence]
-		idDF = pd.DataFrame.from_dict(idDict,orient="index")
-		idDF.columns = ["pephash","sample","contig","start","stop","strand","seq"]
-									
-		idDF.to_csv(output.csv)
-
-
-		with open(output.fasta,"w") as fasta_file:
-			for pephash in hashDict:
-				outRecord = SeqRecord(
-					Seq(hashDict[pephash]),
-					id=pephash,
-					description=""
-				)
-				SeqIO.write(outRecord, fasta_file, "fasta")
 
 
 

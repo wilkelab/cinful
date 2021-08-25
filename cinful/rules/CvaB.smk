@@ -132,7 +132,7 @@ rule filter_CvaB_hits:
 	input:
 		best_CvaB="cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.fa", 
 		align_with_verifiedCvab="cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.with_verified.aln",
-		nr_filtered_csv="cinfulOut/01_orf_homology/CvaB/filtered_nr.csv"
+		nr_filtered_csv="cinfulOut/01_orf_homology/prodigal_out.all.nr_expanded.csv"
 	output:
 		preQC="cinfulOut/01_orf_homology/CvaB/preQC.csv",
 		QC="cinfulOut/01_orf_homology/CvaB/QC.csv"
