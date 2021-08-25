@@ -147,7 +147,7 @@ rule filter_CvaB:
 	output:
 		"cinfulOut/01_orf_homology/CvaB/all_samples/{sample}.filtered.fa"
 	shell:
-		"seqkit rmdup -s {input} > {output}"
+		"seqkit seq -m 600 -M 800 {input} | seqkit rmdup -s > {output}"
 
 rule nonredundant_CvaB:
 	input:
