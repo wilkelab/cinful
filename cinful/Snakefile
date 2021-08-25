@@ -49,6 +49,7 @@ def hmmsearch(queryFile, hmm):
 
 SAMPLES, = glob_wildcards("{sample}.fna")
 
+threads_max = workflow.cores * 0.75
 rule final:
 	input:
 		"cinfulOut/03_best_hits/best_immunity_protein_candidates.csv",

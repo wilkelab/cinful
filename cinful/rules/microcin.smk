@@ -32,8 +32,9 @@ rule blast_microcin:
 		input_seqs = "cinfulOut/01_orf_homology/microcins/filtered_nr.fa"
 	output:
 		"cinfulOut/01_orf_homology/microcins/blast.txt"
+	threads:threads_max
 	shell:
-		"blastp -db {input.verified_component} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
+		"blastp -db {input.verified_component} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1 -num_threads {threads}"
 
 rule msa_microcin:
 	input:
