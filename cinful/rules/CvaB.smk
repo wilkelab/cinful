@@ -58,14 +58,14 @@ rule makeblastdb_CvaB:
 	input:
 		"cinfulOut/00_dbs/CvaB.verified.pep"
 	output:
-		"cinfulOut/00_dbs/CvaB.verified.pep.dmd"
+		"cinfulOut/00_dbs/CvaB.verified.pep.dmdn"
 	shell:
 		"diamond makedb --in {input} -d {input}"
 		# "makeblastdb -dbtype prot -in {input}"
 
 rule blast_CvaB:
 	input:
-		verified_component = "cinfulOut/00_dbs/CvaB.verified.pep",
+		verified_component = "cinfulOut/00_dbs/CvaB.verified.pep.dmnd",
 		input_seqs = "cinfulOut/01_orf_homology/CvaB/filtered_nr.fa"
 	output:
 		"cinfulOut/01_orf_homology/CvaB/blast.txt"
