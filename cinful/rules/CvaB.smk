@@ -58,19 +58,23 @@ rule makeblastdb_CvaB:
 	input:
 		"cinfulOut/00_dbs/CvaB.verified.pep"
 	output:
-		"cinfulOut/00_dbs/CvaB.verified.pep.phr"
+		"cinfulOut/00_dbs/CvaB.verified.pep.dmd"
 	shell:
-		"makeblastdb -dbtype prot -in {input}"
+		"diamond makedb --in {input} -d {input}"
+		# "makeblastdb -dbtype prot -in {input}"
 
 rule blast_CvaB:
 	input:
 		verified_component = "cinfulOut/00_dbs/CvaB.verified.pep",
-		blastdb = "cinfulOut/00_dbs/CvaB.verified.pep.phr",
 		input_seqs = "cinfulOut/01_orf_homology/CvaB/filtered_nr.fa"
 	output:
 		"cinfulOut/01_orf_homology/CvaB/blast.txt"
+	threads:threads_max
 	shell:
-		"blastp -db {input.verified_component} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
+		"diamond blastp -d {input.verified_component} -q {input.input_seqs}   --evalue 0.001 -k 1 -o {output}"
+		# "blastp -db {input.verified_component} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
+
+
 
 rule msa_CvaB:
 	input:
@@ -105,18 +109,37 @@ rule blast_v_hmmer_CvaB:
 		blastDF["hmmerHit"] = blastDF["qseqid"].isin(hmmer_hitsHeaders)#hmmer_hitsHeaders in blastDF["qseqid"]
 		blastDF.to_csv(output[0], index = False)
 
-rule best_Cvab_fa:
+
+rule best_Cvab_headers:
 	input:
-		hitsCvaB="cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.csv",
-		nrPeps="cinfulOut/01_orf_homology/CvaB/filtered_nr.fa"
+		"cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.csv"
+	output:
+		"cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.headers"
+	shell:
+		"cut -d, -f1 {input} > {output}"
+
+rule best_Cvab_fasta:
+	input:
+		headers="cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.headers",
+		input_seqs = "cinfulOut/01_orf_homology/CvaB/filtered_nr.fa"
 	output:
 		"cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.fa"
-	run:
-		hitsCvaBDF = pd.read_csv(input.hitsCvaB)
-		with open(output[0],"w") as out:
-			for record in SeqIO.parse(input.nrPeps, "fasta"):
-				if record.id in set(hitsCvaBDF["qseqid"]):
-					SeqIO.write(record,out,"fasta")
+	shell:
+		"seqkit grep -f {input.headers} {input.input_seqs} > {output}"
+
+
+# rule best_Cvab_fa:
+# 	input:
+# 		hitsCvaB="cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.csv",
+# 		nrPeps="cinfulOut/01_orf_homology/CvaB/filtered_nr.fa"
+# 	output:
+# 		"cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.fa"
+# 	run:
+# 		hitsCvaBDF = pd.read_csv(input.hitsCvaB)
+# 		with open(output[0],"w") as out:
+# 			for record in SeqIO.parse(input.nrPeps, "fasta"):
+# 				if record.id in set(hitsCvaBDF["qseqid"]):
+# 					SeqIO.write(record,out,"fasta")
 
 rule align_with_verifiedCvab:
 	input:
