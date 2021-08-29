@@ -30,6 +30,8 @@ def build_hmm(alnFile):
 
   return hmm
 
+def hasAllStandardAA(seq, alphabet="ACDEFGHIKLMNPQRSTVWY",ignore="*"):
+	return (set(seq) - set(alphabet+ignore)) == set()
 
 rule nonredundant_prodigal:
 	input:
@@ -46,15 +48,18 @@ rule nonredundant_prodigal:
 				for seq_record in SeqIO.parse(handle, "fasta"):
 					pephash = seqhash.seqhash(seq_record.seq,dna_type='PROTEIN')
 					sequence = str(seq_record.seq)
-					
+					hashDict[pephash] = sequence
+
 					descriptionParts = seq_record.description.split("#") 
 					start = descriptionParts[1].strip()
 					stop = descriptionParts[2].strip()
 					strand = descriptionParts[3].strip()
 					contig = '_'.join(seq_record.id.split("_")[:-1])
-					hashDict[pephash] = sequence
+					allStandardAA = hasAllStandardAA(sequence)
+
+					
 					seqID = f"{sample}|{contig}|{start}:{stop}:{strand}"
-					idDict[seqID] = [pephash,sample,contig,start,stop,strand,sequence]
+					idDict[seqID] = [pephash,sample,contig,start,stop,strand,allStandardAA,sequence]
 		
 
 		
@@ -73,7 +78,7 @@ rule nonredundant_prodigal:
 
 		idDF = pd.DataFrame.from_dict(idDict,orient="index")
 		
-		idDF.columns = ["pephash","sample","contig","start","stop","strand","seq"]
+		idDF.columns = ["pephash","sample","contig","start","stop","strand","allStandardAA","seq"]
 		# print("SignalMatch:",len(signalSeqHitStr),signalSeqHitStr)
 		# idDF["signalMatch"] = idDF["pephash"].isin(signalSeqHitStr)
 									
