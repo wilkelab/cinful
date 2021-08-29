@@ -71,7 +71,7 @@ rule blast_CvaB:
 		"cinfulOut/01_orf_homology/CvaB/blast.txt"
 	threads:threads_max
 	shell:
-		"diamond blastp -d {input.verified_component} -q {input.input_seqs}   --evalue 0.001 -k 1 -o {output}"
+		"diamond blastp -d {input.verified_component} -q {input.input_seqs}   --evalue 0.001 -k 1 -o {output} -p {threads}"
 		# "blastp -db {input.verified_component} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
 
 
@@ -81,8 +81,9 @@ rule msa_CvaB:
 		"cinfulOut/00_dbs/CvaB.verified.pep"
 	output:
 		"cinfulOut/00_dbs/CvaB.verified.aln"
+	threads:threads_max
 	shell:
-		"mafft --auto {input} > {output}"
+		"mafft --auto {input} > {output} --thread {threads}"
 
 rule buildhmm_CvaB:
 	input:
