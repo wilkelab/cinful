@@ -130,8 +130,8 @@ rule candidate_immunity:
 		immunityDB = pd.read_csv(input.immunityDB)
 		seqLen = immunityDB["seq"].str.len()
 		immunityDB = immunityDB[(seqLen <= 250 ) & (seqLen >= 30 )]
-		immunityDB = immunityDB["allStandardAA"]
-		
+		immunityDB = immunityDB[immunityDB["allStandardAA"]]
+
 		bestHits = pd.read_csv(input.bestHits)
 		bestMicrocinHits = bestHits[bestHits["component"] == "microcins.verified"]
 
