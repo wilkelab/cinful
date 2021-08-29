@@ -58,7 +58,7 @@ rule makeblastdb_CvaB:
 	input:
 		"cinfulOut/00_dbs/CvaB.verified.pep"
 	output:
-		"cinfulOut/00_dbs/CvaB.verified.pep.dmdn"
+		"cinfulOut/00_dbs/CvaB.verified.pep.dmnd"
 	shell:
 		"diamond makedb --in {input} -d {input}"
 		# "makeblastdb -dbtype prot -in {input}"
