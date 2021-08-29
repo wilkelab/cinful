@@ -83,7 +83,7 @@ rule msa_CvaB:
 		"cinfulOut/00_dbs/CvaB.verified.aln"
 	threads:threads_max
 	shell:
-		"mafft --auto {input} > {output} --thread {threads}"
+		"mafft --thread {threads} --auto {input} > {output}"
 
 rule buildhmm_CvaB:
 	input:
