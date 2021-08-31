@@ -1,0 +1,60 @@
+>classIIb_IP:M_mcmI_tr|Q83TS3|Q83TS3_ECOLX Microcin M imunity protein McmI OS=Escherichia coli OX=562 GN=mcmI PE=4 SV=1
+MGE------VKKDIKITVI------------------------AFVIN------YLFFYI
+PVSLYLSYY--------------------YGYNFFNLYMFFLSLVVTFLS----------
+-----------------------------------------------------LWLNVNF
+YF-------------------------------------------FTNLIAKVL------
+--K
+>classIIb_IP:I47_mchS3_tr|Q712P9|Q712P9_ECOLX MchS3 protein OS=Escherichia coli OX=562 GN=mchS3 PE=4 SV=1
+MY----------LTKKIII-----------------------------------SMMFIL
+PSAAFSS---------DPPPLQ-------QSLEKTTYFSIGMNGFIGYQSE-GEKLYTHI
+LTLDNPEEIFKNIIKNRKST-----KESKIYAACGLYYLNV---ENI------ESLFNEN
+DKQEYVSVLRGDIL---------TKIKLND-----ILNS-----VIINGCNTKLI----S
+EHK
+>classIIb_IP:H47_mchI_sp|O86200|MCHI_ECOLX Microcin H47 immunity protein MchI OS=Escherichia coli OX=562 GN=mchI PE=1 SV=1
+MS----------YKKLYQL-----------------------------------TAIFSL
+PLTILL-----------------------VSLSSLRIVGEGNSYVDVFLS----------
+-----------------------------------------------------FIIFLGF
+IE-------------------------------------------LIHGIRKILVWSGWK
+NGS
+>classIIb_IP:E492_mceB_sp|Q9ZHG0|IM92_KLEPN Microcin E492 immunity protein OS=Klebsiella pneumoniae OX=573 GN=mceB PE=1 SV=1
+MT---------------LLSFGFSPVFFSVMAFCIISRSKFYPQRTRN------KVIVLI
+LLTFFICFLY--------PLTKVYLVGSYGIFDKFYLFCFISTLIAIAIN----------
+-----------------------------------------------------VVILTIN
+GA--------------------------------------------------------KN
+ERN
+>classIIb_IP:G492_mceM_tr|B4DCT4|B4DCT4_KLEPN MceM OS=Klebsiella pneumoniae OX=573 GN=SAMEA4364603_01604 PE=4 SV=1
+MI-------------FLYL---------------------------------DKIPLFIL
+GIGLLTSFAL--------PGS--------SALDSPKFLCIYSSTILAGIS----FIYQVF
+-RHGTNTEF----------------------------FLA-------------MLITVSF
+VV-------------------------------------------MLPVIKMHFA-----
+--Y
+>classIIa_IP:V_cvi
+MD--------RKRTKLELL-----------------------FAFIIN------ATAIYI
+ALAIYDCVF--------------------RGKDFLSMHTFCFSALMSAIC----------
+-----------------------------------------------------YFVGDNY
+YS-------------------------------------------ISDKIKRRSY--ENS
+DSK
+>classIIa_IP:L_mclI
+MKTWQ-------------------------------------------------VFFIIL
+PISIIISLIV-------------------KQLNSSNLVQSVVSGIAIALM----------
+-----------------------------------------------------ISIFFNR
+GK----------------------------------------------------------
+---
+>classIIa_IP:N_mcnI
+MKR-------NKLTRMSFLNFAFSPVFFSIMACYFIVWRNKRNEFVCN------RLLSII
+IISFLICFIY--------PWLNYKIEVKYYIFEQFYLFCFLSSLVAVVIN----------
+-----------------------------------------------------LIVYFIL
+YR------------------------------------------RCI-------------
+---
+>classIIa_IP:PDI_mcpI
+ME----------------------------------------------------GATMFI
+KLLSFICGLL----------LGFALLSG-SSVIDLYWFSLPSEFSKIVVM----------
+-----------------------------------------------------LITLFST
+AR---------------------------------FMDY------IIEKIRTISA-----
+--K
+>classIIa_IP:S_mcsI
+MDERSSQFRYSKYSAIIFLAVVIISTIVTL-----------SPTFTLRYVGLDIAFFIVF
+ITEILISTLVYLFYLKEFPECRIK-----IRTDSATVKFSALSFLIIILIQLAVYCYRDY
+LYHYEPSQI--NWITVLVMTLVVPYYEEIVYRACAFGFLRSIFKENIIIPCVITSLFFSL
+MHFQYYNVLDQSVLFVVSMLLLGVRIKSRSLFYPMLIHSGMNTFVILLNIQNIL------
+---
