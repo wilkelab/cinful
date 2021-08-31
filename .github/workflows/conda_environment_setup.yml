@@ -27,7 +27,7 @@ jobs:
         mamba env update -n cinful --file cinful_conda.yml
     - name: Activate cinful environment
       run: |
-        conda activate cinful
+        source activate cinful
     - name: Run workflow unit-tests
       run: |
         python test/colcinV_Ecoli/.tests/unit/test_align_with_verifiedCvab.py
