@@ -20,7 +20,7 @@ jobs:
         echo $CONDA/bin >> $GITHUB_PATH
     - name: Install dependencies
       run: |
-        conda install mamba
+        conda install mamba -c conda-forge
     - name: Set up environment
       run: |
         mamba create  -n cinful
