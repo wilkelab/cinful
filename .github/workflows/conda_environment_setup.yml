@@ -25,7 +25,7 @@ jobs:
       run: |
         mamba create  -n cinful
         mamba env update -n cinful --file cinful_conda.yml
-    -name: Activate cinful environment
+    - name: Activate cinful environment
       run: |
         conda activate cinful
     - name: Run workflow unit-tests
