@@ -25,5 +25,40 @@ jobs:
       run: |
         mamba create  -n cinful
         mamba env update -n cinful --file cinful_conda.yml
-
-
+    -name: Activate cinful environment
+      run: |
+        conda activate cinful
+    - name: Run workflow unit-tests
+      run: |
+        python test/colcinV_Ecoli/.tests/unit/test_align_with_verifiedCvab.py
+        python test/colcinV_Ecoli/.tests/unit/test_bestHitsContigs.py
+        python test/colcinV_Ecoli/.tests/unit/test_best_Cvab_fasta.py
+        python test/colcinV_Ecoli/.tests/unit/test_best_Cvab_headers.py
+        python test/colcinV_Ecoli/.tests/unit/test_best_hits.py
+        python test/colcinV_Ecoli/.tests/unit/test_blast_CvaB.py
+        python test/colcinV_Ecoli/.tests/unit/test_blast_immunity_protein.py
+        python test/colcinV_Ecoli/.tests/unit/test_blast_microcin.py
+        python test/colcinV_Ecoli/.tests/unit/test_blast_v_hmmer_CvaB.py
+        python test/colcinV_Ecoli/.tests/unit/test_blast_v_hmmer_immunity_protein.py
+        python test/colcinV_Ecoli/.tests/unit/test_blast_v_hmmer_microcin.py
+        python test/colcinV_Ecoli/.tests/unit/test_buildhmm_CvaB.py
+        python test/colcinV_Ecoli/.tests/unit/test_buildhmm_immunity_protein.py
+        python test/colcinV_Ecoli/.tests/unit/test_buildhmm_microcin.py
+        python test/colcinV_Ecoli/.tests/unit/test_candidate_immunity.py
+        python test/colcinV_Ecoli/.tests/unit/test_filter_CvaB.py
+        python test/colcinV_Ecoli/.tests/unit/test_filter_CvaB_hits.py
+        python test/colcinV_Ecoli/.tests/unit/test_filter_immunity_protein.py
+        python test/colcinV_Ecoli/.tests/unit/test_filter_microcin.py
+        python test/colcinV_Ecoli/.tests/unit/test_final.py
+        python test/colcinV_Ecoli/.tests/unit/test_makeblastdb_CvaB.py
+        python test/colcinV_Ecoli/.tests/unit/test_makeblastdb_immunity_protein.py
+        python test/colcinV_Ecoli/.tests/unit/test_makeblastdb_microcin.py
+        python test/colcinV_Ecoli/.tests/unit/test_merged_results.py
+        python test/colcinV_Ecoli/.tests/unit/test_msa_CvaB.py
+        python test/colcinV_Ecoli/.tests/unit/test_msa_immunity_protein.py
+        python test/colcinV_Ecoli/.tests/unit/test_msa_microcin.py
+        python test/colcinV_Ecoli/.tests/unit/test_nonredundant_prodigal.py
+        python test/colcinV_Ecoli/.tests/unit/test_prodigal.py
+        python test/colcinV_Ecoli/.tests/unit/test_write_CvaB.py
+        python test/colcinV_Ecoli/.tests/unit/test_write_immunity_proteins.py
+        python test/colcinV_Ecoli/.tests/unit/test_write_microcins.py
