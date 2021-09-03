@@ -35,7 +35,7 @@ snakemake -d <assembly_directory> --threads <core_nums> --snakefile path/to/cinf
 ## Workflow
 
 The following workflow will be executed.
-![cinful](figures/cinful_workflow.svg)
+![cinful](figures/cinful_workflow.inkscape.svg)
 
 Three output directories will be generated in your `assembly_directory` under a directory called `cinfulOut`.
 * `00_dbs`

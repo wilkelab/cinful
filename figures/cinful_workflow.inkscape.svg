@@ -1,0 +1,1689 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:version="1.0 (4035a4f, 2020-05-01)"
+   sodipodi:docname="cinful_workflow.inkscape.svg"
+   id="svg2718"
+   version="1.1"
+   viewBox="0.00 0.00 1205.40 908.00"
+   height="908pt"
+   width="1205pt">
+  <metadata
+     id="metadata2724">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs2722" />
+  <sodipodi:namedview
+     inkscape:current-layer="node12"
+     inkscape:window-maximized="0"
+     inkscape:window-y="23"
+     inkscape:window-x="0"
+     inkscape:cy="584.20541"
+     inkscape:cx="891.28384"
+     inkscape:zoom="0.65346519"
+     showgrid="false"
+     id="namedview2720"
+     inkscape:window-height="1035"
+     inkscape:window-width="1920"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     guidetolerance="10"
+     gridtolerance="10"
+     objecttolerance="10"
+     borderopacity="1"
+     bordercolor="#666666"
+     pagecolor="#ffffff" />
+  <g
+     transform="translate(4,904)"
+     class="graph"
+     id="graph0">
+    <title
+       id="title2105">snakemake_dag</title>
+    <polygon
+       id="polygon2107"
+       points="1201.4,4 -4,4 -4,-904 1201.4,-904 "
+       stroke="transparent"
+       fill="#ffffff" />
+    <!-- 0 -->
+    <g
+       class="node"
+       id="node1">
+      <title
+         id="title2109">0</title>
+      <path
+         id="path2111"
+         d="m 479,-36 c 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#56d85b"
+         fill="none" />
+      <text
+         id="text2113"
+         font-size="10px"
+         font-family="sans"
+         y="-15.5"
+         x="464"
+         text-anchor="middle">final</text>
+    </g>
+    <!-- 1 -->
+    <g
+       class="node"
+       id="node2">
+      <title
+         id="title2116">1</title>
+      <path
+         id="path2118"
+         d="m 447.5,-108 c 0,0 -81,0 -81,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 81,0 81,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#d87556"
+         fill="none" />
+      <text
+         id="text2120"
+         font-size="10px"
+         font-family="sans"
+         y="-87.5"
+         x="407"
+         text-anchor="middle">candidate_immunity</text>
+    </g>
+    <!-- 1&#45;&gt;0 -->
+    <g
+       class="edge"
+       id="edge1">
+      <title
+         id="title2123">1-&gt;0</title>
+      <path
+         id="path2125"
+         d="m 421.09,-71.7 c 6.83,8.4 15.17,18.63 22.67,27.84"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2127"
+         points="441.04,-41.65 446.47,-46.07 450.07,-36.1 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 2 -->
+    <g
+       class="node"
+       id="node3">
+      <title
+         id="title2130">2</title>
+      <path
+         id="path2132"
+         d="m 537.5,-180 c 0,0 -33,0 -33,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 33,0 33,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#5692d8"
+         fill="none" />
+      <text
+         id="text2134"
+         font-size="10px"
+         font-family="sans"
+         y="-159.5"
+         x="521"
+         text-anchor="middle">best_hits</text>
+    </g>
+    <!-- 2&#45;&gt;1 -->
+    <g
+       class="edge"
+       id="edge3">
+      <title
+         id="title2137">2-&gt;1</title>
+      <path
+         id="path2139"
+         d="m 493.11,-143.88 c -14.9,9.16 -33.44,20.54 -49.49,30.4"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2141"
+         points="441.69,-116.41 445.35,-110.44 434.99,-108.19 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 33 -->
+    <g
+       class="node"
+       id="node34">
+      <title
+         id="title2144">33</title>
+      <path
+         id="path2146"
+         d="m 552.5,-108 c 0,0 -63,0 -63,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 63,0 63,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#80d856"
+         fill="none" />
+      <text
+         id="text2148"
+         font-size="10px"
+         font-family="sans"
+         y="-87.5"
+         x="521"
+         text-anchor="middle">bestHitsContigs</text>
+    </g>
+    <!-- 2&#45;&gt;33 -->
+    <g
+       class="edge"
+       id="edge52">
+      <title
+         id="title2151">2-&gt;33</title>
+      <path
+         id="path2153"
+         d="m 521,-143.7 c 0,7.72 0,16.99 0,25.59"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2155"
+         points="517.5,-118.1 524.5,-118.1 521,-108.1 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 3 -->
+    <g
+       class="node"
+       id="node4">
+      <title
+         id="title2158">3</title>
+      <path
+         id="path2160"
+         d="m 645.5,-252 c 0,0 -61,0 -61,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 61,0 61,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#d86656"
+         fill="none" />
+      <text
+         id="text2162"
+         font-size="10px"
+         font-family="sans"
+         y="-231.5"
+         x="615"
+         text-anchor="middle">merged_results</text>
+    </g>
+    <!-- 3&#45;&gt;2 -->
+    <g
+       class="edge"
+       id="edge6">
+      <title
+         id="title2165">3-&gt;2</title>
+      <path
+         id="path2167"
+         d="m 591.76,-215.7 c -11.95,8.9 -26.68,19.88 -39.61,29.5"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2169"
+         points="549.9,-188.88 554.08,-183.27 543.97,-180.1 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 4 -->
+    <g
+       class="node"
+       id="node5">
+      <title
+         id="title2172">4</title>
+      <path
+         id="path2174"
+         d="m 1036,-612 c 0,0 -104,0 -104,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 104,0 104,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#d85656"
+         fill="none" />
+      <text
+         id="text2176"
+         font-size="10px"
+         font-family="sans"
+         y="-591.5"
+         x="984"
+         text-anchor="middle">blast_v_hmmer_microcin</text>
+    </g>
+    <!-- 4&#45;&gt;3 -->
+    <g
+       class="edge"
+       id="edge8">
+      <title
+         id="title2179">4-&gt;3</title>
+      <path
+         id="path2181"
+         d="M 975.91,-575.95 C 964.22,-549.72 944,-497.61 944,-451 c 0,0 0,0 0,74 0,118.88 -183.31,139.4 -276.27,142.17"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2183"
+         points="667.59,-238.33 667.75,-231.33 657.67,-234.59 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 5 -->
+    <g
+       class="node"
+       id="node6">
+      <title
+         id="title2186">5</title>
+      <path
+         id="path2188"
+         d="m 1041.5,-684 c 0,0 -79,0 -79,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 79,0 79,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#ced856"
+         fill="none" />
+      <text
+         id="text2190"
+         font-size="10px"
+         font-family="sans"
+         y="-663.5"
+         x="1002"
+         text-anchor="middle">buildhmm_microcin</text>
+    </g>
+    <!-- 5&#45;&gt;4 -->
+    <g
+       class="edge"
+       id="edge12">
+      <title
+         id="title2193">5-&gt;4</title>
+      <path
+         id="path2195"
+         d="m 997.55,-647.7 c -2,7.8 -4.42,17.19 -6.65,25.87"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2197"
+         points="987.5,-622.66 994.28,-620.92 988.4,-612.1 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 6 -->
+    <g
+       class="node"
+       id="node7">
+      <title
+         id="title2200">6</title>
+      <path
+         id="path2202"
+         d="m 1037,-756 c 0,0 -54,0 -54,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 54,0 54,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#56d8a9"
+         fill="none" />
+      <text
+         id="text2204"
+         font-size="10px"
+         font-family="sans"
+         y="-735.5"
+         x="1010"
+         text-anchor="middle">msa_microcin</text>
+    </g>
+    <!-- 6&#45;&gt;5 -->
+    <g
+       class="edge"
+       id="edge15">
+      <title
+         id="title2207">6-&gt;5</title>
+      <path
+         id="path2209"
+         d="m 1008.02,-719.7 c -0.88,7.72 -1.94,16.99 -2.92,25.59"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2211"
+         points="1001.61,-694.44 1008.57,-693.64 1003.95,-684.1 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 7 -->
+    <g
+       class="node"
+       id="node8">
+      <title
+         id="title2214">7</title>
+      <path
+         id="path2216"
+         d="m 1155.5,-828 c 0,0 -61,0 -61,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 61,0 61,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#d8a456"
+         fill="none" />
+      <text
+         id="text2218"
+         font-size="10px"
+         font-family="sans"
+         y="-807.5"
+         x="1125"
+         text-anchor="middle">write_microcins</text>
+    </g>
+    <!-- 7&#45;&gt;6 -->
+    <g
+       class="edge"
+       id="edge16">
+      <title
+         id="title2221">7-&gt;6</title>
+      <path
+         id="path2223"
+         d="m 1096.87,-791.88 c -15.04,9.16 -33.74,20.54 -49.93,30.4"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2225"
+         points="1044.96,-764.38 1048.6,-758.4 1038.24,-756.19 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 13 -->
+    <g
+       class="node"
+       id="node14">
+      <title
+         id="title2228">13</title>
+      <path
+         id="path2230"
+         d="m 1146,-684 c 0,0 -56,0 -56,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 56,0 56,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#56c1d8"
+         fill="none" />
+      <text
+         id="text2232"
+         font-size="10px"
+         font-family="sans"
+         y="-663.5"
+         x="1118"
+         text-anchor="middle">blast_microcin</text>
+    </g>
+    <!-- 7&#45;&gt;13 -->
+    <g
+       class="edge"
+       id="edge21">
+      <title
+         id="title2235">7-&gt;13</title>
+      <path
+         id="path2237"
+         d="m 1157.53,-791.98 c 13.26,8.8 27.17,20.89 34.47,35.98 6.97,14.4 7.31,21.77 0,36 -6.27,12.21 -16.81,22.23 -27.99,30.15"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2239"
+         points="1161.84,-692.61 1165.67,-686.75 1155.39,-684.2 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 14 -->
+    <g
+       class="node"
+       id="node15">
+      <title
+         id="title2242">14</title>
+      <path
+         id="path2244"
+         d="m 1171,-756 c 0,0 -92,0 -92,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 92,0 92,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#5663d8"
+         fill="none" />
+      <text
+         id="text2246"
+         font-size="10px"
+         font-family="sans"
+         y="-735.5"
+         x="1125"
+         text-anchor="middle">makeblastdb_microcin</text>
+    </g>
+    <!-- 7&#45;&gt;14 -->
+    <g
+       class="edge"
+       id="edge24">
+      <title
+         id="title2249">7-&gt;14</title>
+      <path
+         id="path2251"
+         d="m 1125,-791.7 c 0,7.72 0,16.99 0,25.59"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2253"
+         points="1121.5,-766.1 1128.5,-766.1 1125,-756.1 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 8 -->
+    <g
+       class="node"
+       id="node9">
+      <title
+         id="title2256">8</title>
+      <path
+         id="path2258"
+         d="m 941,-756 c 0,0 -54,0 -54,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 54,0 54,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#d88556"
+         fill="none" />
+      <text
+         id="text2260"
+         font-size="10px"
+         font-family="sans"
+         y="-735.5"
+         x="914"
+         text-anchor="middle">filter_microcin</text>
+    </g>
+    <!-- 8&#45;&gt;4 -->
+    <g
+       class="edge"
+       id="edge13">
+      <title
+         id="title2263">8-&gt;4</title>
+      <path
+         id="path2265"
+         d="m 917.43,-719.87 c 4.14,18.47 12.13,48.4 24.57,71.87 5.25,9.9 12.43,19.79 19.36,28.3"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2267"
+         points="958.74,-617.38 964.08,-621.9 967.87,-612.01 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 8&#45;&gt;13 -->
+    <g
+       class="edge"
+       id="edge23">
+      <title
+         id="title2270">8-&gt;13</title>
+      <path
+         id="path2272"
+         d="m 953.02,-723.13 c 3.04,1.06 6.06,2.12 8.98,3.13 35.48,12.31 75.6,25.93 106.27,36.29"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2274"
+         points="1067.28,-680.35 1069.52,-686.99 1077.87,-680.47 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 9 -->
+    <g
+       class="node"
+       id="node10">
+      <title
+         id="title2277">9</title>
+      <path
+         id="path2279"
+         d="m 587.5,-828 c 0,0 -95,0 -95,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 95,0 95,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#56a2d8"
+         fill="none" />
+      <text
+         id="text2281"
+         font-size="10px"
+         font-family="sans"
+         y="-807.5"
+         x="540"
+         text-anchor="middle">nonredundant_prodigal</text>
+    </g>
+    <!-- 9&#45;&gt;1 -->
+    <g
+       class="edge"
+       id="edge4">
+      <title
+         id="title2284">9-&gt;1</title>
+      <path
+         id="path2286"
+         d="M 480.41,-805.93 C 339.97,-797.07 0,-765.45 0,-667 c 0,0 0,0 0,434 0,72.01 229.99,116 344.19,133.4"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2288"
+         points="343.8,-96.12 344.84,-103.04 354.21,-98.09 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 9&#45;&gt;2 -->
+    <g
+       class="edge"
+       id="edge7">
+      <title
+         id="title2291">9-&gt;2</title>
+      <path
+         id="path2293"
+         d="M 536.16,-791.61 C 530.6,-764.94 521,-712.27 521,-667 c 0,0 0,0 0,362 0,40 0,86.35 0,114.92"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2295"
+         points="517.5,-190.05 524.5,-190.05 521,-180.05 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 9&#45;&gt;8 -->
+    <g
+       class="edge"
+       id="edge17">
+      <title
+         id="title2298">9-&gt;8</title>
+      <path
+         id="path2300"
+         d="m 599.55,-802.57 c 63.74,7.61 167.82,22.12 265.59,46.59"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2302"
+         points="864.33,-752.57 866.06,-759.35 874.88,-753.5 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 19 -->
+    <g
+       class="node"
+       id="node20">
+      <title
+         id="title2305">19</title>
+      <path
+         id="path2307"
+         d="m 133.5,-468 c 0,0 -93,0 -93,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 93,0 93,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#d8b456"
+         fill="none" />
+      <text
+         id="text2309"
+         font-size="10px"
+         font-family="sans"
+         y="-447.5"
+         x="87"
+         text-anchor="middle">filter_immunity_protein</text>
+    </g>
+    <!-- 9&#45;&gt;19 -->
+    <g
+       class="edge"
+       id="edge30">
+      <title
+         id="title2312">9-&gt;19</title>
+      <path
+         id="path2314"
+         d="M 480.25,-800.61 C 368.27,-783.21 138,-738.7 138,-667 c 0,0 0,0 0,74 0,42.41 -20.4,87.98 -35.4,115.74"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2316"
+         points="99.37,-478.65 105.49,-475.25 97.57,-468.21 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 26 -->
+    <g
+       class="node"
+       id="node27">
+      <title
+         id="title2319">26</title>
+      <path
+         id="path2321"
+         d="m 640.5,-756 c 0,0 -41,0 -41,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 41,0 41,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#56d87b"
+         fill="none" />
+      <text
+         id="text2323"
+         font-size="10px"
+         font-family="sans"
+         y="-735.5"
+         x="620"
+         text-anchor="middle">filter_CvaB</text>
+    </g>
+    <!-- 9&#45;&gt;26 -->
+    <g
+       class="edge"
+       id="edge40">
+      <title
+         id="title2326">9-&gt;26</title>
+      <path
+         id="path2328"
+         d="m 559.78,-791.7 c 9.97,8.73 22.23,19.46 33.08,28.95"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2330"
+         points="590.62,-760.06 595.23,-765.32 600.45,-756.1 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 29 -->
+    <g
+       class="node"
+       id="node30">
+      <title
+         id="title2333">29</title>
+      <path
+         id="path2335"
+         d="m 646.5,-324 c 0,0 -63,0 -63,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 63,0 63,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#56d8c9"
+         fill="none" />
+      <text
+         id="text2337"
+         font-size="10px"
+         font-family="sans"
+         y="-303.5"
+         x="615"
+         text-anchor="middle">filter_CvaB_hits</text>
+    </g>
+    <!-- 9&#45;&gt;29 -->
+    <g
+       class="edge"
+       id="edge46">
+      <title
+         id="title2340">9-&gt;29</title>
+      <path
+         id="path2342"
+         d="m 543.84,-791.61 c 5.56,26.67 15.16,79.34 15.16,124.61 0,0 0,0 0,218 0,43.09 22.6,88.74 39.08,116.3"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2344"
+         points="595.17,-330.75 601.13,-334.42 603.4,-324.07 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 10 -->
+    <!-- 10&#45;&gt;9 -->
+    <!-- 11 -->
+    <g
+       class="node"
+       id="node12">
+      <title
+         id="title2363">11</title>
+      <path
+         id="path2365"
+         d="m 623.5,-900 c 0,0 -167,0 -167,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 167,0 167,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#56d0d8"
+         fill="none" />
+      <text
+         id="text2367"
+         font-size="10px"
+         font-family="sans"
+         y="-885"
+         x="540"
+         text-anchor="middle">prodigal</text>
+    </g>
+    <!-- 11&#45;&gt;9 -->
+    <g
+       class="edge"
+       id="edge19">
+      <title
+         id="title2372">11-&gt;9</title>
+      <path
+         id="path2374"
+         d="m 540,-863.7 c 0,7.72 0,16.99 0,25.59"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2376"
+         points="536.5,-838.1 543.5,-838.1 540,-828.1 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 12 -->
+    <!-- 12&#45;&gt;9 -->
+    <!-- 13&#45;&gt;4 -->
+    <g
+       class="edge"
+       id="edge14">
+      <title
+         id="title2395">13-&gt;4</title>
+      <path
+         id="path2397"
+         d="m 1085.22,-647.88 c -17.85,9.33 -40.12,20.96 -59.22,30.94"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2399"
+         points="1024.15,-619.92 1027.39,-613.72 1016.91,-612.19 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 14&#45;&gt;13 -->
+    <g
+       class="edge"
+       id="edge22">
+      <title
+         id="title2402">14-&gt;13</title>
+      <path
+         id="path2404"
+         d="m 1123.27,-719.7 c -0.77,7.72 -1.7,16.99 -2.56,25.59"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2406"
+         points="1117.22,-694.4 1124.19,-693.71 1119.71,-684.1 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 15 -->
+    <g
+       class="node"
+       id="node16">
+      <title
+         id="title2409">15</title>
+      <path
+         id="path2411"
+         d="m 478.5,-324 c 0,0 -143,0 -143,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 143,0 143,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#5682d8"
+         fill="none" />
+      <text
+         id="text2413"
+         font-size="10px"
+         font-family="sans"
+         y="-303.5"
+         x="407"
+         text-anchor="middle">blast_v_hmmer_immunity_protein</text>
+    </g>
+    <!-- 15&#45;&gt;1 -->
+    <g
+       class="edge"
+       id="edge5">
+      <title
+         id="title2416">15-&gt;1</title>
+      <path
+         id="path2418"
+         d="m 407,-287.85 c 0,37.02 0,124.67 0,169.46"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2420"
+         points="403.5,-118.23 410.5,-118.23 407,-108.23 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 15&#45;&gt;3 -->
+    <g
+       class="edge"
+       id="edge9">
+      <title
+         id="title2423">15-&gt;3</title>
+      <path
+         id="path2425"
+         d="m 457.62,-287.97 c 31.82,10.71 72.79,24.5 104.95,35.32"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2427"
+         points="561.65,-249.26 563.89,-255.89 572.25,-249.39 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 16 -->
+    <g
+       class="node"
+       id="node17">
+      <title
+         id="title2430">16</title>
+      <path
+         id="path2432"
+         d="m 474,-396 c 0,0 -118,0 -118,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 118,0 118,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#56d88a"
+         fill="none" />
+      <text
+         id="text2434"
+         font-size="10px"
+         font-family="sans"
+         y="-375.5"
+         x="415"
+         text-anchor="middle">buildhmm_immunity_protein</text>
+    </g>
+    <!-- 16&#45;&gt;15 -->
+    <g
+       class="edge"
+       id="edge25">
+      <title
+         id="title2437">16-&gt;15</title>
+      <path
+         id="path2439"
+         d="m 413.02,-359.7 c -0.88,7.72 -1.94,16.99 -2.92,25.59"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2441"
+         points="406.61,-334.44 413.57,-333.64 408.95,-324.1 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 17 -->
+    <g
+       class="node"
+       id="node18">
+      <title
+         id="title2444">17</title>
+      <path
+         id="path2446"
+         d="m 480.5,-468 c 0,0 -93,0 -93,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 93,0 93,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#70d856"
+         fill="none" />
+      <text
+         id="text2448"
+         font-size="10px"
+         font-family="sans"
+         y="-447.5"
+         x="434"
+         text-anchor="middle">msa_immunity_protein</text>
+    </g>
+    <!-- 17&#45;&gt;16 -->
+    <g
+       class="edge"
+       id="edge28">
+      <title
+         id="title2451">17-&gt;16</title>
+      <path
+         id="path2453"
+         d="m 429.3,-431.7 c -2.11,7.8 -4.66,17.19 -7.02,25.87"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2455"
+         points="418.88,-406.67 425.64,-404.84 419.64,-396.1 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 18 -->
+    <g
+       class="node"
+       id="node19">
+      <title
+         id="title2458">18</title>
+      <path
+         id="path2460"
+         d="m 330,-540 c 0,0 -100,0 -100,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 100,0 100,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#9fd856"
+         fill="none" />
+      <text
+         id="text2462"
+         font-size="10px"
+         font-family="sans"
+         y="-519.5"
+         x="280"
+         text-anchor="middle">write_immunity_proteins</text>
+    </g>
+    <!-- 18&#45;&gt;17 -->
+    <g
+       class="edge"
+       id="edge29">
+      <title
+         id="title2465">18-&gt;17</title>
+      <path
+         id="path2467"
+         d="m 317.67,-503.88 c 20.96,9.53 47.23,21.47 69.51,31.6"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2469"
+         points="385.9,-469.02 388.79,-475.39 396.45,-468.07 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 20 -->
+    <g
+       class="node"
+       id="node21">
+      <title
+         id="title2472">20</title>
+      <path
+         id="path2474"
+         d="m 289.5,-396 c 0,0 -95,0 -95,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 95,0 95,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#56d8b9"
+         fill="none" />
+      <text
+         id="text2476"
+         font-size="10px"
+         font-family="sans"
+         y="-375.5"
+         x="242"
+         text-anchor="middle">blast_immunity_protein</text>
+    </g>
+    <!-- 18&#45;&gt;20 -->
+    <g
+       class="edge"
+       id="edge31">
+      <title
+         id="title2479">18-&gt;20</title>
+      <path
+         id="path2481"
+         d="m 233.48,-503.85 c -15.73,8.29 -31.56,19.97 -40.48,35.85 -7.84,13.95 -5.83,21.1 0,36 4.2,10.72 11.69,20.57 19.58,28.8"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2483"
+         points="210.24,-400.59 215.12,-405.61 219.85,-396.13 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 21 -->
+    <g
+       class="node"
+       id="node22">
+      <title
+         id="title2486">21</title>
+      <path
+         id="path2488"
+         d="m 345.5,-468 c 0,0 -131,0 -131,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 131,0 131,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#56b1d8"
+         fill="none" />
+      <text
+         id="text2490"
+         font-size="10px"
+         font-family="sans"
+         y="-447.5"
+         x="280"
+         text-anchor="middle">makeblastdb_immunity_protein</text>
+    </g>
+    <!-- 18&#45;&gt;21 -->
+    <g
+       class="edge"
+       id="edge34">
+      <title
+         id="title2493">18-&gt;21</title>
+      <path
+         id="path2495"
+         d="m 280,-503.7 c 0,7.72 0,16.99 0,25.59"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2497"
+         points="276.5,-478.1 283.5,-478.1 280,-468.1 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 19&#45;&gt;15 -->
+    <g
+       class="edge"
+       id="edge26">
+      <title
+         id="title2500">19-&gt;15</title>
+      <path
+         id="path2502"
+         d="m 98.82,-431.68 c 14.87,20.4 42.35,53.76 74.18,71.68 42.77,24.07 95.75,37.22 140.47,44.39"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2504"
+         points="313.06,-312.14 314.11,-319.06 323.47,-314.09 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 19&#45;&gt;20 -->
+    <g
+       class="edge"
+       id="edge33">
+      <title
+         id="title2507">19-&gt;20</title>
+      <path
+         id="path2509"
+         d="m 124.92,-431.88 c 21.09,9.53 47.54,21.47 69.95,31.6"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2511"
+         points="193.65,-396.99 196.53,-403.37 204.21,-396.07 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 20&#45;&gt;15 -->
+    <g
+       class="edge"
+       id="edge27">
+      <title
+         id="title2514">20-&gt;15</title>
+      <path
+         id="path2516"
+         d="m 282.36,-359.88 c 22.66,9.62 51.11,21.69 75.11,31.87"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2518"
+         points="356.19,-324.75 358.93,-331.2 366.77,-324.07 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 21&#45;&gt;20 -->
+    <g
+       class="edge"
+       id="edge32">
+      <title
+         id="title2521">21-&gt;20</title>
+      <path
+         id="path2523"
+         d="m 270.61,-431.7 c -4.37,8.06 -9.67,17.81 -14.51,26.72"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2525"
+         points="252.98,-406.56 259.13,-403.22 251.29,-396.1 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 22 -->
+    <g
+       class="node"
+       id="node23">
+      <title
+         id="title2528">22</title>
+      <path
+         id="path2530"
+         d="m 742.5,-612 c 0,0 -91,0 -91,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 91,0 91,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#d8c356"
+         fill="none" />
+      <text
+         id="text2532"
+         font-size="10px"
+         font-family="sans"
+         y="-591.5"
+         x="697"
+         text-anchor="middle">blast_v_hmmer_CvaB</text>
+    </g>
+    <!-- 22&#45;&gt;3 -->
+    <g
+       class="edge"
+       id="edge10">
+      <title
+         id="title2535">22-&gt;3</title>
+      <path
+         id="path2537"
+         d="m 730.31,-575.87 c 39.1,22.78 98.69,66.98 98.69,124.87 0,0 0,0 0,74 0,77.35 -98.26,115.07 -161.62,131.36"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2539"
+         points="666.4,-249.01 668.08,-242.21 657.54,-243.21 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 31 -->
+    <g
+       class="node"
+       id="node32">
+      <title
+         id="title2542">31</title>
+      <path
+         id="path2544"
+         d="m 728,-540 c 0,0 -82,0 -82,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 82,0 82,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#d89556"
+         fill="none" />
+      <text
+         id="text2546"
+         font-size="10px"
+         font-family="sans"
+         y="-519.5"
+         x="687"
+         text-anchor="middle">best_Cvab_headers</text>
+    </g>
+    <!-- 22&#45;&gt;31 -->
+    <g
+       class="edge"
+       id="edge49">
+      <title
+         id="title2549">22-&gt;31</title>
+      <path
+         id="path2551"
+         d="m 694.53,-575.7 c -1.1,7.72 -2.43,16.99 -3.66,25.59"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2553"
+         points="687.39,-550.5 694.32,-549.51 689.44,-540.1 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 23 -->
+    <g
+       class="node"
+       id="node24">
+      <title
+         id="title2556">23</title>
+      <path
+         id="path2558"
+         d="m 827,-684 c 0,0 -66,0 -66,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 66,0 66,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#61d856"
+         fill="none" />
+      <text
+         id="text2560"
+         font-size="10px"
+         font-family="sans"
+         y="-663.5"
+         x="794"
+         text-anchor="middle">buildhmm_CvaB</text>
+    </g>
+    <!-- 23&#45;&gt;22 -->
+    <g
+       class="edge"
+       id="edge35">
+      <title
+         id="title2563">23-&gt;22</title>
+      <path
+         id="path2565"
+         d="m 770.02,-647.7 c -12.33,8.9 -27.54,19.88 -40.87,29.5"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2567"
+         points="726.76,-620.79 730.86,-615.12 720.7,-612.1 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 24 -->
+    <g
+       class="node"
+       id="node25">
+      <title
+         id="title2570">24</title>
+      <path
+         id="path2572"
+         d="m 844.5,-756 c 0,0 -41,0 -41,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 41,0 41,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#56d86b"
+         fill="none" />
+      <text
+         id="text2574"
+         font-size="10px"
+         font-family="sans"
+         y="-735.5"
+         x="824"
+         text-anchor="middle">msa_CvaB</text>
+    </g>
+    <!-- 24&#45;&gt;23 -->
+    <g
+       class="edge"
+       id="edge38">
+      <title
+         id="title2577">24-&gt;23</title>
+      <path
+         id="path2579"
+         d="m 816.58,-719.7 c -3.37,7.89 -7.45,17.4 -11.2,26.15"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2581"
+         points="802.05,-694.67 808.49,-691.92 801.33,-684.1 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 32 -->
+    <g
+       class="node"
+       id="node33">
+      <title
+         id="title2584">32</title>
+      <path
+         id="path2586"
+         d="m 753,-396 c 0,0 -98,0 -98,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 98,0 98,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#afd856"
+         fill="none" />
+      <text
+         id="text2588"
+         font-size="10px"
+         font-family="sans"
+         y="-375.5"
+         x="704"
+         text-anchor="middle">align_with_verifiedCvab</text>
+    </g>
+    <!-- 24&#45;&gt;32 -->
+    <g
+       class="edge"
+       id="edge51">
+      <title
+         id="title2591">24-&gt;32</title>
+      <path
+         id="path2593"
+         d="m 833.95,-719.98 c 5.32,10.09 11.32,23.34 14.05,35.98 3.38,15.64 3.89,20.48 0,36 -24.46,97.5 -91.78,198.27 -124.98,243.88"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2595"
+         points="720.15,-406.13 725.79,-401.98 717.04,-396 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 25 -->
+    <g
+       class="node"
+       id="node26">
+      <title
+         id="title2598">25</title>
+      <path
+         id="path2600"
+         d="m 795,-828 c 0,0 -44,0 -44,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 44,0 44,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#bed856"
+         fill="none" />
+      <text
+         id="text2602"
+         font-size="10px"
+         font-family="sans"
+         y="-807.5"
+         x="773"
+         text-anchor="middle">write_CvaB</text>
+    </g>
+    <!-- 25&#45;&gt;24 -->
+    <g
+       class="edge"
+       id="edge39">
+      <title
+         id="title2605">25-&gt;24</title>
+      <path
+         id="path2607"
+         d="m 785.61,-791.7 c 5.99,8.23 13.27,18.22 19.87,27.28"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2609"
+         points="802.82,-762.13 808.48,-766.25 811.54,-756.1 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 28 -->
+    <g
+       class="node"
+       id="node29">
+      <title
+         id="title2612">28</title>
+      <path
+         id="path2614"
+         d="m 761.5,-756 c 0,0 -79,0 -79,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 79,0 79,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#d8d356"
+         fill="none" />
+      <text
+         id="text2616"
+         font-size="10px"
+         font-family="sans"
+         y="-735.5"
+         x="722"
+         text-anchor="middle">makeblastdb_CvaB</text>
+    </g>
+    <!-- 25&#45;&gt;28 -->
+    <g
+       class="edge"
+       id="edge43">
+      <title
+         id="title2619">25-&gt;28</title>
+      <path
+         id="path2621"
+         d="m 760.39,-791.7 c -5.99,8.23 -13.27,18.22 -19.87,27.28"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2623"
+         points="737.52,-766.25 743.18,-762.13 734.46,-756.1 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 26&#45;&gt;22 -->
+    <g
+       class="edge"
+       id="edge36">
+      <title
+         id="title2626">26-&gt;22</title>
+      <path
+         id="path2628"
+         d="m 624.77,-719.88 c 5.53,18.47 15.67,48.38 29.23,71.88 5.65,9.8 13.07,19.66 20.15,28.18"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2630"
+         points="671.6,-617.42 676.91,-621.98 680.77,-612.12 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 27 -->
+    <g
+       class="node"
+       id="node28">
+      <title
+         id="title2633">27</title>
+      <path
+         id="path2635"
+         d="m 719,-684 c 0,0 -44,0 -44,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 44,0 44,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#8fd856"
+         fill="none" />
+      <text
+         id="text2637"
+         font-size="10px"
+         font-family="sans"
+         y="-663.5"
+         x="697"
+         text-anchor="middle">blast_CvaB</text>
+    </g>
+    <!-- 26&#45;&gt;27 -->
+    <g
+       class="edge"
+       id="edge42">
+      <title
+         id="title2640">26-&gt;27</title>
+      <path
+         id="path2642"
+         d="m 639.03,-719.7 c 9.51,8.65 21.18,19.25 31.54,28.67"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2644"
+         points="668.43,-688.24 673.14,-693.42 678.19,-684.1 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 30 -->
+    <g
+       class="node"
+       id="node31">
+      <title
+         id="title2647">30</title>
+      <path
+         id="path2649"
+         d="m 694,-468 c 0,0 -68,0 -68,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12 0,0 68,0 68,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12"
+         stroke-dasharray="5, 2"
+         stroke-width="2"
+         stroke="#56d89a"
+         fill="none" />
+      <text
+         id="text2651"
+         font-size="10px"
+         font-family="sans"
+         y="-447.5"
+         x="660"
+         text-anchor="middle">best_Cvab_fasta</text>
+    </g>
+    <!-- 26&#45;&gt;30 -->
+    <g
+       class="edge"
+       id="edge48">
+      <title
+         id="title2654">26-&gt;30</title>
+      <path
+         id="path2656"
+         d="m 617.19,-719.81 c -5.74,39.31 -16.36,138.37 7.81,215.81 3.02,9.69 8.4,19.26 14.04,27.55"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2658"
+         points="636.23,-474.37 641.89,-478.48 644.93,-468.33 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 27&#45;&gt;22 -->
+    <g
+       class="edge"
+       id="edge37">
+      <title
+         id="title2661">27-&gt;22</title>
+      <path
+         id="path2663"
+         d="m 697,-647.7 c 0,7.72 0,16.99 0,25.59"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2665"
+         points="693.5,-622.1 700.5,-622.1 697,-612.1 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 28&#45;&gt;27 -->
+    <g
+       class="edge"
+       id="edge41">
+      <title
+         id="title2668">28-&gt;27</title>
+      <path
+         id="path2670"
+         d="m 715.82,-719.7 c -2.82,7.89 -6.21,17.4 -9.34,26.15"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2672"
+         points="703.18,-694.7 709.77,-692.34 703.11,-684.1 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 29&#45;&gt;3 -->
+    <g
+       class="edge"
+       id="edge11">
+      <title
+         id="title2675">29-&gt;3</title>
+      <path
+         id="path2677"
+         d="m 615,-287.7 c 0,7.72 0,16.99 0,25.59"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2679"
+         points="611.5,-262.1 618.5,-262.1 615,-252.1 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 30&#45;&gt;29 -->
+    <g
+       class="edge"
+       id="edge44">
+      <title
+         id="title2682">30-&gt;29</title>
+      <path
+         id="path2684"
+         d="m 650.22,-431.8 c -5.43,10.15 -11.93,23.4 -16.22,35.8 -7.01,20.25 -11.92,44.02 -15,61.9"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2686"
+         points="615.52,-334.5 622.43,-333.37 617.37,-324.07 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 30&#45;&gt;32 -->
+    <g
+       class="edge"
+       id="edge50">
+      <title
+         id="title2689">30-&gt;32</title>
+      <path
+         id="path2691"
+         d="m 670.88,-431.7 c 5.11,8.14 11.32,18.01 16.96,27"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2693"
+         points="684.96,-402.71 690.89,-406.43 693.25,-396.1 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 31&#45;&gt;30 -->
+    <g
+       class="edge"
+       id="edge47">
+      <title
+         id="title2696">31-&gt;30</title>
+      <path
+         id="path2698"
+         d="m 680.33,-503.7 c -3.04,7.89 -6.71,17.4 -10.09,26.15"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2700"
+         points="666.93,-478.69 673.46,-476.17 666.6,-468.1 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 32&#45;&gt;29 -->
+    <g
+       class="edge"
+       id="edge45">
+      <title
+         id="title2703">32-&gt;29</title>
+      <path
+         id="path2705"
+         d="m 682,-359.7 c -11.21,8.82 -25,19.67 -37.15,29.23"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2707"
+         points="642.44,-333.04 646.77,-327.54 636.75,-324.1 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+    <!-- 33&#45;&gt;0 -->
+    <g
+       class="edge"
+       id="edge2">
+      <title
+         id="title2710">33-&gt;0</title>
+      <path
+         id="path2712"
+         d="m 506.91,-71.7 c -6.83,8.4 -15.17,18.63 -22.67,27.84"
+         stroke-width="2"
+         stroke="#808080"
+         fill="none" />
+      <polygon
+         id="polygon2714"
+         points="481.53,-46.07 486.96,-41.65 477.93,-36.1 "
+         stroke-width="2"
+         stroke="#808080"
+         fill="#808080" />
+    </g>
+  </g>
+</svg>
