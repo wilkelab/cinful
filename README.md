@@ -5,6 +5,12 @@ A fully automated pipeline to identify microcins along with their associated imm
 
 # Installation
 
+
+First, make sure to clone this repository:
+
+```bash
+git clone https://github.com/tijeco/cinful.git
+```
 All software dependencies needed to run cinful are available through conda and are specified in `cinful_conda.yml`, the following helper script can be used to generate the cinful conda environment `scripts/build_conda_env.sh`, to run this script, you will need to have conda installed, as well as mamba (which helps speed up installation). To install mamba, use the following command:
 
 ```bash
@@ -47,6 +53,22 @@ Three output directories will be generated in your `assembly_directory` under a 
   * The results from all the homology searches will be merged here
 * `03_best_hits`
   * The top hits from the homology results will be placed here
+
+# Example usage
+
+There is a test dataset with an _E. coli_ genome assembly to test cinful on under `test/colcinV_Ecoli`, you can run cinful on this dataset by running the following:
+
+```bash
+snakemake -d test/colcinV_Ecoli --snakemake 
+```
+# Todo
+
+Currently, cinful is executed via directly issuing a snakemake command, what I will do in the future is create a python package that acts as a wrapper for snakemake to ease potential configuration of certain parameters within the workflow.
+
+Also, the pipeline currently runs end to end, though there may be cases where the user already has data for a certain part of the pipeline and would like to plug that in. Snakemake allows for that to be a possibility, so I will work to make a set of tutorials on how to do that through snakemake, and eventually the cinful python package will have options to do that as well.
+
+
+
 
 
 
