@@ -35,7 +35,8 @@ def hasAllStandardAA(seq, alphabet="ACDEFGHIKLMNPQRSTVWY",ignore="*"):
 
 rule nonredundant_prodigal:
 	input:
-		all_samples=expand("cinfulOut/01_orf_homology/prodigal_out/{sample}.faa",sample=SAMPLES)
+		all_samples=expand("cinfulOut/01_orf_homology/prodigal_out/{sample}.faa",sample=SAMPLES),
+		signalSeqAln="cinfulOut/00_dbs/verified_SP.aln"
 	output:
 		fasta="cinfulOut/01_orf_homology/prodigal_out.all.nr.faa",
 		csv="cinfulOut/01_orf_homology/prodigal_out.all.nr_expanded.csv"
@@ -71,16 +72,16 @@ rule nonredundant_prodigal:
 					description=""
 				)
 				SeqIO.write(outRecord, fasta_file, "fasta")
-		# signalSeqHMM = build_hmm(input.signalSeqAln)
+		signalSeqHMM = build_hmm(input.signalSeqAln)
 		
-		# signalSeqHits = hmmsearch(output.fasta, signalSeqHMM)
-		# signalSeqHitStr = [hit.name.decode('utf-8') for hit in signalSeqHits]
+		signalSeqHits = hmmsearch(output.fasta, signalSeqHMM)
+		signalSeqHitStr = [hit.name.decode('utf-8') for hit in signalSeqHits]
 
 		idDF = pd.DataFrame.from_dict(idDict,orient="index")
 		
 		idDF.columns = ["pephash","sample","contig","start","stop","strand","allStandardAA","seq"]
 		# print("SignalMatch:",len(signalSeqHitStr),signalSeqHitStr)
-		# idDF["signalMatch"] = idDF["pephash"].isin(signalSeqHitStr)
+		idDF["signalMatch"] = idDF["pephash"].isin(signalSeqHitStr)
 									
 		idDF.to_csv(output.csv)
 
