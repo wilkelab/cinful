@@ -42,6 +42,23 @@ rule buildhmm_microcin:
 		"hmmbuild {output} {input}"
 
 
+rule signalSeqHMM:
+	input:
+		input_seqs = "cinfulOut/01_orf_homology/microcins/filtered_nr.fa",
+		signalSeqAln = "cinfulOut/00_dbs/verified_SP.aln"
+	output:
+		"cinfulOut/01_orf_homology/microcins/signalSeq.hit.csv"
+	run:
+		signalSeqHMM = build_hmm(input.signalSeqAln)
+		
+		signalSeqHits = hmmsearch(output.fasta, signalSeqHMM)
+		signalSeqHitStr = [hit.name.decode('utf-8') for hit in signalSeqHits]
+		matchDF = pd.DataFrame.from_dict({"signalMatch":signalSeqHitStr})
+		matchDF.to_csv(output[0])
+		# idDF["signalMatch"] = idDF["pephash"].isin(signalSeqHitStr)
+
+
+
 
 rule blast_v_hmmer_microcin:
 	input:
