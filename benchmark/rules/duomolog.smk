@@ -29,6 +29,14 @@ def run_hmmsearch(queryFile, hmmFile):
 	return hits , hmm.name.decode() # [hit.name.decode() for hit in hmmerOut]
 
 
+# rule final:
+# 	input:
+# 		expand("cinfulOut/02_homology_results/{sample}.all_merged.csv", sample = SAMPLES)
+		# expand("cinfulOut/01_orf_homology/{sample}_prodigal/{component}/blast_v_hmmer.csv", sample = SAMPLES, component = COMPONENTS)
+		# expand("{sample}_cinfulOut/{component}/{sample}.hmmerOut.txt", sample = SAMPLES, component = COMPONENTS)
+		# expand("{sample}_cinfulOut/{component}/blast.txt", sample = SAMPLES, component = COMPONENTS)
+		# expand("{sample}blast_intersect_hmmer.fa", sample = SAMPLES, component = COMPONENTS)
+
 rule makeblastdb:
 	input:
 		"{component}.verified.pep"
@@ -102,3 +110,61 @@ rule merged_results:
 		# with open(output[0],"w") as out:
 			# out.write("test\n")
 		
+
+
+
+
+
+
+# rule hmmsearch:
+
+
+
+# rule duomolog:
+# 	input:
+# 		verified_microcins = "verified_microcins.pep",
+# 		input_seqs = "{sample}_cinfulOut/{sample}.30_150.fa",
+# 		blastout="{sample}_cinfulOut/{sample}.verified_microcins.blast.txt",
+# 		hmm="verified_microcins.hmm"
+# 	output:
+# 		"{sample}_cinfulOut/duomolog_microcin/summary_out.txt"
+# 	shell:
+# 		"""duomolog blast_v_hmmer --inFile {input.verified_microcins} --queryFile {input.input_seqs} \
+# 			--blastFile {input.blastout} \
+# 			--intersectOnly \
+# 			--hmmFile {input.hmm}	\
+# 			--summaryOut {output}
+# 		"""
+
+# rule duomolog:
+# 	input:
+# 		verified_immunity_proteins = "verified_immunity_proteins.pep",
+# 		input_seqs = "{sample}_cinfulOut/{sample}.30_150.fa",
+# 		blastout="{sample}_cinfulOut/{sample}.verified_immunity_proteins.blast.txt",
+# 		hmm="verified_immunity_proteins.hmm"
+# 	output:
+# 		"{sample}_cinfulOut/duomolog_immunity_protein/summary_out.txt"
+# 	shell:
+# 		"""duomolog blast_v_hmmer --inFile {input.verified_immunity_proteins} --queryFile {input.input_seqs} \
+# 			--blastFile {input.blastout} \
+# 			--intersectOnly \
+# 			--hmmFile {input.hmm}	\
+# 			--summaryOut {output}
+# 		"""	
+
+
+# rule duomolog:
+# 	input:
+# 		verified_CvaB = "verified_CvaB.pep",
+# 		input_seqs = "{sample}_cinfulOut/{sample}.faa",
+# 		blastout = "{sample}_cinfulOut/{sample}.verified_CvaB.blast.txt",
+# 		hmm = "verified_CvaB.hmm"
+# 	output:
+# 		"{sample}_cinfulOut/duomolog_CvaB/summary_out.txt"
+# 	shell:
+# 		"""duomolog blast_v_hmmer --inFile {input.verified_CvaB} --queryFile {input.input_seqs} \
+# 			--blastFile {input.blastout} \
+# 			--intersectOnly \
+# 			--hmmFile {input.hmm}	\
+# 			--summaryOut {output}
+# 		"""

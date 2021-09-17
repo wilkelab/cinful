@@ -36,12 +36,24 @@ def qcCvab(best_hitsPep, best_hitsAln):
 
 
 
+# rule final:
+	# input:
+		# expand("cinfulOut/01_orf_homology/CvaB/filtered_nr.fa", sample = SAMPLES)
+
+
+
+
+
+
+
 
 rule makeblastdb_CvaB:
 	input:
 		"cinfulOut/00_dbs/CvaB.verified.pep"
 	output:
 		"cinfulOut/00_dbs/CvaB.verified.pep.dmnd"
+	benchmark:
+		"cinfulOut/benchmark/makeblastdb_CvaB.txt"
 	shell:
 		"diamond makedb --in {input} -d {input}"
 		# "makeblastdb -dbtype prot -in {input}"
@@ -53,6 +65,8 @@ rule blast_CvaB:
 	output:
 		"cinfulOut/01_orf_homology/CvaB/blast.txt"
 	threads:threads_max
+	benchmark:
+		"cinfulOut/benchmark/blast_CvaB.txt"
 	shell:
 		"diamond blastp -d {input.verified_component} -q {input.input_seqs}   --evalue 0.001 -k 1 -o {output} -p {threads}"
 		# "blastp -db {input.verified_component} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
@@ -65,6 +79,8 @@ rule msa_CvaB:
 	output:
 		"cinfulOut/00_dbs/CvaB.verified.aln"
 	threads:threads_max
+	benchmark:
+		"cinfulOut/benchmark/msa_CvaB.txt"
 	shell:
 		"mafft --thread {threads} --auto {input} > {output}"
 
@@ -73,6 +89,8 @@ rule buildhmm_CvaB:
 		"cinfulOut/00_dbs/CvaB.verified.aln"
 	output:
 		"cinfulOut/00_dbs/CvaB.verified.hmm"
+	benchmark:
+		"cinfulOut/benchmark/buildhmm_CvaB.txt"
 	shell:
 		"hmmbuild {output} {input}"
 
@@ -99,6 +117,8 @@ rule best_Cvab_headers:
 		"cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.csv"
 	output:
 		"cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.headers"
+	benchmark:
+		"cinfulOut/benchmark/best_Cvab_headers.txt"
 	shell:
 		"cut -d, -f1 {input} > {output}"
 
@@ -108,11 +128,24 @@ rule best_Cvab_fasta:
 		input_seqs = "cinfulOut/01_orf_homology/CvaB/filtered_nr.fa"
 	output:
 		"cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.fa"
+	benchmark:
+		"cinfulOut/benchmark/best_Cvab_fasta.txt"
 	shell:
 		"seqkit grep -f {input.headers} {input.input_seqs} > {output}"
 
 
-
+# rule best_Cvab_fa:
+# 	input:
+# 		hitsCvaB="cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.csv",
+# 		nrPeps="cinfulOut/01_orf_homology/CvaB/filtered_nr.fa"
+# 	output:
+# 		"cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.fa"
+# 	run:
+# 		hitsCvaBDF = pd.read_csv(input.hitsCvaB)
+# 		with open(output[0],"w") as out:
+# 			for record in SeqIO.parse(input.nrPeps, "fasta"):
+# 				if record.id in set(hitsCvaBDF["qseqid"]):
+# 					SeqIO.write(record,out,"fasta")
 
 rule align_with_verifiedCvab:
 	input:
@@ -120,6 +153,8 @@ rule align_with_verifiedCvab:
 		verified_CvaB="cinfulOut/00_dbs/CvaB.verified.aln"
 	output:
 		"cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.with_verified.aln"
+	benchmark:
+		"cinfulOut/benchmark/align_with_verifiedCvab.txt"
 	shell:
 		"mafft --inputorder --keeplength --add {input.best_CvaB} --auto "
 		"{input[1]} > {output}"

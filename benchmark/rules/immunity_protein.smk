@@ -9,6 +9,8 @@ rule makeblastdb_immunity_protein:
 		"cinfulOut/00_dbs/immunity_proteins.verified.pep"
 	output:
 		"cinfulOut/00_dbs/immunity_proteins.verified.pep.phr"
+	benchmark:
+		"cinfulOut/benchmark/makeblastdb_immunity_protein.txt"
 	shell:
 		"makeblastdb -dbtype prot -in {input}"
 
@@ -20,6 +22,8 @@ rule blast_immunity_protein:
 	output:
 		"cinfulOut/01_orf_homology/immunity_proteins/blast.txt"
 	threads:threads_max
+	benchmark:
+		"cinfulOut/benchmark/blast_immunity_protein.txt"
 	shell:
 		"blastp -db {input.verified_component} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1 -num_threads {threads}"
 
@@ -28,6 +32,8 @@ rule msa_immunity_protein:
 		"cinfulOut/00_dbs/immunity_proteins.verified.pep"
 	output:
 		"cinfulOut/00_dbs/immunity_proteins.verified.aln"
+	benchmark:
+		"cinfulOut/benchmark/msa_immunity_protein.txt"
 	shell:
 		"mafft --auto {input} > {output}"
 
@@ -36,6 +42,8 @@ rule buildhmm_immunity_protein:
 		"cinfulOut/00_dbs/immunity_proteins.verified.aln"
 	output:
 		"cinfulOut/00_dbs/immunity_proteins.verified.hmm"
+	benchmark:
+		"cinfulOut/benchmark/buildhmm_immunity_protein.txt"
 	shell:
 		"hmmbuild {output} {input}"
 

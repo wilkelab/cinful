@@ -11,6 +11,8 @@ rule makeblastdb_microcin:
 		"cinfulOut/00_dbs/microcins.verified.pep"
 	output:
 		"cinfulOut/00_dbs/microcins.verified.pep.phr"
+	benchmark:
+		"cinfulOut/benchmark/makeblastdb_microcin.txt"
 	shell:
 		"makeblastdb -dbtype prot -in {input}"
 
@@ -22,6 +24,8 @@ rule blast_microcin:
 	output:
 		"cinfulOut/01_orf_homology/microcins/blast.txt"
 	threads:threads_max
+	benchmark:
+		"cinfulOut/benchmark/blast_microcin.txt"
 	shell:
 		"blastp -db {input.verified_component} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1 -num_threads {threads}"
 
@@ -30,6 +34,8 @@ rule msa_microcin:
 		"cinfulOut/00_dbs/microcins.verified.pep"
 	output:
 		"cinfulOut/00_dbs/microcins.verified.aln"
+	benchmark:
+		"cinfulOut/benchmark/msa_microcin.txt"
 	shell:
 		"mafft --auto {input} > {output}"
 
@@ -38,6 +44,8 @@ rule buildhmm_microcin:
 		"cinfulOut/00_dbs/microcins.verified.aln"
 	output:
 		"cinfulOut/00_dbs/microcins.verified.hmm"
+	benchmark:
+		"cinfulOut/benchmark/buildhmm_microcin.txt"
 	shell:
 		"hmmbuild {output} {input}"
 

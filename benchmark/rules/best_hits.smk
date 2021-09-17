@@ -145,4 +145,21 @@ rule candidate_immunity:
 
 
 
-	
+		
+# rule best_hits_combined:
+# 	input:
+# 		"cinfulOut/02_homology_results/best_hits.csv", sample = SAMPLES)
+# 	output:
+# 		"cinfulOut/03_best_hits/best_hits.csv"
+# 	run:
+# 		inDFs = []
+		
+# 		for inFile in input:
+# 			sample = inFile.replace("cinfulOut/02_homology_results/","").replace(".best_hits.csv","")
+# 			# print(f"################\n{sample}\n###############")
+# 			inDF = pd.read_csv(inFile)
+# 			inDF.insert(0,"sample",sample)
+# 			inDFs.append(inDF)
+# 		outDF = pd.concat(inDFs)
+# 		outDF.to_csv(output[0], index=False)
+
