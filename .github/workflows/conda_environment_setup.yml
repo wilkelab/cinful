@@ -25,11 +25,9 @@ jobs:
       run: |
         mamba create  -n cinful
         mamba env update -n cinful --file cinful_conda.yml
-    - name: Activate cinful environment
-      run: |
-        source activate cinful
     - name: Run workflow unit-tests
       run: |
+        source activate cinful
         cd cinful
         python -m snakemake cinful_out/01_orf_homology/CvaB/blast_v_hmmer.with_verified.aln -F -j1 --keep-target-files --allowed-rules align_with_verifiedCvab -d .tests/align_with_verifiedCvab
         python -m snakemake cinful_out/03_best_hits/best_hit_contigs.csv -F -j1 --keep-target-files --allowed-rules bestHitsContigs -d .tests/bestHitsContigs
