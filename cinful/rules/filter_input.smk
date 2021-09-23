@@ -33,17 +33,18 @@ def build_hmm(alnFile):
 def hasAllStandardAA(seq, alphabet="ACDEFGHIKLMNPQRSTVWY",ignore="*"):
 	return (set(seq) - set(alphabet+ignore)) == set()
 
+
 rule nonredundant_prodigal:
 	input:
-		all_samples=expand("cinfulOut/01_orf_homology/prodigal_out/{sample}.faa",sample=SAMPLES)		
+		all_samples=expand(config["outdir"]+"/01_orf_homology/prodigal_out/{sample}.faa", sample=SAMPLES)
 	output:
-		fasta="cinfulOut/01_orf_homology/prodigal_out.all.nr.faa",
-		csv="cinfulOut/01_orf_homology/prodigal_out.all.nr_expanded.csv"
+		fasta=config["outdir"] + "/01_orf_homology/prodigal_out.all.nr.faa",
+		csv=config["outdir"] + "/01_orf_homology/prodigal_out.all.nr_expanded.csv"
 	run:
 		hashDict = {}
 		idDict = {}
 		for file in input.all_samples:
-			sample = file.split("cinfulOut/01_orf_homology/prodigal_out/")[1].strip(".faa")
+			sample = file.split("01_orf_homology/prodigal_out/")[1].strip(".faa")
 			with open(file) as handle:
 				for seq_record in SeqIO.parse(handle, "fasta"):
 					pephash = seqhash.seqhash(seq_record.seq,dna_type='PROTEIN')
@@ -82,9 +83,9 @@ rule nonredundant_prodigal:
 
 rule filter_microcin:
 	input:
-		"cinfulOut/01_orf_homology/prodigal_out.all.nr.faa"
+		config["outdir"] + "/01_orf_homology/prodigal_out.all.nr.faa"
 	output:
-		"cinfulOut/01_orf_homology/microcins/filtered_nr.fa"
+		config["outdir"] + "/01_orf_homology/microcins/filtered_nr.fa"
 	shell:
 		"seqkit seq -m 30 -M 150 {input} | seqkit rmdup -s > {output}"
 
@@ -92,17 +93,17 @@ rule filter_microcin:
 		
 rule filter_immunity_protein:
 	input:
-		"cinfulOut/01_orf_homology/prodigal_out.all.nr.faa"
+		config["outdir"] + "/01_orf_homology/prodigal_out.all.nr.faa"
 	output:
-		"cinfulOut/01_orf_homology/immunity_proteins/filtered_nr.fa"
+		config["outdir"] + "/01_orf_homology/immunity_proteins/filtered_nr.fa"
 	shell:
 		"seqkit seq -m 30 -M 250  {input} | seqkit rmdup -s > {output}"
 
 rule filter_CvaB:
 	input:
-		"cinfulOut/01_orf_homology/prodigal_out.all.nr.faa"
+		config["outdir"] + "/01_orf_homology/prodigal_out.all.nr.faa"
 	output:
-		"cinfulOut/01_orf_homology/CvaB/filtered_nr.fa"
+		config["outdir"] + "/01_orf_homology/CvaB/filtered_nr.fa"
 	shell:
 		"seqkit seq -m 600 -M 800 {input} | seqkit rmdup -s > {output}"
 

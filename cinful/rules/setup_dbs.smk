@@ -11,7 +11,7 @@ from Bio import AlignIO
 
 rule write_CvaB:
 	output:
-		"cinfulOut/00_dbs/CvaB.verified.pep"
+		config["outdir"] + "/00_dbs/CvaB.verified.pep"
 	run:
 		verified_CvaB = """>AAL08400.1 MceG [Klebsiella pneumoniae RYC492]
 MSNGNVRRMINQLDMRWRRRVPVIHQTETSECGLACLAMICGHFGKNIDLISLRRKFNLS
@@ -114,7 +114,7 @@ DSESEHFVNVAIKNMNITRVIIAHRETTLRTVDRVISI
 
 rule write_microcins:
 	output:
-		"cinfulOut/00_dbs/microcins.verified.pep"
+		config["outdir"] + "/00_dbs/microcins.verified.pep"
 	run:
 		verified_microcins =""">E492_sp_Q9Z4N4_MCEA_KLEPN Microcin E492 OS=Klebsiella pneumoniae OX=573 GN=mceA PE=1 SV=2
 MREISQKDLNLAFGAGETDPNTQLLNDLGNNMAWGAALGAPGGLGSAALGAAGGALQTVG
@@ -154,7 +154,7 @@ VFSGMVGGAIKGGPVGMTRGTIGGAVIGQCLSGGGNGNGGGNRAGSSNCSGSNVGGTCSR
 
 rule write_immunity_proteins:
 	output:
-		"cinfulOut/00_dbs/immunity_proteins.verified.pep"
+		config["outdir"] + "/00_dbs/immunity_proteins.verified.pep"
 	run:
 		verified_immunity_proteins = """>classIIb_IP:M_mcmI_tr|Q83TS3|Q83TS3_ECOLX Microcin M imunity protein McmI OS=Escherichia coli OX=562 GN=mcmI PE=4 SV=1
 MGEVKKDIKITVIAFVINYLFFYIPVSLYLSYYYGYNFFNLYMFFLSLVVTFLSLWLNVN
@@ -190,7 +190,7 @@ MDERSSQFRYSKYSAIIFLAVVIISTIVTLSPTFTLRYVGLDIAFFIVFITEILISTLVYLFYLKEFPECRIKIRTDSAT
 
 rule microcin_signal:
 	output:
-		"cinfulOut/00_dbs/verified_SP.aln"
+		config["outdir"] + "/00_dbs/verified_SP.aln"
 	run:
 		verified_SP = """>V_ECOLX_classIIa
 MRTLTLNELDSVSGG

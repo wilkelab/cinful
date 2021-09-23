@@ -85,10 +85,10 @@ def tmhmmCol(df,seqCol="seq"):
 
 rule best_hits:
 	input:
-		merged_homology_results = "cinfulOut/02_homology_results/all_merged.csv", # fail:0d468e0c6dbc3a2a9ac28501607740c0, pass:0d468e0c6dbc3a2a9ac28501607740c0
-		nr_csv = "cinfulOut/01_orf_homology/prodigal_out.all.nr_expanded.csv" # fail:9e4762453f5c228a450d61503601895f, pass:3bbbb1a51f2461a152dfcafc18779ff7
+		merged_homology_results = config["outdir"] + "/02_homology_results/all_merged.csv", # fail:0d468e0c6dbc3a2a9ac28501607740c0, pass:0d468e0c6dbc3a2a9ac28501607740c0
+		nr_csv = config["outdir"] + "/01_orf_homology/prodigal_out.all.nr_expanded.csv" # fail:9e4762453f5c228a450d61503601895f, pass:3bbbb1a51f2461a152dfcafc18779ff7
 	output:
-		"cinfulOut/03_best_hits/best_hits.csv"
+		config["outdir"] + "/03_best_hits/best_hits.csv"
 	run:
 		# print("merged_homology_results:",input.merged_homology_results)
 		# for inFileIndex in range(len(input.merged_homology_results)):
@@ -111,9 +111,9 @@ rule best_hits:
 			best_hitsDF.to_csv(output[0], index = False)
 rule bestHitsContigs:
 	input:
-		"cinfulOut/03_best_hits/best_hits.csv"
+		config["outdir"] + "/03_best_hits/best_hits.csv"
 	output:
-		"cinfulOut/03_best_hits/best_hit_contigs.csv"
+		config["outdir"] + "/03_best_hits/best_hit_contigs.csv"
 	run:
 		microcinContigsDF = contigs_wMicrocins(input[0])
 		microcinContigsDF.to_csv(output[0],index = False)
@@ -121,11 +121,11 @@ rule bestHitsContigs:
 
 rule candidate_immunity:
 	input:
-		bestHits = "cinfulOut/03_best_hits/best_hits.csv",
-		immunityDB = "cinfulOut/01_orf_homology/prodigal_out.all.nr_expanded.csv",
-		immunityHomologs = "cinfulOut/01_orf_homology/immunity_proteins/blast_v_hmmer.csv"
+		bestHits = config["outdir"] + "/03_best_hits/best_hits.csv",
+		immunityDB = config["outdir"] + "/01_orf_homology/prodigal_out.all.nr_expanded.csv",
+		immunityHomologs = config["outdir"] + "/01_orf_homology/immunity_proteins/blast_v_hmmer.csv"
 	output:
-		"cinfulOut/03_best_hits/best_immunity_protein_candidates.csv"
+		config["outdir"] + "/03_best_hits/best_immunity_protein_candidates.csv"
 	run:
 		immunityDB = pd.read_csv(input.immunityDB)
 		seqLen = immunityDB["seq"].str.len()
