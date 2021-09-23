@@ -8,46 +8,46 @@ from Bio import SeqIO
 
 rule makeblastdb_microcin:
 	input:
-		"cinfulOut/00_dbs/microcins.verified.pep"
+		config["outdir"] + "/00_dbs/microcins.verified.pep"
 	output:
-		"cinfulOut/00_dbs/microcins.verified.pep.phr"
+		config["outdir"] + "/00_dbs/microcins.verified.pep.phr"
 	shell:
 		"makeblastdb -dbtype prot -in {input}"
 
 rule blast_microcin:
 	input:
-		verified_component = "cinfulOut/00_dbs/microcins.verified.pep",
-		blastdb = "cinfulOut/00_dbs/microcins.verified.pep.phr",
-		input_seqs = "cinfulOut/01_orf_homology/microcins/filtered_nr.fa"
+		verified_component = config["outdir"] + "/00_dbs/microcins.verified.pep",
+		blastdb = config["outdir"] + "/00_dbs/microcins.verified.pep.phr",
+		input_seqs = config["outdir"] + "/01_orf_homology/microcins/filtered_nr.fa"
 	output:
-		"cinfulOut/01_orf_homology/microcins/blast.txt"
+		config["outdir"] + "/01_orf_homology/microcins/blast.txt"
 	threads:threads_max
 	shell:
 		"blastp -db {input.verified_component} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1 -num_threads {threads}"
 
 rule msa_microcin:
 	input:
-		"cinfulOut/00_dbs/microcins.verified.pep"
+		config["outdir"] + "/00_dbs/microcins.verified.pep"
 	output:
-		"cinfulOut/00_dbs/microcins.verified.aln"
+		config["outdir"] + "/00_dbs/microcins.verified.aln"
 	shell:
 		"mafft --auto {input} > {output}"
 
 rule buildhmm_microcin:
 	input:
-		"cinfulOut/00_dbs/microcins.verified.aln"
+		config["outdir"] + "/00_dbs/microcins.verified.aln"
 	output:
-		"cinfulOut/00_dbs/microcins.verified.hmm"
+		config["outdir"] + "/00_dbs/microcins.verified.hmm"
 	shell:
 		"hmmbuild {output} {input}"
 
 
 rule signalSeqHMM:
 	input:
-		input_seqs = "cinfulOut/01_orf_homology/microcins/filtered_nr.fa",
-		signalSeqAln = "cinfulOut/00_dbs/verified_SP.aln"
+		input_seqs = config["outdir"] + "/01_orf_homology/microcins/filtered_nr.fa",
+		signalSeqAln = config["outdir"] + "/00_dbs/verified_SP.aln"
 	output:
-		"cinfulOut/01_orf_homology/microcins/signalSeq.hit.csv"
+		config["outdir"] + "/01_orf_homology/microcins/signalSeq.hit.csv"
 	run:
 		signalSeqHMM = build_hmm(input.signalSeqAln)
 		
@@ -62,16 +62,16 @@ rule signalSeqHMM:
 
 rule blast_v_hmmer_microcin:
 	input:
-		verifiedHMM = "cinfulOut/00_dbs/microcins.verified.hmm",
-		input_seqs = "cinfulOut/01_orf_homology/microcins/filtered_nr.fa",
-		blastOut = "cinfulOut/01_orf_homology/microcins/blast.txt"
+		verifiedHMM = config["outdir"] + "/00_dbs/microcins.verified.hmm",
+		input_seqs = config["outdir"] + "/01_orf_homology/microcins/filtered_nr.fa",
+		blastOut = config["outdir"] + "/01_orf_homology/microcins/blast.txt"
 	output:
-		"cinfulOut/01_orf_homology/microcins/blast_v_hmmer.csv"
+		config["outdir"] + "/01_orf_homology/microcins/blast_v_hmmer.csv"
 	run:
 		blastDF = load_blast(input.blastOut)
 		hmmer_hits, hmm_name = run_hmmsearch(input.input_seqs, input.verifiedHMM)
 		hmmer_hitsHeaders = [hit.name.decode() for hit in hmmer_hits]
 		blastDF["component"] = hmm_name
-		blastDF["hmmerHit"] = blastDF["qseqid"].isin(hmmer_hitsHeaders)#hmmer_hitsHeaders in blastDF["qseqid"]
+		blastDF["hmmerHit"] = blastDF["qseqid"].isin(hmmer_hitsHeaders) #hmmer_hitsHeaders in blastDF["qseqid"]
 		blastDF.to_csv(output[0], index = False)
 

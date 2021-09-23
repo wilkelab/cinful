@@ -3,7 +3,7 @@ import pyhmmer
 from functools import reduce
 
 
-SAMPLES, = glob_wildcards("cinfulOut/01_orf_homology/{sample}_prodigal")
+SAMPLES, = glob_wildcards("{config[outdir]}/01_orf_homology/{sample}_prodigal")
 COMPONENTS, = glob_wildcards("{component}.verified.pep")
 
 
@@ -34,12 +34,12 @@ def run_hmmsearch(queryFile, hmmFile):
 
 rule merged_results:
 	input:
-		microcins = "cinfulOut/01_orf_homology/microcins/blast_v_hmmer.csv",
-		immunity_proteins = "cinfulOut/01_orf_homology/immunity_proteins/blast_v_hmmer.csv",
-		unfilteredCvaB = "cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.csv",
-		QC_Cvab="cinfulOut/01_orf_homology/CvaB/QC.csv"
+		microcins = config["outdir"] + "/01_orf_homology/microcins/blast_v_hmmer.csv",
+		immunity_proteins = config["outdir"] + "/01_orf_homology/immunity_proteins/blast_v_hmmer.csv",
+		unfilteredCvaB = config["outdir"] + "/01_orf_homology/CvaB/blast_v_hmmer.csv",
+		QC_Cvab=config["outdir"] + "/01_orf_homology/CvaB/QC.csv"
 	output:
-		"cinfulOut/02_homology_results/all_merged.csv"
+		config["outdir"] + "/02_homology_results/all_merged.csv"
 	run:
 		# componentDFs = []
 		# for componentHomologFile in [input.microcins, input.immunity_proteins, input.CvaB]:

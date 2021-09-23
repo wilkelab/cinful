@@ -1,6 +1,7 @@
 import pandas as pd
 import pyhmmer
 from functools import reduce
+import os
 
 def load_blast(blastout, hasHeaders=False):
 	if hasHeaders:
@@ -50,15 +51,21 @@ def hmmsearch(queryFile, hmm):
 SAMPLES, = glob_wildcards("{sample}.fna")
 
 threads_max = workflow.cores * 0.75
+
 if threads_max <1:
 	threads_max = 1
+
+# print(srcdir('config.yaml'))
+configfile: srcdir('config.yaml')
+
 rule final:
 	input:
-		"cinfulOut/03_best_hits/best_immunity_protein_candidates.csv",
-		"cinfulOut/03_best_hits/best_hit_contigs.csv"
+		config["outdir"] + "/03_best_hits/best_immunity_protein_candidates.csv",
+		config["outdir"] + "/03_best_hits/best_hit_contigs.csv"
 		# "cinfulOut/03_best_hits/best_hits.csv"
 		# expand("cinfulOut/02_homology_results/{sample}.best_hits.csv", sample = SAMPLES)
 		# expand("cinfulOut/02_homology_results/{sample}.all_merged.csv", sample = SAMPLES)
+
 
 
 

@@ -39,19 +39,19 @@ def qcCvab(best_hitsPep, best_hitsAln):
 
 rule makeblastdb_CvaB:
 	input:
-		"cinfulOut/00_dbs/CvaB.verified.pep"
+		config["outdir"] + "/00_dbs/CvaB.verified.pep"
 	output:
-		"cinfulOut/00_dbs/CvaB.verified.pep.dmnd"
+		config["outdir"] + "/00_dbs/CvaB.verified.pep.dmnd"
 	shell:
 		"diamond makedb --in {input} -d {input}"
 		# "makeblastdb -dbtype prot -in {input}"
 
 rule blast_CvaB:
 	input:
-		verified_component = "cinfulOut/00_dbs/CvaB.verified.pep.dmnd",
-		input_seqs = "cinfulOut/01_orf_homology/CvaB/filtered_nr.fa"
+		verified_component = config["outdir"] + "/00_dbs/CvaB.verified.pep.dmnd",
+		input_seqs = config["outdir"] + "/01_orf_homology/CvaB/filtered_nr.fa"
 	output:
-		"cinfulOut/01_orf_homology/CvaB/blast.txt"
+		config["outdir"] + "/01_orf_homology/CvaB/blast.txt"
 	threads:threads_max
 	shell:
 		"diamond blastp -d {input.verified_component} -q {input.input_seqs}   --evalue 0.001 -k 1 -o {output} -p {threads}"
@@ -61,18 +61,18 @@ rule blast_CvaB:
 
 rule msa_CvaB:
 	input:
-		"cinfulOut/00_dbs/CvaB.verified.pep"
+		config["outdir"] + "/00_dbs/CvaB.verified.pep"
 	output:
-		"cinfulOut/00_dbs/CvaB.verified.aln"
+		config["outdir"] + "/00_dbs/CvaB.verified.aln"
 	threads:threads_max
 	shell:
 		"mafft --thread {threads} --auto {input} > {output}"
 
 rule buildhmm_CvaB:
 	input:
-		"cinfulOut/00_dbs/CvaB.verified.aln"
+		config["outdir"] + "/00_dbs/CvaB.verified.aln"
 	output:
-		"cinfulOut/00_dbs/CvaB.verified.hmm"
+		config["outdir"] + "/00_dbs/CvaB.verified.hmm"
 	shell:
 		"hmmbuild {output} {input}"
 
@@ -80,11 +80,11 @@ rule buildhmm_CvaB:
 
 rule blast_v_hmmer_CvaB:
 	input:
-		verifiedHMM = "cinfulOut/00_dbs/CvaB.verified.hmm",
-		input_seqs = "cinfulOut/01_orf_homology/CvaB/filtered_nr.fa",
-		blastOut = "cinfulOut/01_orf_homology/CvaB/blast.txt"
+		verifiedHMM = config["outdir"] + "/00_dbs/CvaB.verified.hmm",
+		input_seqs = config["outdir"] + "/01_orf_homology/CvaB/filtered_nr.fa",
+		blastOut = config["outdir"] + "/01_orf_homology/CvaB/blast.txt"
 	output:
-		"cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.csv"
+		config["outdir"] + "/01_orf_homology/CvaB/blast_v_hmmer.csv"
 	run:
 		blastDF = load_blast(input.blastOut)
 		hmmer_hits, hmm_name = run_hmmsearch(input.input_seqs, input.verifiedHMM)
@@ -96,18 +96,18 @@ rule blast_v_hmmer_CvaB:
 
 rule best_Cvab_headers:
 	input:
-		"cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.csv"
+		config["outdir"] + "/01_orf_homology/CvaB/blast_v_hmmer.csv"
 	output:
-		"cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.headers"
+		config["outdir"] + "/01_orf_homology/CvaB/blast_v_hmmer.headers"
 	shell:
 		"cut -d, -f1 {input} > {output}"
 
 rule best_Cvab_fasta:
 	input:
-		headers="cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.headers",
-		input_seqs = "cinfulOut/01_orf_homology/CvaB/filtered_nr.fa"
+		headers=config["outdir"] + "/01_orf_homology/CvaB/blast_v_hmmer.headers",
+		input_seqs = config["outdir"] + "/01_orf_homology/CvaB/filtered_nr.fa"
 	output:
-		"cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.fa"
+		config["outdir"] + "/01_orf_homology/CvaB/blast_v_hmmer.fa"
 	shell:
 		"seqkit grep -f {input.headers} {input.input_seqs} > {output}"
 
@@ -116,22 +116,22 @@ rule best_Cvab_fasta:
 
 rule align_with_verifiedCvab:
 	input:
-		best_CvaB="cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.fa",
-		verified_CvaB="cinfulOut/00_dbs/CvaB.verified.aln"
+		best_CvaB=config["outdir"] + "/01_orf_homology/CvaB/blast_v_hmmer.fa",
+		verified_CvaB=config["outdir"] + "/00_dbs/CvaB.verified.aln"
 	output:
-		"cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.with_verified.aln"
+		config["outdir"] + "/01_orf_homology/CvaB/blast_v_hmmer.with_verified.aln"
 	shell:
 		"mafft --inputorder --keeplength --add {input.best_CvaB} --auto "
 		"{input[1]} > {output}"
 
 rule filter_CvaB_hits:
 	input:
-		best_CvaB="cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.fa", 
-		align_with_verifiedCvab="cinfulOut/01_orf_homology/CvaB/blast_v_hmmer.with_verified.aln",
-		nr_filtered_csv="cinfulOut/01_orf_homology/prodigal_out.all.nr_expanded.csv"
+		best_CvaB=config["outdir"] + "/01_orf_homology/CvaB/blast_v_hmmer.fa", 
+		align_with_verifiedCvab=config["outdir"] + "/01_orf_homology/CvaB/blast_v_hmmer.with_verified.aln",
+		nr_filtered_csv=config["outdir"] + "/01_orf_homology/prodigal_out.all.nr_expanded.csv"
 	output:
-		preQC="cinfulOut/01_orf_homology/CvaB/preQC.csv",
-		QC="cinfulOut/01_orf_homology/CvaB/QC.csv"
+		preQC=config["outdir"] + "/01_orf_homology/CvaB/preQC.csv",
+		QC=config["outdir"] + "/01_orf_homology/CvaB/QC.csv"
 	run:
 		preQC_Cvab = qcCvab(input.best_CvaB, input.align_with_verifiedCvab)
 		nr_filteredDF = pd.read_csv(input.nr_filtered_csv)
