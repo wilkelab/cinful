@@ -4,7 +4,8 @@ from Bio.SeqRecord import SeqRecord
 import json
 import seqhash
 
-SAMPLES, = glob_wildcards("{sample}.fna")
+SAMPLES, = glob_wildcards("cinful_out/01_orf_homology/prodigal_out/{sample}.faa")
+print("SAMPLES",SAMPLES)
 
 def hmmsearch(queryFile, hmm):
 	
@@ -36,14 +37,15 @@ def hasAllStandardAA(seq, alphabet="ACDEFGHIKLMNPQRSTVWY",ignore="*"):
 
 rule nonredundant_prodigal:
 	input:
-		all_samples=expand(config["outdir"]+"/01_orf_homology/prodigal_out/{sample}.faa", sample=SAMPLES)
+		expand(config["outdir"]+"/01_orf_homology/prodigal_out/{sample}.faa", sample=SAMPLES)
 	output:
 		fasta=config["outdir"] + "/01_orf_homology/prodigal_out.all.nr.faa",
 		csv=config["outdir"] + "/01_orf_homology/prodigal_out.all.nr_expanded.csv"
 	run:
 		hashDict = {}
 		idDict = {}
-		for file in input.all_samples:
+		print("INPUT:",input)
+		for file in input:
 			sample = file.split("01_orf_homology/prodigal_out/")[1].strip(".faa")
 			with open(file) as handle:
 				for seq_record in SeqIO.parse(handle, "fasta"):
