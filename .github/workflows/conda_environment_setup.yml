@@ -160,6 +160,11 @@ jobs:
         source activate cinful
         cd cinful
         python -m snakemake cinful_out/01_orf_homology/prodigal_out/GCF_000026285.1_ASM2628v2_genomic.gff3 cinful_out/01_orf_homology/prodigal_out/GCF_000026285.1_ASM2628v2_genomic.cds cinful_out/01_orf_homology/prodigal_out/GCF_000026285.1_ASM2628v2_genomic.faa -F -j1 --keep-target-files --allowed-rules prodigal -d .tests/prodigal
+    - name: signalSeqHMM
+      run: |
+        source activate cinful
+        cd cinful
+        python -m snakemake cinful_out/01_orf_homology/microcins/signalSeq.hit.csv -F -j1 --keep-target-files --allowed-rules signalSeqHMM -d .tests/signalSeqHMM
     - name: write_CvaB
       run: |
         source activate cinful

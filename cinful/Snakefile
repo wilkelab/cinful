@@ -79,9 +79,9 @@ include: "rules/CvaB.smk"
 include: "rules/duomolog_components.smk"
 include: "rules/best_hits.smk"
 
-import shutil
-onsuccess:
-    shutil.rmtree(".snakemake")
+# import shutil
+# onsuccess:
+#     shutil.rmtree(".snakemake")
 # rule prodigal:
 # 	input:
 # 		"{sample}.fna"
