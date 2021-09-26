@@ -4,8 +4,10 @@ from Bio.SeqRecord import SeqRecord
 import json
 import seqhash
 
-SAMPLES, = glob_wildcards("cinful_out/01_orf_homology/prodigal_out/{sample}.faa")
-print("SAMPLES",SAMPLES)
+# SAMPLES, = glob_wildcards("cinful_out/01_orf_homology/prodigal_out/{sample}.faa")
+SAMPLES, = glob_wildcards("{sample}.fna")
+
+# print("SAMPLES",SAMPLES)
 
 def hmmsearch(queryFile, hmm):
 	
