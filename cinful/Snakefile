@@ -2,6 +2,7 @@ import pandas as pd
 import pyhmmer
 from functools import reduce
 import os
+import sys
 
 def load_blast(blastout, hasHeaders=False):
 	if hasHeaders:
@@ -55,7 +56,7 @@ threads_max = workflow.cores * 0.75
 if threads_max <1:
 	threads_max = 1
 
-# print(srcdir('config.yaml'))
+# sys.exit("HE:P!!!!!!!!" + srcdir('config.yaml'))
 configfile: srcdir('config.yaml')
 
 rule final:
@@ -78,7 +79,9 @@ include: "rules/CvaB.smk"
 include: "rules/duomolog_components.smk"
 include: "rules/best_hits.smk"
 
-
+import shutil
+onsuccess:
+    shutil.rmtree(".snakemake")
 # rule prodigal:
 # 	input:
 # 		"{sample}.fna"

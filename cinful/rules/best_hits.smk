@@ -85,30 +85,27 @@ def tmhmmCol(df,seqCol="seq"):
 
 rule best_hits:
 	input:
-		merged_homology_results = config["outdir"] + "/02_homology_results/all_merged.csv", # fail:0d468e0c6dbc3a2a9ac28501607740c0, pass:0d468e0c6dbc3a2a9ac28501607740c0
-		nr_csv = config["outdir"] + "/01_orf_homology/prodigal_out.all.nr_expanded.csv" # fail:9e4762453f5c228a450d61503601895f, pass:3bbbb1a51f2461a152dfcafc18779ff7
+		merged_homology_results = config["outdir"] + "/02_homology_results/all_merged.csv",
+		nr_csv = config["outdir"] + "/01_orf_homology/prodigal_out.all.nr_expanded.csv",
+		signalSeq = config["outdir"] + "/01_orf_homology/microcins/signalSeq.hit.csv"
 	output:
 		config["outdir"] + "/03_best_hits/best_hits.csv"
 	run:
-		# print("merged_homology_results:",input.merged_homology_results)
-		# for inFileIndex in range(len(input.merged_homology_results)):
-		homologyFile = input.merged_homology_results #[inFileIndex]
-		########### will break here ##########
-		# prodigalPepFile = input.nr_csv #[inFileIndex] 
-		prodigalDF =  pd.read_csv(input.nr_csv) #prodigalFa2DF(prodigalPepFile)
-		# print(f"prodigalDF:{prodigalDF.shape}")
-		######################################
-		# prodigalDF:(14, 8)
-		# homology_withProdigalDF:(2, 22)
-		# microcinDF:(0, 22)
 		
+		homologyFile = input.merged_homology_results 
+
+		prodigalDF =  pd.read_csv(input.nr_csv) 
+		
+		signalSeqDF = pd.read_csv(input.signalSeq)
+
 		homology_withProdigalDF = homology_withProdigal(homologyFile, prodigalDF)
-		# print(f"homology_withProdigalDF:{homology_withProdigalDF.shape}")
 		microcinDF, immunity_proteinDF, CvaBDF = componentDFs(homology_withProdigalDF)
-		# print(f"microcinDF:{microcinDF.shape}")
 		if not microcinDF.empty:
 			best_hitsDF = bestHits(microcinDF,immunity_proteinDF,CvaBDF)
+			best_hitsDF["signalMatch"] = best_hitsDF["pephash"].isin(signalSeqDF["signalMatch"])
 			best_hitsDF.to_csv(output[0], index = False)
+			
+
 rule bestHitsContigs:
 	input:
 		config["outdir"] + "/03_best_hits/best_hits.csv"

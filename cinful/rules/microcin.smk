@@ -51,7 +51,7 @@ rule signalSeqHMM:
 	run:
 		signalSeqHMM = build_hmm(input.signalSeqAln)
 		
-		signalSeqHits = hmmsearch(output.fasta, signalSeqHMM)
+		signalSeqHits = hmmsearch(input.input_seqs, signalSeqHMM)
 		signalSeqHitStr = [hit.name.decode('utf-8') for hit in signalSeqHits]
 		matchDF = pd.DataFrame.from_dict({"signalMatch":signalSeqHitStr})
 		matchDF.to_csv(output[0])
