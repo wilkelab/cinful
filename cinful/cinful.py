@@ -23,39 +23,52 @@ class valid_file(argparse.Action):
 
 
 
-# set up command line arguments
-parser = argparse.ArgumentParser(description='cinful')
-parser.add_argument('-d', '--directory', action=readable_dir,required=True)
-parser.add_argument('-o', '--outDir', type=str,default="cinful_out")
-parser.add_argument('-t', '--threads', type=int, default=1)
-args = parser.parse_args()
 
 
-print(args)
-threads = args.threads
-workdir = args.directory
-outdir = args.outDir
 
-# absolute path of this file, needed to find snakefile
-currentAbsPath = os.path.dirname(os.path.abspath(__file__))
-snakefile = f"{currentAbsPath}/Snakefile"
-print(os.path.dirname(os.path.abspath(__file__)))
-print(snakefile)
 
-# snakemake command to run
-cmd = [		"python",
-			"-m",
-            "snakemake",  
-			"--snakefile",
-			snakefile,
-            "-j",
-			str(threads),
-            "--directory",
-			workdir,
-			"--config",
-			f"outdir={outdir}"
-        ]
-print("Running the following command:")
-print(" ".join(cmd))
-sp.check_output(cmd)
+
+
+
+def main():
+	# set up command line arguments
+	parser = argparse.ArgumentParser(description='cinful')
+	parser.add_argument('-d', '--directory', action=readable_dir,required=True)
+	parser.add_argument('-o', '--outDir', type=str,default="cinful_out")
+	parser.add_argument('-t', '--threads', type=int, default=1)
+	args = parser.parse_args()
+
+	print(args)
+	threads = args.threads
+	workdir = args.directory
+	outdir = args.outDir
+
+	# absolute path of this file, needed to find snakefile
+	currentAbsPath = os.path.dirname(os.path.abspath(__file__))
+	snakefile = f"{currentAbsPath}/Snakefile"
+	print(os.path.dirname(os.path.abspath(__file__)))
+	print(snakefile)
+
+		# snakemake command to run
+	cmd = [		"python",
+				"-m",
+				"snakemake",  
+				"--snakefile",
+				snakefile,
+				"-j",
+				str(threads),
+				"--directory",
+				workdir,
+				"--config",
+				f"outdir={outdir}"
+			]
+	print("Running the following command:")
+	print(" ".join(cmd))
+	sp.check_output(cmd)
+
+
+
+if __name__ == "__main__":
+    main()
+
 
