@@ -1,0 +1,2 @@
+# Include all non-python files
+recursive-include cinful *
