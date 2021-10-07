@@ -80,11 +80,11 @@ rule nonredundant_prodigal:
 				SeqIO.write(outRecord, fasta_file, "fasta")
 
 
-		idDF = pd.DataFrame.from_dict(idDict,orient="index")
+		idDF = pd.DataFrame.from_dict(idDict, orient="index").reset_index()
 		
-		idDF.columns = ["pephash","sample","contig","start","stop","strand","allStandardAA","seq"]
+		idDF.columns = ["cinful_id","pephash","sample","contig","start","stop","strand","allStandardAA","seq"]
 									
-		idDF.to_csv(output.csv)
+		idDF.to_csv(output.csv, index = None)
 
 
 rule filter_microcin:

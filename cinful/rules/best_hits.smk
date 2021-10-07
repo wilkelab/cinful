@@ -49,13 +49,13 @@ def bestHits(microcinDF,immunity_proteinDF,CvaBDF):
 
 
 def contigs_wMicrocins(best_hitsFile):
-	best_hitsDF = pd.read_csv(best_hitsFile).rename(columns={"Unnamed: 0":"id"})
-	needed_columns = ["id","contig","start","stop","strand"]
-	renameDict_microcin = {"id":"microcin_id","start":"microcin_start","stop":"microcin_stop","strand":"microcin_strand"}
+	best_hitsDF = pd.read_csv(best_hitsFile)
+	needed_columns = ["cinful_id","contig","start","stop","strand"]
+	renameDict_microcin = {"cinful_id":"microcin_id","start":"microcin_start","stop":"microcin_stop","strand":"microcin_strand"}
 	microcin_contigs = best_hitsDF[best_hitsDF["component"] == "microcins.verified"][needed_columns].rename(columns=renameDict_microcin)
 	microcin_contig_componentDF = best_hitsDF[best_hitsDF["contig"].isin(microcin_contigs["contig"])]
 
-	renameDict_CvaB = {"id":"CvaB_id","start":"CvaB_start","stop":"CvaB_stop","strand":"CvaB_strand"}
+	renameDict_CvaB = {"cinful_id":"CvaB_id","start":"CvaB_start","stop":"CvaB_stop","strand":"CvaB_strand"}
 	microcin_contig_CvaB = microcin_contig_componentDF[microcin_contig_componentDF["component"] == "CvaB.verified"][needed_columns].rename(columns=renameDict_CvaB)
 
 	return microcin_contigs.merge(microcin_contig_CvaB, left_on="contig",right_on="contig")
@@ -64,7 +64,7 @@ def nearestImmunityProtein(immunityDB, bestMicrocinHits):
 	candidateList = []
 	for row in bestMicrocinHits.to_dict(orient="records"):
 		immunitySubset = immunityDB[immunityDB["sample"] + immunityDB["contig"] == row["sample"]+row["contig"] ].sort_values("start")
-		immunitySubset["microcinHit"] = row["Unnamed: 0"]
+		immunitySubset["microcinHit"] = row["cinful_id"]
 		immunityUpstream = immunitySubset[immunitySubset["start"] < row["start"]].tail(3)
 		immunityDownstream = immunitySubset[immunitySubset["start"] > row["stop"]].head(3)
 		nearestCandidates = pd.concat([immunityUpstream,immunityDownstream])
@@ -137,7 +137,7 @@ rule candidate_immunity:
 		nearestImmunityDF["tmhmm"] = tmhmmCol(nearestImmunityDF)
 		nearestImmunityDF["homologyHit"] = nearestImmunityDF["pephash"].isin(immunityHomologs["qseqid"])
 
-		nearestImmunityDF.to_csv(output[0])
+		nearestImmunityDF.to_csv(output[0], index = None)
 
 
 
