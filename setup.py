@@ -8,8 +8,9 @@ with open(os.path.join(this_directory, 'README.md')) as f:
 setup(
     name='cinful',
 	include_package_data = True,
-	version='0.0.1',
+	version='0.1.0',
 	author='T. Jeffrey Cole',
+    author_email = "jffcole7@gmail.com",
     url='https://github.com/tijeco/cinful',
 	description=('cinful: A fully automated pipeline to identify microcins'
         'along with their associated immunity proteins and export machinery'),
