@@ -86,20 +86,19 @@ def tmhmmCol(df,seqCol="seq"):
 rule best_hits:
 	input:
 		merged_homology_results = config["outdir"] + "/02_homology_results/all_merged.csv",
-		nr_csv = config["outdir"] + "/01_orf_homology/prodigal_out.all.nr_expanded.csv",
 		signalSeq = config["outdir"] + "/01_orf_homology/microcins/signalSeq.hit.csv"
 	output:
 		config["outdir"] + "/03_best_hits/best_hits.csv"
 	run:
 		
-		homologyFile = input.merged_homology_results 
+		homologyDF = pd.read_csv(input.merged_homology_results )
 
-		prodigalDF =  pd.read_csv(input.nr_csv) 
+		# prodigalDF =  pd.read_csv(input.nr_csv) 
 		
 		signalSeqDF = pd.read_csv(input.signalSeq)
 
-		homology_withProdigalDF = homology_withProdigal(homologyFile, prodigalDF)
-		microcinDF, immunity_proteinDF, CvaBDF = componentDFs(homology_withProdigalDF)
+		# homology_withProdigalDF = homology_withProdigal(homologyFile, prodigalDF)
+		microcinDF, immunity_proteinDF, CvaBDF = componentDFs(homologyDF)
 		if not microcinDF.empty:
 			best_hitsDF = bestHits(microcinDF,immunity_proteinDF,CvaBDF)
 			best_hitsDF["signalMatch"] = best_hitsDF["pephash"].isin(signalSeqDF["signalMatch"])

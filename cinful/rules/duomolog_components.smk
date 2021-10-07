@@ -37,14 +37,12 @@ rule merged_results:
 		microcins = config["outdir"] + "/01_orf_homology/microcins/blast_v_hmmer.csv",
 		immunity_proteins = config["outdir"] + "/01_orf_homology/immunity_proteins/blast_v_hmmer.csv",
 		unfilteredCvaB = config["outdir"] + "/01_orf_homology/CvaB/blast_v_hmmer.csv",
-		QC_Cvab=config["outdir"] + "/01_orf_homology/CvaB/QC.csv"
+		QC_Cvab=config["outdir"] + "/01_orf_homology/CvaB/QC.csv",
+		nr_csv = config["outdir"] + "/01_orf_homology/prodigal_out.all.nr_expanded.csv"
 	output:
 		config["outdir"] + "/02_homology_results/all_merged.csv"
 	run:
-		# componentDFs = []
-		# for componentHomologFile in [input.microcins, input.immunity_proteins, input.CvaB]:
-		# 	componentDFs.append(pd.read_csv(componentHomologFile))
-		
+		nrDF = pd.read_csv(input.nr_csv)
 		microcinDF = pd.read_csv(input.microcins)
 		immunity_proteinDF = pd.read_csv(input.immunity_proteins)
 		QC_CvabDF = pd.read_csv(input.QC_Cvab)
@@ -54,7 +52,8 @@ rule merged_results:
 		
 		componentDFs = [microcinDF, immunity_proteinDF, bestCvaB]
 		mergedDf = pd.concat(componentDFs)
-		mergedDf.to_csv(output[0], index = None)
+		mergedDf_nr = mergedDf.merge(nrDF, left_on ="qseqid", right_on= "pephash")
+		mergedDf_nr.to_csv(output[0], index = None)
 		# with open(output[0],"w") as out:
 			# out.write("test\n")
 		
