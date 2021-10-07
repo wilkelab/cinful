@@ -92,14 +92,14 @@ rule best_hits:
 		config["outdir"] + "/03_best_hits/best_hits.csv"
 	run:
 		
-		homologyFile = input.merged_homology_results 
+		homologyDF = pd.read_csv(input.merged_homology_results )
 
-		prodigalDF =  pd.read_csv(input.nr_csv) 
+		# prodigalDF =  pd.read_csv(input.nr_csv) 
 		
 		signalSeqDF = pd.read_csv(input.signalSeq)
 
-		homology_withProdigalDF = homology_withProdigal(homologyFile, prodigalDF)
-		microcinDF, immunity_proteinDF, CvaBDF = componentDFs(homology_withProdigalDF)
+		# homology_withProdigalDF = homology_withProdigal(homologyFile, prodigalDF)
+		microcinDF, immunity_proteinDF, CvaBDF = componentDFs(homologyDF)
 		if not microcinDF.empty:
 			best_hitsDF = bestHits(microcinDF,immunity_proteinDF,CvaBDF)
 			best_hitsDF["signalMatch"] = best_hitsDF["pephash"].isin(signalSeqDF["signalMatch"])
