@@ -86,7 +86,6 @@ def tmhmmCol(df,seqCol="seq"):
 rule best_hits:
 	input:
 		merged_homology_results = config["outdir"] + "/02_homology_results/all_merged.csv",
-		nr_csv = config["outdir"] + "/01_orf_homology/prodigal_out.all.nr_expanded.csv",
 		signalSeq = config["outdir"] + "/01_orf_homology/microcins/signalSeq.hit.csv"
 	output:
 		config["outdir"] + "/03_best_hits/best_hits.csv"
