@@ -1,5 +1,6 @@
 # cinful
-![example workflow](https://github.com/tijeco/cinful/actions/workflows/conda_environment_setup.yml/badge.svg)
+![example workflow](https://github.com/tijeco/cinful/actions/workflows/conda_environment_setup.yml/badge.svg) [![PyPi version](https://img.shields.io/pypi/v/cinful.svg)](https://pypi.org/project/cinful)
+
 
 A fully automated pipeline to identify microcins along with their associated immunity proteins and export machinery
 
