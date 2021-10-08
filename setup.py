@@ -23,5 +23,4 @@ setup(
         cinful=cinful.cinful:main
     ''',
     packages=['cinful'],
-	classifiers=["Topic :: Scientific/Engineering :: Bioinformatics"],
 )
