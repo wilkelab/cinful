@@ -87,6 +87,7 @@ rule best_hits:
 	input:
 		merged_homology_results = config["outdir"] + "/02_homology_results/all_merged.csv",
 		signalSeq = config["outdir"] + "/01_orf_homology/microcins/signalSeq.hit.csv"
+		
 	output:
 		config["outdir"] + "/03_best_hits/best_hits.csv"
 	run:

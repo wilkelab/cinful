@@ -53,8 +53,9 @@ rule nonredundant_prodigal:
 			sample = file.split("01_orf_homology/prodigal_out/")[1].strip(".faa")
 			with open(file) as handle:
 				for seq_record in SeqIO.parse(handle, "fasta"):
-					pephash = seqhash.seqhash(seq_record.seq,dna_type='PROTEIN')
 					sequence = str(seq_record.seq)
+					pephash = seqhash.seqhash(sequence.strip("*"),dna_type='PROTEIN')
+					
 					hashDict[pephash] = sequence
 
 					descriptionParts = seq_record.description.split("#") 

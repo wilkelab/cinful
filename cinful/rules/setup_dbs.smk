@@ -3,7 +3,14 @@ from Bio import SeqIO
 from Bio.Align.Applications import MafftCommandline
 from Bio import AlignIO
 
-
+def fa2hashDF(fa):
+	outDict = {"header":[],"pephash":[],"sequeunce":[]}
+	for record in SeqIO.parse(fa,"fasta"):
+		pephash = seqhash.seqhash(record.seq,dna_type='PROTEIN')
+		outDict["header"].append(record.id)
+		outDict["pephash"].append(pephash)
+		outDict["sequeunce"].append(str(record.seq))
+	return pd.DataFrame.from_dict(outDict)
 
 # For now, these will just have sequences hardcoded in them,
 # This guarantees that if you have the codebase, you can do the searches.
@@ -11,7 +18,8 @@ from Bio import AlignIO
 
 rule write_CvaB:
 	output:
-		config["outdir"] + "/00_dbs/CvaB.verified.pep"
+		CvaB_fasta = config["outdir"] + "/00_dbs/CvaB.verified.pep",
+		CvaB_pepHash = config["outdir"] + "/00_dbs/CvaB.verified.pephash.csv"
 	run:
 		verified_CvaB = """>AAL08400.1 MceG [Klebsiella pneumoniae RYC492]
 MSNGNVRRMINQLDMRWRRRVPVIHQTETSECGLACLAMICGHFGKNIDLISLRRKFNLS
@@ -109,12 +117,16 @@ DSESEHFVNVAIKNMNITRVIIAHRETTLRTVDRVISI
 """
 
 		verified_CvaB_SeqIO = SeqIO.parse(StringIO(verified_CvaB), "fasta")
-		with open(output[0],"w") as seq_out:
+
+		verified_CvaB_pepHashDF = fa2hashDF(StringIO(verified_CvaB))
+		verified_CvaB_pepHashDF.to_csv(output.CvaB_pepHash)
+		with open(output.CvaB_fasta,"w") as seq_out:
 			SeqIO.write(verified_CvaB_SeqIO, seq_out,"fasta")
 
 rule write_microcins:
 	output:
-		config["outdir"] + "/00_dbs/microcins.verified.pep"
+		microcin_fasta = config["outdir"] + "/00_dbs/microcins.verified.pep",
+		microcin_pepHash = config["outdir"] + "/00_dbs/microcins.verified.pephash.csv"
 	run:
 		verified_microcins =""">E492_sp_Q9Z4N4_MCEA_KLEPN Microcin E492 OS=Klebsiella pneumoniae OX=573 GN=mceA PE=1 SV=2
 MREISQKDLNLAFGAGETDPNTQLLNDLGNNMAWGAALGAPGGLGSAALGAAGGALQTVG
@@ -149,12 +161,15 @@ VFSGMVGGAIKGGPVGMTRGTIGGAVIGQCLSGGGNGNGGGNRAGSSNCSGSNVGGTCSR
 """
 
 		verified_microcins_SeqIO = SeqIO.parse(StringIO(verified_microcins), "fasta")
-		with open(output[0],"w") as seq_out:
+		verified_microcins_pepHashDF = fa2hashDF(StringIO(verified_microcins))
+		verified_microcins_pepHashDF.to_csv(output.microcin_pepHash)
+		with open(output.microcin_fasta,"w") as seq_out:
 			SeqIO.write(verified_microcins_SeqIO, seq_out,"fasta")
 
 rule write_immunity_proteins:
 	output:
-		config["outdir"] + "/00_dbs/immunity_proteins.verified.pep"
+		immunity_protein_fasta = config["outdir"] + "/00_dbs/immunity_proteins.verified.pep",
+		immunity_protein_pepHash = config["outdir"] + "/00_dbs/immunity_proteins.verified.pephash.csv"
 	run:
 		verified_immunity_proteins = """>classIIb_IP:M_mcmI_tr|Q83TS3|Q83TS3_ECOLX Microcin M imunity protein McmI OS=Escherichia coli OX=562 GN=mcmI PE=4 SV=1
 MGEVKKDIKITVIAFVINYLFFYIPVSLYLSYYYGYNFFNLYMFFLSLVVTFLSLWLNVN
@@ -185,7 +200,9 @@ MDERSSQFRYSKYSAIIFLAVVIISTIVTLSPTFTLRYVGLDIAFFIVFITEILISTLVYLFYLKEFPECRIKIRTDSAT
 """
 
 		verified_immunity_proteins_SeqIO = SeqIO.parse(StringIO(verified_immunity_proteins), "fasta")
-		with open(output[0],"w") as seq_out:
+		verified_immunity_proteins_pepHashDF = fa2hashDF(StringIO(verified_immunity_proteins))
+		verified_immunity_proteins_pepHashDF.to_csv(output.immunity_protein_pepHash)
+		with open(output.immunity_protein_fasta,"w") as seq_out:
   			SeqIO.write(verified_immunity_proteins_SeqIO, seq_out,"fasta")
 
 rule microcin_signal:

@@ -38,7 +38,10 @@ rule merged_results:
 		immunity_proteins = config["outdir"] + "/01_orf_homology/immunity_proteins/blast_v_hmmer.csv",
 		unfilteredCvaB = config["outdir"] + "/01_orf_homology/CvaB/blast_v_hmmer.csv",
 		QC_Cvab=config["outdir"] + "/01_orf_homology/CvaB/QC.csv",
-		nr_csv = config["outdir"] + "/01_orf_homology/prodigal_out.all.nr_expanded.csv"
+		nr_csv = config["outdir"] + "/01_orf_homology/prodigal_out.all.nr_expanded.csv",
+		microcin_pepHash = config["outdir"] + "/00_dbs/microcins.verified.pephash.csv",
+		immunity_protein_pepHash = config["outdir"] + "/00_dbs/immunity_proteins.verified.pephash.csv",
+		CvaB_pepHash = config["outdir"] + "/00_dbs/CvaB.verified.pephash.csv"
 	output:
 		config["outdir"] + "/02_homology_results/all_merged.csv"
 	run:
@@ -47,8 +50,17 @@ rule merged_results:
 		immunity_proteinDF = pd.read_csv(input.immunity_proteins)
 		QC_CvabDF = pd.read_csv(input.QC_Cvab)
 		unfilteredCvaBDF = pd.read_csv(input.unfilteredCvaB)
+
+		microcin_pepHashDF = pd.read_csv(input.microcin_pepHash)
+		immunity_protein_pepHashDF = pd.read_csv(input.immunity_protein_pepHash)
+		CvaB_pepHashDF = pd.read_csv(input.CvaB_pepHash)
+
 		# filteredCvaBDF = pd.read_csv(input.filteredCvaB)
 		bestCvaB = unfilteredCvaBDF[unfilteredCvaBDF["qseqid"].isin(QC_CvabDF["id"]) ]
+		
+		microcinDF["verified"] = microcinDF["qseqid"].isin(microcin_pepHashDF["pephash"])
+		immunity_proteinDF["verified"] = immunity_proteinDF["qseqid"].isin(immunity_protein_pepHashDF["pephash"])
+		bestCvaB["verified"] = bestCvaB["qseqid"].isin(CvaB_pepHashDF["pephash"])
 		
 		componentDFs = [microcinDF, immunity_proteinDF, bestCvaB]
 		mergedDf = pd.concat(componentDFs)
