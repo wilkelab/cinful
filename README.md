@@ -1,5 +1,5 @@
 # cinful
-![example workflow](https://github.com/tijeco/cinful/actions/workflows/conda_environment_setup.yml/badge.svg) [![PyPi version](https://img.shields.io/pypi/v/cinful.svg)](https://pypi.org/project/cinful)
+
 
 
 A fully automated pipeline to identify microcins along with their associated immunity proteins and export machinery
@@ -25,7 +25,7 @@ Then simply run
 bash scripts/build_conda_env.sh
 ```
 
-to set up the cinful environment. You can activate the environment with
+To set up the cinful environment, you can activate the environment with
 
 ```bash
 conda activate cinful
@@ -39,6 +39,24 @@ Snakemake is the core workflow management used by cinful, the main snakefile is 
 
 ```bash
 snakemake -d <assembly_directory> --threads <core_nums> --snakefile path/to/cinful/Snakefile
+```
+
+If installed properly, running `cinful -h` will produce the following output.
+
+```
+cinful
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -d DIRECTORY, --directory DIRECTORY
+                        Must be a directory containing uncompressed FASTA formatted genome assemblies with
+                        .fna extension. Files within nested directories are fine
+  -o OUTDIR, --outDir OUTDIR
+                        This directory will contain all output files. It will be nested under the input
+                        directory.
+  -t THREADS, --threads THREADS
+                        This specifies how many threads to allow snakemake to have access to for
+                        parallelization
 ```
 
 ## Workflow
@@ -64,11 +82,15 @@ There is a test dataset with an _E. coli_ genome assembly to test cinful on unde
 ```bash
 snakemake -d test/colcinV_Ecoli --snakemake 
 ```
-# Todo
+# Contributing
 
-Currently, cinful is executed via directly issuing a snakemake command, what I will do in the future is create a python package that acts as a wrapper for snakemake to ease potential configuration of certain parameters within the workflow.
+<!-- Currently, cinful is executed via directly issuing a snakemake command, what I will do in the future is create a python package that acts as a wrapper for snakemake to ease potential configuration of certain parameters within the workflow. -->
 
-Also, the pipeline currently runs end to end, though there may be cases where the user already has data for a certain part of the pipeline and would like to plug that in. Snakemake allows for that to be a possibility, so I will work to make a set of tutorials on how to do that through snakemake, and eventually the cinful python package will have options to do that as well.
+cinful currently exists as a wrapper to a series of snakemake subroutines, so adding functionality to it is as simple as adding additional subroutines. If there are any subroutines that you see are needed, feel free to raise an issue, and I will be glad to guide you through the process of making a pull request to add that feature.
+
+Additionally, since cinful primarily works through snakemake, it can also be used by simply running the snakefiles separately, so if additional configuration is needed, in terms of the types of input files, this can probably be achieved that way.
+
+<!-- Also, the pipeline currently runs end to end, though there may be cases where the user already has data for a certain part of the pipeline and would like to plug that in. Snakemake allows for that to be a possibility, so I will work to make a set of tutorials on how to do that through snakemake, and eventually the cinful python package will have options to do that as well. -->
 
 
 
