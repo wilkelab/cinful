@@ -66,9 +66,12 @@ def subDF2Fasta(df, subName, baseDir,seqCol="seq", idCol = "cinful_id"):
 def main():
 	# set up command line arguments
 	parser = argparse.ArgumentParser(description='cinful')
-	parser.add_argument('-d', '--directory', action=readable_dir,required=True)
-	parser.add_argument('-o', '--outDir', type=str,default="cinful_out")
-	parser.add_argument('-t', '--threads', type=int, default=1)
+	parser.add_argument('-d', '--directory', action=readable_dir,required=True,
+		help='Must be a directory containing uncompressed FASTA formatted genome assemblies with .fna extension. Files within nested directories are fine')
+	parser.add_argument('-o', '--outDir', type=str,default="cinful_out",
+		help='This directory will contain all output files. It will be nested under the input directory.')
+	parser.add_argument('-t', '--threads', type=int, default=1,
+		help = 'This specifies how many threads to allow snakemake to have access to for parallelization')
 	# parser.add_argument('--snakemake_params', type=list, nargs='+')
 	args = parser.parse_args()
 
