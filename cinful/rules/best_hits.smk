@@ -80,7 +80,35 @@ def tmhmmCol(df,seqCol="seq"):
   return tmhmmAnnotations	
 	
 	
+def cvab_mfp_neighbor(CvaBDF, prodigalDF, mfp_hmmFile):
 
+	seqLen = prodigalDF["seq"].str.len()
+	prodigalDF_mfpLen = prodigalDF[(seqLen <= 450) & (seqLen >= 375)]
+
+	hmm = load_hmm(mfp_hmmFile)
+	candidateList = []
+	for row in CvaBDF.to_dict(orient="records"):
+		# immunitySubset = immunityDB[immunityDB["sample"] + immunityDB["contig"] == row["sample"]+row["contig"] ].sort_values("start")
+		prodigalDF_mfpLen_cvab_contig = prodigalDF_mfpLen[prodigalDF_mfpLen["sample"] + prodigalDF_mfpLen["contig"]== row["sample"]+row["contig"] ].sort_values("start")
+		
+		prodigalDF_mfpLen_cvab_contig["cvab_hit"] = row["cinful_id"]
+		mfpUpstream = prodigalDF_mfpLen_cvab_contig[prodigalDF_mfpLen_cvab_contig["start"] < row["start"]].tail(5)
+		mfpDownstream = prodigalDF_mfpLen_cvab_contig[prodigalDF_mfpLen_cvab_contig["start"] > row["stop"]].head(5)
+		nearestCandidates = pd.concat([mfpUpstream,mfpDownstream])
+		candidateList.append(nearestCandidates)
+	mfp_candidates =  pd.concat(candidateList)
+	sequences = []
+	for row in mfp_candidates.to_dict(orient="records"):
+		text_seq = pyhmmer.easel.TextSequence(name =bytes(row["pephash"],"utf-8"), sequence = row["seq"])
+		sequences.append(text_seq.digitize(hmm.alphabet))
+	pipeline = pyhmmer.plan7.Pipeline(hmm.alphabet)
+	hits = pipeline.search_hmm(hmm, sequences)
+	return mfp_candidates[mfp_candidates["pephash"].isin([hit.name.decode() for hit in hits])]
+	
+	
+
+
+	
 	
 
 rule best_hits:
@@ -142,4 +170,17 @@ rule candidate_immunity:
 
 
 
-	
+rule candidate_MFP:	
+	input:
+		bestHits = config["outdir"] + "/03_best_hits/best_hits.csv",
+		mfp_hmm = config["outdir"] + "/00_dbs/MFP.verified.hmm",
+		prodigalDB = config["outdir"] + "/01_orf_homology/prodigal_out.all.nr_expanded.csv"
+	output:
+		config["outdir"] + "/03_best_hits/best_MFP_candidates.csv"
+	run:
+		bestHits = pd.read_csv(input.bestHits)
+		CvaBDF = bestHits[bestHits["component"] == "CvaB.verified"]
+		prodigalDF = pd.read_csv(input.prodigalDB)
+		best_MFP_candidates = cvab_mfp_neighbor(CvaBDF, prodigalDF, input.mfp_hmm)
+		best_MFP_candidates.to_csv(output[0], index = None)
+

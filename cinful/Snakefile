@@ -49,7 +49,7 @@ def hmmsearch(queryFile, hmm):
   hits = pipeline.search_hmm(hmm, sequences)
   return hits
 
-SAMPLES, = glob_wildcards("{sample}.fna")
+
 
 threads_max = workflow.cores * 0.75
 
@@ -59,10 +59,24 @@ if threads_max <1:
 # sys.exit("HE:P!!!!!!!!" + srcdir('config.yaml'))
 configfile: srcdir('config.yaml')
 
+# print("Checking samples")
+# if "SAMPLES" in config:
+# 	if config["SAMPLES"] != []:
+# 		SAMPLES = config["SAMPLES"]
+# elif glob_wildcards("{sample}.fna") != []:
+# 	SAMPLES, = glob_wildcards("{sample}.fna")	
+# else:
+# 	sys.exit("No valid FASTA files found, exiting")
+SAMPLES, = glob_wildcards("{sample}.fna")
+# print(SAMPLES)
+# sys.exit("Samples checked")
+
 rule final:
 	input:
 		config["outdir"] + "/03_best_hits/best_immunity_protein_candidates.csv",
+		config["outdir"] + "/03_best_hits/best_MFP_candidates.csv",
 		config["outdir"] + "/03_best_hits/best_hit_contigs.csv"
+
 		# "cinfulOut/03_best_hits/best_hits.csv"
 		# expand("cinfulOut/02_homology_results/{sample}.best_hits.csv", sample = SAMPLES)
 		# expand("cinfulOut/02_homology_results/{sample}.all_merged.csv", sample = SAMPLES)
