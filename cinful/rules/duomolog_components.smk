@@ -3,7 +3,7 @@ import pyhmmer
 from functools import reduce
 
 
-SAMPLES, = glob_wildcards("{config[outdir]}/01_orf_homology/{sample}_prodigal")
+SAMPLES, = glob_wildcards(config["outdir"] + "/01_orf_homology/{sample}_prodigal")
 COMPONENTS, = glob_wildcards("{component}.verified.pep")
 
 
@@ -34,21 +34,21 @@ def run_hmmsearch(queryFile, hmmFile):
 
 rule merged_results:
 	input:
-		nr_csv = "{config[outdir]}/01_orf_homology/prodigal_out.all.nr_expanded.csv",
+		nr_csv = config["outdir"] + "/01_orf_homology/prodigal_out.all.nr_expanded.csv",
 
-		microcins = "{config[outdir]}/01_orf_homology/microcins/blast_v_hmmer.csv",
-		microcin_pepHash = "{config[outdir]}/00_dbs/microcins.verified.pephash.csv",
+		microcins = config["outdir"] + "/01_orf_homology/microcins/blast_v_hmmer.csv",
+		microcin_pepHash = config["outdir"] + "/00_dbs/microcins.verified.pephash.csv",
 
-		immunity_proteins = "{config[outdir]}/01_orf_homology/immunity_proteins/blast_v_hmmer.csv",
-		immunity_protein_pepHash = "{config[outdir]}/00_dbs/immunity_proteins.verified.pephash.csv",
+		immunity_proteins = config["outdir"] + "/01_orf_homology/immunity_proteins/blast_v_hmmer.csv",
+		immunity_protein_pepHash = config["outdir"] + "/00_dbs/immunity_proteins.verified.pephash.csv",
 
-		unfilteredCvaB = "{config[outdir]}/01_orf_homology/CvaB/blast_v_hmmer.csv",
-		QC_Cvab="{config[outdir]}/01_orf_homology/CvaB/QC.csv",
+		unfilteredCvaB = config["outdir"] + "/01_orf_homology/CvaB/blast_v_hmmer.csv",
+		QC_Cvab=config["outdir"] + "/01_orf_homology/CvaB/QC.csv",
 
-		CvaB_pepHash = "{config[outdir]}/00_dbs/CvaB.verified.pephash.csv"
+		CvaB_pepHash = config["outdir"] + "/00_dbs/CvaB.verified.pephash.csv"
 
 	output:
-		"{config[outdir]}/02_homology_results/all_merged.csv"
+		config["outdir"] + "/02_homology_results/all_merged.csv"
 	run:
 		nrDF = pd.read_csv(input.nr_csv)
 		microcinDF = pd.read_csv(input.microcins)
