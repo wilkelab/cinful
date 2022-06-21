@@ -114,6 +114,12 @@ rule filter_CvaB:
 	shell:
 		"seqkit seq -m 600 -M 800 {input} | seqkit rmdup -s > {output}"
 
-
+rule filter_mfp:
+	input:
+		config["outdir"] + "/01_orf_homology/prodigal_out.all.nr.faa"
+	output:
+		config["outdir"] + "/01_orf_homology/mfp/filtered_nr.fa"
+	shell:
+		"seqkit seq -m 350 -M 500 {input} | seqkit rmdup -s > {output}"
 
 # TODO: add a merge nonredundant step for each component
