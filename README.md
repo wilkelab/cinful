@@ -20,7 +20,7 @@ All software dependencies needed to run cinful are available through conda and a
 conda install mamba -c conda-forge
 ```
 
-Then simply run 
+Then simply run
 ```bash
 bash scripts/build_conda_env.sh
 ```
@@ -41,7 +41,7 @@ Snakemake is the core workflow management used by cinful, the main snakefile is 
 snakemake -d <assembly_directory> --threads <core_nums> --snakefile path/to/cinful/Snakefile
 ```
 
-If installed properly, running `cinful -h` will produce the following output.
+If installed properly, running `python cinful.py -h` will produce the following output.
 
 ```
 cinful
@@ -80,7 +80,7 @@ Three output directories will be generated in your `assembly_directory` under a 
 There is a test dataset with an _E. coli_ genome assembly to test cinful on under `test/colcinV_Ecoli`, you can run cinful on this dataset by running the following:
 
 ```bash
-snakemake -d test/colcinV_Ecoli --snakemake 
+snakemake -d test/colcinV_Ecoli --snakemake
 ```
 # Contributing
 
@@ -111,4 +111,3 @@ Additionally, since cinful primarily works through snakemake, it can also be use
 <!-- ## Immunity protein homologs
 * subcelluar localization and transmembrane helix will be predicted as a final filtering step
  -->
-
