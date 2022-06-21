@@ -2,10 +2,6 @@ from io import StringIO
 from Bio import SeqIO
 
 
-
-
-
-
 rule makeblastdb_microcin:
 	input:
 		config["outdir"] + "/00_dbs/microcins.verified.pep"
@@ -13,6 +9,7 @@ rule makeblastdb_microcin:
 		config["outdir"] + "/00_dbs/microcins.verified.pep.phr"
 	shell:
 		"makeblastdb -dbtype prot -in {input}"
+
 
 rule blast_microcin:
 	input:
@@ -25,6 +22,7 @@ rule blast_microcin:
 	shell:
 		"blastp -db {input.verified_component} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1 -num_threads {threads}"
 
+
 rule msa_microcin:
 	input:
 		config["outdir"] + "/00_dbs/microcins.verified.pep"
@@ -32,6 +30,7 @@ rule msa_microcin:
 		config["outdir"] + "/00_dbs/microcins.verified.aln"
 	shell:
 		"mafft --auto {input} > {output}"
+
 
 rule buildhmm_microcin:
 	input:
@@ -50,14 +49,12 @@ rule signalSeqHMM:
 		config["outdir"] + "/01_orf_homology/microcins/signalSeq.hit.csv"
 	run:
 		signalSeqHMM = build_hmm(input.signalSeqAln)
-		
+
 		signalSeqHits = hmmsearch(input.input_seqs, signalSeqHMM)
 		signalSeqHitStr = [hit.name.decode('utf-8') for hit in signalSeqHits]
 		matchDF = pd.DataFrame.from_dict({"signalMatch":signalSeqHitStr})
 		matchDF.to_csv(output[0])
 		# idDF["signalMatch"] = idDF["pephash"].isin(signalSeqHitStr)
-
-
 
 
 rule blast_v_hmmer_microcin:
@@ -74,4 +71,3 @@ rule blast_v_hmmer_microcin:
 		blastDF["component"] = hmm_name
 		blastDF["hmmerHit"] = blastDF["qseqid"].isin(hmmer_hitsHeaders) #hmmer_hitsHeaders in blastDF["qseqid"]
 		blastDF.to_csv(output[0], index = False)
-

@@ -13,27 +13,27 @@ print("SAMPLES",SAMPLES)
 
 def hmmsearch(queryFile, hmm):
 
-  with pyhmmer.easel.SequenceFile(queryFile) as seq_file:
-    sequences = [ seq.digitize(hmm.alphabet) for seq in seq_file ]
-  pipeline = pyhmmer.plan7.Pipeline(hmm.alphabet)
-  hits = pipeline.search_hmm(hmm, sequences)
-  return hits
+	with pyhmmer.easel.SequenceFile(queryFile) as seq_file:
+		sequences = [ seq.digitize(hmm.alphabet) for seq in seq_file ]
+	pipeline = pyhmmer.plan7.Pipeline(hmm.alphabet)
+	hits = pipeline.search_hmm(hmm, sequences)
+	return hits
 
 def build_hmm(alnFile):
-  abc = pyhmmer.easel.Alphabet.amino()
-  builder = pyhmmer.plan7.Builder(alphabet=abc)
+	abc = pyhmmer.easel.Alphabet.amino()
+ 	builder = pyhmmer.plan7.Builder(alphabet=abc)
 
-  with pyhmmer.easel.MSAFile(alnFile) as msa_file:
-    msa_file.set_digital(abc)
-    msa = next(msa_file)
+	with pyhmmer.easel.MSAFile(alnFile) as msa_file:
+		msa_file.set_digital(abc)
+		msa = next(msa_file)
   # MSA must have a name, otherwise building will fail
-  if msa.name is None:
-    msa.name = b"alignment"
-  builder = pyhmmer.plan7.Builder(abc)
-  background = pyhmmer.plan7.Background(abc)
-  hmm, _, _ = builder.build_msa(msa, background)
+	if msa.name is None:
+		msa.name = b"alignment"
+	builder = pyhmmer.plan7.Builder(abc)
+	background = pyhmmer.plan7.Background(abc)
+	hmm, _, _ = builder.build_msa(msa, background)
 
-  return hmm
+	return hmm
 
 def hasAllStandardAA(seq, alphabet="ACDEFGHIKLMNPQRSTVWY",ignore="*"):
 	return (set(seq) - set(alphabet+ignore)) == set()
