@@ -9,7 +9,7 @@ def qcCvab(best_hitsPep, best_hitsAln):
 	alignment = AlignIO.read(open(best_hitsAln), "fasta")
 	gappyDict = {"id":[], "nonGap":[], "percentGap":[], "alignment":[]}
 
-	for record in alignment:	
+	for record in alignment:
 		percentGap = record.seq.count("-")/len(record.seq)
 		gappyDict["id"].append(record.id)
 		gappyDict["nonGap"].append( len(record.seq) - record.seq.count("-"))
@@ -126,7 +126,7 @@ rule align_with_verifiedCvab:
 
 rule filter_CvaB_hits:
 	input:
-		best_CvaB=config["outdir"] + "/01_orf_homology/CvaB/blast_v_hmmer.fa", 
+		best_CvaB=config["outdir"] + "/01_orf_homology/CvaB/blast_v_hmmer.fa",
 		align_with_verifiedCvab=config["outdir"] + "/01_orf_homology/CvaB/blast_v_hmmer.with_verified.aln",
 		nr_filtered_csv=config["outdir"] + "/01_orf_homology/prodigal_out.all.nr_expanded.csv"
 	output:
@@ -141,21 +141,3 @@ rule filter_CvaB_hits:
 		lowTrimCvaB = lowGapCvaB[lowGapCvaB["percentTrim"] <0.1]
 		catalyticTriadCvab = lowTrimCvaB[(lowTrimCvaB["C34"] + lowTrimCvaB["H107"] + lowTrimCvaB["D123"]) == "CHD"]
 		catalyticTriadCvab.to_csv(output.QC)
-
-
-rule msa_MFP:
-	input:
-		config["outdir"] + "/00_dbs/MFP.verified.pep"
-	output:
-		config["outdir"] + "/00_dbs/MFP.verified.aln"
-	threads:threads_max
-	shell:
-		"mafft --thread {threads} --auto {input} > {output}"
-
-rule buildhmm_MFP:
-	input:
-		config["outdir"] + "/00_dbs/MFP.verified.aln"
-	output:
-		config["outdir"] + "/00_dbs/MFP.verified.hmm"
-	shell:
-		"hmmbuild {output} {input}"
