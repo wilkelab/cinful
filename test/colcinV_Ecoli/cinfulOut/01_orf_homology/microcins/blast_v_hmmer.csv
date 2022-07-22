@@ -1,2 +1,2 @@
 qseqid,sseqid,pident,length,mismatch,gapopen,qstart,qend,sstart,send,evalue,bitscore,component,hmmerHit
-v1_PLS_cf172055d7db9550127c7d064489dd0947315d2407e2176e97335b2d54dc701d,V_sp_P22522_CEAV_ECOLX,100.0,103,0,0,1,103,1,103,7.68e-76,208,microcins.verified,True
+v1_PLS_f46b02a1bfa1c3d276b482deec9926ec13d8dc5b8b8eceeea84e4fda83be41e6,V_sp_P22522_CEAV_ECOLX,100.0,103,0,0,1,103,1,103,3.39e-75,208,microcins.verified,True
