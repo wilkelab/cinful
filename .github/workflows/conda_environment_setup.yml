@@ -145,16 +145,16 @@ jobs:
         source activate cinful
         cd cinful
         python -m snakemake cinful_out/00_dbs/microcins.verified.aln -F -j1 --keep-target-files --allowed-rules msa_microcin -d .tests/msa_microcin
-    - name: nonredundant_prodigal
-      run: |
-        source activate cinful
-        cd cinful
-        python -m snakemake cinful_out/01_orf_homology/prodigal_out.all.nr.faa cinful_out/01_orf_homology/prodigal_out.all.nr_expanded.csv -F -j1 --keep-target-files --allowed-rules nonredundant_prodigal -d .tests/nonredundant_prodigal
     - name: prodigal
       run: |
         source activate cinful
         cd cinful
         python -m snakemake cinful_out/01_orf_homology/prodigal_out/GCF_000026285.1_ASM2628v2_genomic.gff3 cinful_out/01_orf_homology/prodigal_out/GCF_000026285.1_ASM2628v2_genomic.cds cinful_out/01_orf_homology/prodigal_out/GCF_000026285.1_ASM2628v2_genomic.faa -F -j1 --keep-target-files --allowed-rules prodigal -d .tests/prodigal
+    - name: nonredundant_prodigal
+      run: |
+        source activate cinful
+        cd cinful
+        python -m snakemake cinful_out/01_orf_homology/prodigal_out.all.nr.faa cinful_out/01_orf_homology/prodigal_out.all.nr_expanded.csv -F -j1 --keep-target-files --allowed-rules nonredundant_prodigal -d .tests/nonredundant_prodigal
     - name: signalSeqHMM
       run: |
         source activate cinful
