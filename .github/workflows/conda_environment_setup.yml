@@ -130,11 +130,6 @@ jobs:
         source activate cinful
         cd cinful
         python -m snakemake cinful_out/00_dbs/microcins.verified.pep.phr -F -j1 --keep-target-files --allowed-rules makeblastdb_microcin -d .tests/makeblastdb_microcin
-    - name: merged_results
-      run: |
-        source activate cinful
-        cd cinful
-        python -m snakemake cinful_out/02_homology_results/all_merged.csv -F -j1 --keep-target-files --allowed-rules merged_results -d .tests/merged_results
     - name: msa_CvaB
       run: |
         source activate cinful
@@ -180,3 +175,8 @@ jobs:
         source activate cinful
         cd cinful
         python -m snakemake cinful_out/00_dbs/microcins.verified.pep -F -j1 --keep-target-files --allowed-rules write_microcins -d .tests/write_microcins
+    - name: merged_results
+      run: |
+        source activate cinful
+        cd cinful
+        python -m snakemake cinful_out/02_homology_results/all_merged.csv -F -j1 --keep-target-files --allowed-rules merged_results -d .tests/merged_results
