@@ -3,7 +3,7 @@ import pyhmmer
 from functools import reduce
 
 
-SAMPLES, = glob_wildcards("cinfulOut/01_orf_homology/{sample}_prodigal")
+SAMPLES, = glob_wildcards("{config[outdir]}/01_orf_homology/{sample}_prodigal")
 COMPONENTS, = glob_wildcards("{component}.verified.pep")
 
 
@@ -11,7 +11,7 @@ def load_blast(blastout, hasHeaders=False):
 	if hasHeaders:
 		blastpDF = pd.read_csv(blastout, sep = "\t")
 	else:
-		blastpDF = pd.read_csv(blastout, sep = "\t", names = ["qseqid","sseqid","pident","length","mismatch",			"gapopen","qstart","qend","sstart","send","evalue","bitscore"])
+		blastpDF = pd.read_csv(blastout, sep = "\t", names = ["qseqid","sseqid","pident","length","mismatch","gapopen","qstart","qend","sstart","send","evalue","bitscore"])
 	return blastpDF
 
 def load_hmm(hmmFile):
@@ -25,7 +25,7 @@ def run_hmmsearch(queryFile, hmmFile):
 		sequences = [ seq.digitize(hmm.alphabet) for seq in seq_file ]
 	pipeline = pyhmmer.plan7.Pipeline(hmm.alphabet)
 	hits = pipeline.search_hmm(hmm, sequences) # Has lots of goodies!
-	
+
 	return hits , hmm.name.decode() # [hit.name.decode() for hit in hmmerOut]
 
 
@@ -41,9 +41,9 @@ rule blast:
 	input:
 		verified_component = "{component}.verified.pep",
 		blastdb = "{component}.verified.pep.phr",
-		input_seqs = "cinfulOut/01_orf_homology/{sample}_prodigal/{component}/{sample}.filtered.fa"
+		input_seqs = "{config[outdir]}/01_orf_homology/{sample}_prodigal/{component}/{sample}.filtered.fa"
 	output:
-		"cinfulOut/01_orf_homology/{sample}_prodigal/{component}/blast.txt"
+		"{config[outdir]}/01_orf_homology/{sample}_prodigal/{component}/blast.txt"
 	shell:
 		"blastp -db {input.verified_component} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
 
@@ -68,13 +68,13 @@ rule buildhmm:
 rule blast_v_hmmer:
 	input:
 		verifiedHMM = "{component}.verified.hmm",
-		input_seqs = "cinfulOut/01_orf_homology/{sample}_prodigal/{component}/{sample}.filtered.fa",
-		blastOut = "cinfulOut/01_orf_homology/{sample}_prodigal/{component}/blast.txt"
+		input_seqs = "{config[outdir]}/01_orf_homology/{sample}_prodigal/{component}/{sample}.filtered.fa",
+		blastOut = "{config[outdir]}/01_orf_homology/{sample}_prodigal/{component}/blast.txt"
 	output:
-		"cinfulOut/01_orf_homology/{sample}_prodigal/{component}/blast_v_hmmer.csv"
+		"{config[outdir]}/01_orf_homology/{sample}_prodigal/{component}/blast_v_hmmer.csv"
 	run:
 		# print(input.verifiedHMM, input.input_seqs, input.blastOut)
-		
+
 
 
 		blastDF = load_blast(input.blastOut)
@@ -87,11 +87,11 @@ rule blast_v_hmmer:
 
 rule merged_results:
 	input:
-		blast_v_hmmer = expand("cinfulOut/01_orf_homology/{sample}_prodigal/{component}/blast_v_hmmer.csv",
+		blast_v_hmmer = expand("{config[outdir]}/01_orf_homology/{sample}_prodigal/{component}/blast_v_hmmer.csv",
 		                       sample=SAMPLES, component=COMPONENTS),
-		prodigalGFF = "cinfulOut/01_orf_homology/{sample}_prodigal/{sample}.gff3"
+		prodigalGFF = "{config[outdir]}/01_orf_homology/{sample}_prodigal/{sample}.gff3"
 	output:
-		"cinfulOut/02_homology_results/{sample}.all_merged.csv"
+		"{config[outdir]}/02_homology_results/{sample}.all_merged.csv"
 	run:
 		# print(len(input.blast_v_hmmer), input.blast_v_hmmer)
 		componentDFs = []
@@ -101,4 +101,3 @@ rule merged_results:
 		mergedDf.to_csv(output[0], index = None)
 		# with open(output[0],"w") as out:
 			# out.write("test\n")
-		
