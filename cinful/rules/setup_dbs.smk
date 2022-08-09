@@ -5,12 +5,12 @@ from Bio import AlignIO
 import os
 
 def fa2hashDF(fa):
-	outDict = {"header":[],"pephash":[],"sequeunce":[]}
+	outDict = {"header":[],"pephash":[],"sequence":[]}
 	for record in SeqIO.parse(fa,"fasta"):
 		pephash = seqhash.seqhash(record.seq,dna_type='PROTEIN')
 		outDict["header"].append(record.id)
 		outDict["pephash"].append(pephash)
-		outDict["sequeunce"].append(str(record.seq))
+		outDict["sequence"].append(str(record.seq))
 	return pd.DataFrame.from_dict(outDict)
 
 rule write_CvaB:
