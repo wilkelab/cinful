@@ -120,6 +120,6 @@ rule filter_mfp:
 	output:
 		config["outdir"] + "/01_orf_homology/mfp/filtered_nr.fa"
 	shell:
-		"seqkit seq -m 350 -M 500 {input} | seqkit rmdup -s > {output}"
+		"seqkit seq -m 375 -M 450 {input} | seqkit rmdup -s > {output}"
 
 # TODO: add a merge nonredundant step for each component
