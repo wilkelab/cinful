@@ -4,6 +4,8 @@ from Bio import AlignIO
 import pandas as pd
 
 threads_max = workflow.cores * 0.75
+if threads_max <1:
+	threads_max = 1
 
 def qcCvab(best_hitsPep, best_hitsAln):
 	alignment = AlignIO.read(open(best_hitsAln), "fasta")

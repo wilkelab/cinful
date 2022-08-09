@@ -2,6 +2,8 @@ from io import StringIO
 from Bio import SeqIO
 
 threads_max = workflow.cores * 0.75
+if threads_max <1:
+	threads_max = 1
 
 rule makeblastdb_microcin:
 	input:
