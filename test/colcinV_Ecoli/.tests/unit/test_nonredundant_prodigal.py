@@ -22,24 +22,24 @@ def test_nonredundant_prodigal():
         shutil.copytree(data_path, workdir)
 
         # dbg
-        print("cinfulOut/01_orf_homology/prodigal_out.all.nr.faa cinfulOut/01_orf_homology/prodigal_out.all.nr_expanded.csv", file=sys.stderr)
+        print("cinful_out/01_orf_homology/prodigal_out.all.nr.faa cinful_out/01_orf_homology/prodigal_out.all.nr_expanded.csv", file=sys.stderr)
 
         # Run the test job.
         sp.check_output([
             "python",
             "-m",
-            "snakemake", 
-            "cinfulOut/01_orf_homology/prodigal_out.all.nr.faa cinfulOut/01_orf_homology/prodigal_out.all.nr_expanded.csv",
-            "-F", 
+            "snakemake",
+            "cinful_out/01_orf_homology/prodigal_out.all.nr.faa cinful_out/01_orf_homology/prodigal_out.all.nr_expanded.csv",
+            "-F",
             "-j1",
             "--keep-target-files",
-    
+
             "--directory",
             workdir,
         ])
 
         # Check the output byte by byte using cmp.
         # To modify this behavior, you can inherit from common.OutputChecker in here
-        # and overwrite the method `compare_files(generated_file, expected_file), 
+        # and overwrite the method `compare_files(generated_file, expected_file),
         # also see common.py.
         common.OutputChecker(data_path, expected_path, workdir).check()
