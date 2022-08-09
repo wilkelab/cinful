@@ -63,7 +63,7 @@ rule nonredundant_prodigal:
 					contig = '_'.join(seq_record.id.split("_")[:-1])
 					allStandardAA = hasAllStandardAA(sequence)
 					seqID = f"{sample}|{contig}|{start}:{stop}:{strand}"
-					idDict[seqID] = [pephash,sample,contig,start,stop,strand,allStandardAA,sequence]
+					idDict[seqID] = [pephash, sample, contig, start, stop, strand, allStandardAA, sequence]
 			with open(output.fasta,"w") as fasta_file:
 				for pephash in hashDict:
 					outRecord = SeqRecord(
@@ -73,13 +73,8 @@ rule nonredundant_prodigal:
 						)
 					SeqIO.write(outRecord, fasta_file, "fasta")
 
-#old way
 		idDF = pd.DataFrame.from_dict(idDict, orient="index").reset_index()
 		idDF.columns = ["cinful_id","pephash","sample","contig","start","stop","strand","allStandardAA","seq"]
-
-#attempted new method, broken
-#		idDF = pd.DataFrame(columns = ["cinful_id","pephash","sample","contig","start","stop","strand","allStandardAA","seq"]).from_dict(idDict, orient="index").reset_index()
-
 		idDF.to_csv(output.csv, index = None)
 
 
