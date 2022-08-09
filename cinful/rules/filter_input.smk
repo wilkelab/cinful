@@ -55,35 +55,30 @@ rule nonredundant_prodigal:
 				for seq_record in SeqIO.parse(handle, "fasta"):
 					sequence = str(seq_record.seq)
 					pephash = seqhash.seqhash(sequence.strip("*"),dna_type='PROTEIN')
-
 					hashDict[pephash] = sequence
-
 					descriptionParts = seq_record.description.split("#")
 					start = descriptionParts[1].strip()
 					stop = descriptionParts[2].strip()
 					strand = descriptionParts[3].strip()
 					contig = '_'.join(seq_record.id.split("_")[:-1])
 					allStandardAA = hasAllStandardAA(sequence)
-
-
 					seqID = f"{sample}|{contig}|{start}:{stop}:{strand}"
 					idDict[seqID] = [pephash,sample,contig,start,stop,strand,allStandardAA,sequence]
+			with open(output.fasta,"w") as fasta_file:
+				for pephash in hashDict:
+					outRecord = SeqRecord(
+						Seq(hashDict[pephash]),
+						id=pephash,
+						description=""
+						)
+					SeqIO.write(outRecord, fasta_file, "fasta")
 
+#old way
+		idDF = pd.DataFrame.from_dict(idDict, orient="index").reset_index()
+		idDF.columns = ["cinful_id","pephash","sample","contig","start","stop","strand","allStandardAA","seq"]
 
-
-		with open(output.fasta,"w") as fasta_file:
-			for pephash in hashDict:
-				outRecord = SeqRecord(
-					Seq(hashDict[pephash]),
-					id=pephash,
-					description=""
-				)
-				SeqIO.write(outRecord, fasta_file, "fasta")
-
-
-		idDF = pd.DataFrame(columns = ["cinful_id","pephash","sample","contig","start","stop","strand","allStandardAA","seq"]).from_dict(idDict, orient="index").reset_index()
-
-#		idDF.columns = ["cinful_id","pephash","sample","contig","start","stop","strand","allStandardAA","seq"]
+#attempted new method, broken
+#		idDF = pd.DataFrame(columns = ["cinful_id","pephash","sample","contig","start","stop","strand","allStandardAA","seq"]).from_dict(idDict, orient="index").reset_index()
 
 		idDF.to_csv(output.csv, index = None)
 
@@ -114,11 +109,11 @@ rule filter_CvaB:
 	shell:
 		"seqkit seq -m 600 -M 800 {input} | seqkit rmdup -s > {output}"
 
-rule filter_mfp:
+rule filter_MFP:
 	input:
 		config["outdir"] + "/01_orf_homology/prodigal_out.all.nr.faa"
 	output:
-		config["outdir"] + "/01_orf_homology/mfp/filtered_nr.fa"
+		config["outdir"] + "/01_orf_homology/MFP/filtered_nr.fa"
 	shell:
 		"seqkit seq -m 375 -M 450 {input} | seqkit rmdup -s > {output}"
 
