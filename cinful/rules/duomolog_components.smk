@@ -60,7 +60,6 @@ rule merged_results:
 		immunity_protein_pepHashDF = pd.read_csv(input.immunity_protein_pepHash)
 		CvaB_pepHashDF = pd.read_csv(input.CvaB_pepHash)
 
-		# filteredCvaBDF = pd.read_csv(input.filteredCvaB)
 		bestCvaB = unfilteredCvaBDF[unfilteredCvaBDF["qseqid"].isin(QC_CvabDF["id"]) ]
 
 		microcinDF["verified"] = microcinDF["qseqid"].isin(microcin_pepHashDF["pephash"])
@@ -71,5 +70,3 @@ rule merged_results:
 		mergedDf = pd.concat(componentDFs)
 		mergedDf_nr = mergedDf.merge(nrDF, left_on ="qseqid", right_on= "pephash")
 		mergedDf_nr.to_csv(output[0], index = None)
-		# with open(output[0],"w") as out:
-			# out.write("test\n")

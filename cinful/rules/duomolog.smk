@@ -63,8 +63,6 @@ rule buildhmm:
 	shell:
 		"hmmbuild {output} {input}"
 
-
-
 rule blast_v_hmmer:
 	input:
 		verifiedHMM = "{component}.verified.hmm",
@@ -73,10 +71,6 @@ rule blast_v_hmmer:
 	output:
 		"{config[outdir]}/01_orf_homology/{sample}_prodigal/{component}/blast_v_hmmer.csv"
 	run:
-		# print(input.verifiedHMM, input.input_seqs, input.blastOut)
-
-
-
 		blastDF = load_blast(input.blastOut)
 		hmmer_hits, hmm_name = run_hmmsearch(input.input_seqs, input.verifiedHMM)
 		hmmer_hitsHeaders = [hit.name.decode() for hit in hmmer_hits]

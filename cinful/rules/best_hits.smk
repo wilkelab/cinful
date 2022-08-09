@@ -27,7 +27,7 @@ def prodigalFa2DF(fa):
 def homology_withProdigal(homology_results_file, prodigalDF):
 	homology_resultsDF = pd.read_csv(homology_results_file)
 
-	return homology_resultsDF.merge(prodigalDF, left_on="qseqid",right_on="pephash")#, left_on = "qseqid", right_on = "id")
+	return homology_resultsDF.merge(prodigalDF, left_on="qseqid",right_on="pephash")
 
 def componentDFs(homology_withProdigalDF):
 	microcinDF = homology_withProdigalDF[homology_withProdigalDF["component"]=="microcins.verified"]
@@ -76,7 +76,6 @@ def tmhmmCol(df,seqCol="seq"):
     for seq in df["seq"]:
         tmhmmAnnotation = pyTMHMM.predict(seq.strip("*"), compute_posterior=False)
         tmhmmAnnotations.append(tmhmmAnnotation)
-        # df["tmhmm"] = tmhmmAnnotations
     return tmhmmAnnotations
 
 
@@ -88,9 +87,7 @@ def cvab_mfp_neighbor(CvaBDF, prodigalDF, mfp_hmmFile):
 	hmm = load_hmm(mfp_hmmFile)
 	candidateList = []
 	for row in CvaBDF.to_dict(orient="records"):
-		# immunitySubset = immunityDB[immunityDB["sample"] + immunityDB["contig"] == row["sample"]+row["contig"] ].sort_values("start")
 		prodigalDF_mfpLen_cvab_contig = prodigalDF_mfpLen[prodigalDF_mfpLen["sample"] + prodigalDF_mfpLen["contig"]== row["sample"]+row["contig"] ].sort_values("start")
-
 		prodigalDF_mfpLen_cvab_contig["cvab_hit"] = row["cinful_id"]
 		mfpUpstream = prodigalDF_mfpLen_cvab_contig[prodigalDF_mfpLen_cvab_contig["start"] < row["start"]].tail(5)
 		mfpDownstream = prodigalDF_mfpLen_cvab_contig[prodigalDF_mfpLen_cvab_contig["start"] > row["stop"]].head(5)
@@ -105,28 +102,15 @@ def cvab_mfp_neighbor(CvaBDF, prodigalDF, mfp_hmmFile):
 	hits = pipeline.search_hmm(hmm, sequences)
 	return mfp_candidates[mfp_candidates["pephash"].isin([hit.name.decode() for hit in hits])]
 
-
-
-
-
-
-
 rule best_hits:
 	input:
 		merged_homology_results = config["outdir"] + "/02_homology_results/all_merged.csv",
 		signalSeq = config["outdir"] + "/01_orf_homology/microcins/signalSeq.hit.csv"
-
 	output:
 		config["outdir"] + "/03_best_hits/best_hits.csv"
 	run:
-
-		homologyDF = pd.read_csv(input.merged_homology_results )
-
-		# prodigalDF =  pd.read_csv(input.nr_csv)
-
+		homologyDF = pd.read_csv(input.merged_homology_results)
 		signalSeqDF = pd.read_csv(input.signalSeq)
-
-		# homology_withProdigalDF = homology_withProdigal(homologyFile, prodigalDF)
 		microcinDF, immunity_proteinDF, CvaBDF = componentDFs(homologyDF)
 		if not microcinDF.empty:
 			best_hitsDF = bestHits(microcinDF,immunity_proteinDF,CvaBDF)
@@ -156,19 +140,13 @@ rule candidate_immunity:
 		seqLen = immunityDB["seq"].str.len()
 		immunityDB = immunityDB[(seqLen <= 250 ) & (seqLen >= 30 )]
 		immunityDB = immunityDB[immunityDB["allStandardAA"]]
-
 		bestHits = pd.read_csv(input.bestHits)
 		bestMicrocinHits = bestHits[bestHits["component"] == "microcins.verified"]
-
 		immunityHomologs = pd.read_csv(input.immunityHomologs)
-
 		nearestImmunityDF = nearestImmunityProtein(immunityDB, bestMicrocinHits)
 		nearestImmunityDF["tmhmm"] = tmhmmCol(nearestImmunityDF)
 		nearestImmunityDF["homologyHit"] = nearestImmunityDF["pephash"].isin(immunityHomologs["qseqid"])
-
 		nearestImmunityDF.to_csv(output[0], index = None)
-
-
 
 rule candidate_MFP:
 	input:
