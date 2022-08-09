@@ -73,8 +73,9 @@ rule nonredundant_prodigal:
 						)
 					SeqIO.write(outRecord, fasta_file, "fasta")
 
-		idDF = pd.DataFrame.from_dict(idDict, orient="index").reset_index()
-		idDF.columns = ["cinful_id","pephash","sample","contig","start","stop","strand","allStandardAA","seq"]
+		idDF = pd.DataFrame.from_dict(idDict, orient="index", columns=["pephash","sample","contig","start","stop","strand","allStandardAA","seq"]).reset_index()
+		idDF.rename(columns={'index': 'cinful_id'}, inplace = True)
+#		idDF.columns = ["cinful_id","pephash","sample","contig","start","stop","strand","allStandardAA","seq"]
 		idDF.to_csv(output.csv, index = None)
 
 
