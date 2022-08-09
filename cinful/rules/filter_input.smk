@@ -64,14 +64,14 @@ rule nonredundant_prodigal:
 					allStandardAA = hasAllStandardAA(sequence)
 					seqID = f"{sample}|{contig}|{start}:{stop}:{strand}"
 					idDict[seqID] = [pephash, sample, contig, start, stop, strand, allStandardAA, sequence]
-			with open(output.fasta,"w") as fasta_file:
-				for pephash in hashDict:
-					outRecord = SeqRecord(
-						Seq(hashDict[pephash]),
-						id=pephash,
-						description=""
-						)
-					SeqIO.write(outRecord, fasta_file, "fasta")
+		with open(output.fasta,"w") as fasta_file:
+			for pephash in hashDict:
+				outRecord = SeqRecord(
+					Seq(hashDict[pephash]),
+					id=pephash,
+					description=""
+				)
+				SeqIO.write(outRecord, fasta_file, "fasta")
 
 		idDF = pd.DataFrame.from_dict(idDict, orient="index", columns=["pephash","sample","contig","start","stop","strand","allStandardAA","seq"]).reset_index()
 		idDF.rename(columns={'index': 'cinful_id'}, inplace = True)
