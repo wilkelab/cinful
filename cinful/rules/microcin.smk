@@ -1,6 +1,7 @@
 from io import StringIO
 from Bio import SeqIO
 
+threads_max = workflow.cores * 0.75
 
 rule makeblastdb_microcin:
 	input:
@@ -28,8 +29,9 @@ rule msa_microcin:
 		config["outdir"] + "/00_dbs/microcins.verified.pep"
 	output:
 		config["outdir"] + "/00_dbs/microcins.verified.aln"
+	threads:threads_max
 	shell:
-		"mafft --auto {input} > {output}"
+		"mafft --thread {threads} --auto {input} > {output}"
 
 
 rule buildhmm_microcin:

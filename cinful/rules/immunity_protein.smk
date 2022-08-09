@@ -1,8 +1,7 @@
 from io import StringIO
 from Bio import SeqIO
 
-
-
+threads_max = workflow.cores * 0.75
 
 rule makeblastdb_immunity_protein:
 	input:
@@ -28,8 +27,9 @@ rule msa_immunity_protein:
 		config["outdir"] + "/00_dbs/immunity_proteins.verified.pep"
 	output:
 		config["outdir"] + "/00_dbs/immunity_proteins.verified.aln"
+	threads:threads_max
 	shell:
-		"mafft --auto {input} > {output}"
+		"mafft --thread {threads} --auto {input} > {output}"
 
 rule buildhmm_immunity_protein:
 	input:
