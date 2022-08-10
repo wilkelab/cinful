@@ -3,12 +3,13 @@ from Bio import SeqIO
 from Bio import AlignIO
 import pandas as pd
 
-
 threads_max = workflow.cores * 0.75
+if threads_max <1:
+	threads_max = 1
+
 def qcCvab(best_hitsPep, best_hitsAln):
 	alignment = AlignIO.read(open(best_hitsAln), "fasta")
 	gappyDict = {"id":[], "nonGap":[], "percentGap":[], "alignment":[]}
-
 	for record in alignment:
 		percentGap = record.seq.count("-")/len(record.seq)
 		gappyDict["id"].append(record.id)
@@ -16,26 +17,18 @@ def qcCvab(best_hitsPep, best_hitsAln):
 		gappyDict["percentGap"].append(percentGap)
 		gappyDict["alignment"].append(str(record.seq))
 	gappyDF = pd.DataFrame.from_dict(gappyDict)
-
 	# catalytic triad
 	gappyDF["C34"] = gappyDF["alignment"].astype(str).str[34]
 	gappyDF["H107"] = gappyDF["alignment"].astype(str).str[107]
 	gappyDF["D123"] = gappyDF["alignment"].astype(str).str[123]
-
 	lenDict = {"id":[], "len":[]}
 	for record in SeqIO.parse(best_hitsPep, "fasta"):
 		lenDict["id"].append(record.id)
 		lenDict["len"].append(len(record.seq))
 	lenDF = pd.DataFrame.from_dict(lenDict)
-
 	lenGapDF = gappyDF.merge(lenDF)
 	lenGapDF["percentTrim"] = (lenGapDF["len"]-lenGapDF["nonGap"])/ lenGapDF["len"]
-
 	return lenGapDF
-
-
-
-
 
 rule makeblastdb_CvaB:
 	input:
@@ -57,8 +50,6 @@ rule blast_CvaB:
 		"diamond blastp -d {input.verified_component} -q {input.input_seqs}   --evalue 0.001 -k 1 -o {output} -p {threads}"
 		# "blastp -db {input.verified_component} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
 
-
-
 rule msa_CvaB:
 	input:
 		config["outdir"] + "/00_dbs/CvaB.verified.pep"
@@ -76,8 +67,6 @@ rule buildhmm_CvaB:
 	shell:
 		"hmmbuild {output} {input}"
 
-
-
 rule blast_v_hmmer_CvaB:
 	input:
 		verifiedHMM = config["outdir"] + "/00_dbs/CvaB.verified.hmm",
@@ -92,7 +81,6 @@ rule blast_v_hmmer_CvaB:
 		blastDF["component"] = hmm_name
 		blastDF["hmmerHit"] = blastDF["qseqid"].isin(hmmer_hitsHeaders)#hmmer_hitsHeaders in blastDF["qseqid"]
 		blastDF.to_csv(output[0], index = False)
-
 
 rule best_Cvab_headers:
 	input:
@@ -111,9 +99,6 @@ rule best_Cvab_fasta:
 	shell:
 		"seqkit grep -f {input.headers} {input.input_seqs} > {output}"
 
-
-
-
 rule align_with_verifiedCvab:
 	input:
 		best_CvaB=config["outdir"] + "/01_orf_homology/CvaB/blast_v_hmmer.fa",
@@ -122,7 +107,7 @@ rule align_with_verifiedCvab:
 		config["outdir"] + "/01_orf_homology/CvaB/blast_v_hmmer.with_verified.aln"
 	shell:
 		"mafft --inputorder --keeplength --add {input.best_CvaB} --auto "
-		"{input[1]} > {output}"
+		"{input.verified_CvaB} > {output}"
 
 rule filter_CvaB_hits:
 	input:

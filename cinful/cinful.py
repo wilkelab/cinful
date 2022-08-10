@@ -1,4 +1,4 @@
-import os 
+import os
 import sys
 import subprocess as sp
 import argparse
@@ -47,8 +47,8 @@ def subDF2Fasta(df, subName, baseDir,seqCol="seq", idCol = "cinful_id"):
 
 		if sample not in recordDict:
 			recordDict[sample] = []
-		recordDict[sample].append(record)	
-	
+		recordDict[sample].append(record)
+
 	for sample in recordDict:
 		outFile = Path(baseDir)/ "03_best_hits"/"fastas"/ subName / f"{sample}.{subName}.fa" # "{baseDir}{subName}/{sample}.{subName}.fa"
 		# print(outFile)
@@ -64,63 +64,60 @@ def subDF2Fasta(df, subName, baseDir,seqCol="seq", idCol = "cinful_id"):
 
 
 def main():
-	# set up command line arguments
-	parser = argparse.ArgumentParser(description='cinful')
-	parser.add_argument('-d', '--directory', action=readable_dir,required=True,
-		help='Must be a directory containing uncompressed FASTA formatted genome assemblies with .fna extension. Files within nested directories are fine')
-	parser.add_argument('-o', '--outDir', type=str,default="cinful_out",
-		help='This directory will contain all output files. It will be nested under the input directory.')
-	parser.add_argument('-t', '--threads', type=int, default=1,
-		help = 'This specifies how many threads to allow snakemake to have access to for parallelization')
-	# parser.add_argument('--snakemake_params', type=list, nargs='+')
-	args = parser.parse_args()
+    # set up command line arguments
+    parser = argparse.ArgumentParser(description='cinful')
+    parser.add_argument('-d', '--directory', action=readable_dir,required=True,
+        help='Must be a directory containing uncompressed FASTA formatted genome assemblies with .fna extension. Files within nested directories are fine')
+    parser.add_argument('-o', '--outDir', type=str,default="cinful_out",
+        help='This directory will contain all output files. It will be nested under the input directory.')
+    parser.add_argument('-t', '--threads', type=int, default=1,
+        help = 'This specifies how many threads to allow snakemake to have access to for parallelization')
+    # parser.add_argument('--snakemake_params', type=list, nargs='+')
+    args = parser.parse_args()
 
-	# print(args)
-	
-	threads = args.threads
-	workdir = args.directory
-	outdir = args.outDir
+    # print(args)
 
-	# absolute path of this file, needed to find snakefile
-	currentAbsPath = os.path.dirname(os.path.abspath(__file__))
-	snakefile = f"{currentAbsPath}/Snakefile"
-	# print(os.path.dirname(os.path.abspath(__file__)))
-	# print(snakefile)
+    threads = args.threads
+    workdir = args.directory
+    outdir = args.outDir
 
-		# snakemake command to run
-	cmd = [		"python",
-				"-m",
-				"snakemake",  
-				"--snakefile",
-				snakefile,
-				"-j",
-				str(threads),
-				"--directory",
-				workdir,
-				"--config",
-				f"outdir={outdir}",
-			]
-	print("Running the following command:")
-	print(" ".join(cmd))
+    # absolute path of this file, needed to find snakefile
+    currentAbsPath = os.path.dirname(os.path.abspath(__file__))
+    snakefile = f"{currentAbsPath}/Snakefile"
+    # print(os.path.dirname(os.path.abspath(__file__)))
+    # print(snakefile)
 
-	try:
-		sp.check_output(cmd)
-		print("cinful finished succesfuly!\n")
-		all_hits = Path(workdir)/ outdir / "02_homology_results/all_merged.csv"
-		print(f"Now checking that any hits were identified in {all_hits}")
-		all_hitsDF = pd.read_csv(all_hits).sort_values(['component','bitscore'],ascending=False)
-		microcinDF = all_hitsDF[all_hitsDF["component"] == "microcins.verified" ]
-		CvaBDF = all_hitsDF[all_hitsDF["component"] == "CvaB.verified" ]
-		print("\nFinal fasta results will be written to:",Path(workdir)/outdir/ "03_best_hits"/"fastas")
-		subDF2Fasta(microcinDF,"microcin",Path(workdir)/outdir)
-		subDF2Fasta(CvaBDF,"CvaB",Path(workdir)/outdir)
-	except sp.CalledProcessError as e:
-		print(e.output)
-	
+    # snakemake command to run
+    cmd = [ "python",
+            "-m",
+            "snakemake",
+            "--snakefile",
+            snakefile,
+            "-j",
+            str(threads),
+            "--directory",
+            workdir,
+            "--config",
+            f"outdir={outdir}",
+            ]
+    print("Running the following command:")
+    print(" ".join(cmd))
 
-
+    try:
+        sp.check_output(cmd)
+        print("cinful finished succesfuly!\n")
+        all_hits = Path(workdir)/ outdir / "02_homology_results/all_merged.csv"
+        print(f"Now checking that any hits were identified in {all_hits}")
+        all_hitsDF = pd.read_csv(all_hits).sort_values(['component','bitscore'],ascending=False)
+        microcinDF = all_hitsDF[all_hitsDF["component"] == "microcins.verified" ]
+        CvaBDF = all_hitsDF[all_hitsDF["component"] == "CvaB.verified" ]
+        MFPDF = all_hitsDF[all_hitsDF["component"] == "MFP.verified" ]
+        print("\nFinal fasta results will be written to:",Path(workdir)/outdir/ "03_best_hits"/"fastas")
+        subDF2Fasta(microcinDF,"microcin",Path(workdir)/outdir)
+        subDF2Fasta(CvaBDF,"CvaB",Path(workdir)/outdir)
+        subDF2Fasta(MFPDF,"MFP",Path(workdir)/outdir)
+    except sp.CalledProcessError as e:
+        print(e.output)
 
 if __name__ == "__main__":
     main()
-
-
