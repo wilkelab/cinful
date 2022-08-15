@@ -22,7 +22,7 @@ rule write_CvaB:
 	run:
 		verified_CvaB = open(input.verified_CvaB)
 		verified_CvaB_SeqIO = SeqIO.parse(StringIO(verified_CvaB.read()), "fasta")
-		verified_CvaB_pepHashDF = fa2hashDF(StringIO(verified_CvaB.read()))
+		verified_CvaB_pepHashDF = fa2hashDF(StringIO(verified_CvaB))
 		verified_CvaB_pepHashDF.to_csv(output.CvaB_pepHash)
 		with open(output.CvaB_fasta,"w") as seq_out:
 			SeqIO.write(verified_CvaB_SeqIO, seq_out,"fasta")
@@ -36,7 +36,7 @@ rule write_MFP:
 	run:
 		verified_MFP = open(input.verified_MFP)
 		verified_MFP_SeqIO = SeqIO.parse(StringIO(verified_MFP.read()), "fasta")
-		verified_MFP_pepHashDF = fa2hashDF(StringIO(verified_MFP.read()))
+		verified_MFP_pepHashDF = fa2hashDF(StringIO(verified_MFP))
 		verified_MFP_pepHashDF.to_csv(output.MFP_pepHash)
 		with open(output.MFP_fasta,"w") as seq_out:
 			SeqIO.write(verified_MFP_SeqIO, seq_out,"fasta")
@@ -50,7 +50,7 @@ rule write_microcins:
 	run:
 		verified_microcins = open(input.verified_microcins)
 		verified_microcins_SeqIO = SeqIO.parse(StringIO(verified_microcins.read()), "fasta")
-		verified_microcins_pepHashDF = fa2hashDF(StringIO(verified_microcins.read()))
+		verified_microcins_pepHashDF = fa2hashDF(StringIO(verified_microcins))
 		verified_microcins_pepHashDF.to_csv(output.microcin_pepHash)
 		with open(output.microcin_fasta,"w") as seq_out:
 			SeqIO.write(verified_microcins_SeqIO, seq_out,"fasta")
@@ -64,7 +64,7 @@ rule write_immunity_proteins:
 	run:
 		verified_immunity_proteins = open(input.verified_immunity_proteins)
 		verified_immunity_proteins_SeqIO = SeqIO.parse(StringIO(verified_immunity_proteins.read()), "fasta")
-		verified_immunity_proteins_pepHashDF = fa2hashDF(StringIO(verified_immunity_proteins.read()))
+		verified_immunity_proteins_pepHashDF = fa2hashDF(StringIO(verified_immunity_proteins))
 		verified_immunity_proteins_pepHashDF.to_csv(output.immunity_protein_pepHash)
 		with open(output.immunity_protein_fasta,"w") as seq_out:
   			SeqIO.write(verified_immunity_proteins_SeqIO, seq_out,"fasta")
