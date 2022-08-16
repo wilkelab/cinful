@@ -2,16 +2,19 @@ from io import StringIO
 from Bio import SeqIO
 from Bio.Align.Applications import MafftCommandline
 from Bio import AlignIO
+import pandas as pd
 import os
+import seqhash
 
-def fa2hashDF(fa):
-	outDict = {"header":[],"pephash":[],"sequence":[]}
-	for record in SeqIO.parse(fa,"fasta"):
-		pephash = seqhash.seqhash(record.seq,dna_type='PROTEIN')
-		outDict["header"].append(record.id)
-		outDict["pephash"].append(pephash)
-		outDict["sequence"].append(str(record.seq))
-	return pd.DataFrame.from_dict(outDict)
+def fa2hashDF(fasta_file):
+    outDict = {"header":[],"pephash":[],"sequence":[]}
+    with open(fasta_file) as fasta:
+        for record in SeqIO.parse(fasta, "fasta"):
+            pephash = seqhash.seqhash(record.seq,dna_type='PROTEIN')
+            outDict["header"].append(record.id)
+            outDict["pephash"].append(pephash)
+            outDict["sequence"].append(record.seq)
+        return pd.DataFrame.from_dict(outDict)
 
 rule write_CvaB:
 	input:
@@ -20,9 +23,9 @@ rule write_CvaB:
 		CvaB_fasta = config["outdir"] + "/00_dbs/CvaB.verified.pep",
 		CvaB_pepHash = config["outdir"] + "/00_dbs/CvaB.verified.pephash.csv"
 	run:
-		verified_CvaB = open(input.verified_CvaB)
-		verified_CvaB_SeqIO = SeqIO.parse(StringIO(verified_CvaB.read()), "fasta")
-		verified_CvaB_pepHashDF = fa2hashDF(StringIO(verified_CvaB))
+		verified_CvaB = input.verified_CvaB
+		verified_CvaB_SeqIO = SeqIO.parse(StringIO(open(verified_CvaB).read()), "fasta")
+		verified_CvaB_pepHashDF = fa2hashDF(verified_CvaB)
 		verified_CvaB_pepHashDF.to_csv(output.CvaB_pepHash)
 		with open(output.CvaB_fasta,"w") as seq_out:
 			SeqIO.write(verified_CvaB_SeqIO, seq_out,"fasta")
@@ -34,9 +37,9 @@ rule write_MFP:
 		MFP_fasta = config["outdir"] + "/00_dbs/MFP.verified.pep",
 		MFP_pepHash = config["outdir"] + "/00_dbs/MFP.verified.pephash.csv"
 	run:
-		verified_MFP = open(input.verified_MFP)
-		verified_MFP_SeqIO = SeqIO.parse(StringIO(verified_MFP.read()), "fasta")
-		verified_MFP_pepHashDF = fa2hashDF(StringIO(verified_MFP))
+		verified_MFP = input.verified_MFP
+		verified_MFP_SeqIO = SeqIO.parse(StringIO(open(verified_MFP).read()), "fasta")
+		verified_MFP_pepHashDF = fa2hashDF(verified_MFP)
 		verified_MFP_pepHashDF.to_csv(output.MFP_pepHash)
 		with open(output.MFP_fasta,"w") as seq_out:
 			SeqIO.write(verified_MFP_SeqIO, seq_out,"fasta")
@@ -48,9 +51,9 @@ rule write_microcins:
 		microcin_fasta = config["outdir"] + "/00_dbs/microcins.verified.pep",
 		microcin_pepHash = config["outdir"] + "/00_dbs/microcins.verified.pephash.csv"
 	run:
-		verified_microcins = open(input.verified_microcins)
-		verified_microcins_SeqIO = SeqIO.parse(StringIO(verified_microcins.read()), "fasta")
-		verified_microcins_pepHashDF = fa2hashDF(StringIO(verified_microcins))
+		verified_microcins = input.verified_microcins
+		verified_microcins_SeqIO = SeqIO.parse(StringIO(open(verified_microcins).read()), "fasta")
+		verified_microcins_pepHashDF = fa2hashDF(verified_microcins)
 		verified_microcins_pepHashDF.to_csv(output.microcin_pepHash)
 		with open(output.microcin_fasta,"w") as seq_out:
 			SeqIO.write(verified_microcins_SeqIO, seq_out,"fasta")
@@ -62,9 +65,9 @@ rule write_immunity_proteins:
 		immunity_protein_fasta = config["outdir"] + "/00_dbs/immunity_proteins.verified.pep",
 		immunity_protein_pepHash = config["outdir"] + "/00_dbs/immunity_proteins.verified.pephash.csv"
 	run:
-		verified_immunity_proteins = open(input.verified_immunity_proteins)
-		verified_immunity_proteins_SeqIO = SeqIO.parse(StringIO(verified_immunity_proteins.read()), "fasta")
-		verified_immunity_proteins_pepHashDF = fa2hashDF(StringIO(verified_immunity_proteins))
+		verified_immunity_proteins = input.verified_immunity_proteins
+		verified_immunity_proteins_SeqIO = SeqIO.parse(StringIO(open(verified_immunity_proteins).read()), "fasta")
+		verified_immunity_proteins_pepHashDF = fa2hashDF(verified_immunity_proteins)
 		verified_immunity_proteins_pepHashDF.to_csv(output.immunity_protein_pepHash)
 		with open(output.immunity_protein_fasta,"w") as seq_out:
   			SeqIO.write(verified_immunity_proteins_SeqIO, seq_out,"fasta")
