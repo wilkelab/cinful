@@ -60,12 +60,12 @@ def contigs_wMicrocins(best_hitsFile):
 def nearestImmunityProtein(immunityDB, bestMicrocinHits):
 	candidateList = []
 	for row in bestMicrocinHits.to_dict(orient="records"):
-		immunitySubset = immunityDB[immunityDB["sample"] + immunityDB["contig"] == row["sample"]+row["contig"] ].sort_values("start")
-		immunitySubset["microcinHit"] = row["cinful_id"]
-		immunityUpstream = immunitySubset[immunitySubset["start"] < row["start"]].tail(3)
-		immunityDownstream = immunitySubset[immunitySubset["start"] > row["stop"]].head(3)
-		nearestCandidates = pd.concat([immunityUpstream,immunityDownstream])
-		candidateList.append(nearestCandidates)
+		immunitySubset = immunityDB[immunityDB["sample"] + immunityDB["contig"] == row["sample"]+row["contig"] ].sort_values("start") #Finds all prodigal proteins with the same sample and contig as the microcin hits
+		immunitySubset["microcinHit"] = row["cinful_id"] #creates a column for Microcin Hits
+		immunityUpstream = immunitySubset[immunitySubset["start"] < row["start"]].tail(3) #searches up stream from microcin for 3 CDS
+		immunityDownstream = immunitySubset[immunitySubset["start"] > row["stop"]].head(3) #searches downstream from microcin for 3 CDS
+		nearestCandidates = pd.concat([immunityUpstream,immunityDownstream]) #concats up and downstream
+		candidateList.append(nearestCandidates) #concats nearestCandidates to the empty candidateList created above
 	return pd.concat(candidateList)
 
 def tmhmmCol(df,seqCol="seq"):
@@ -123,21 +123,27 @@ rule bestHitsContigs:
 rule candidate_immunity:
 	input:
 		bestHits = config["outdir"] + "/03_best_hits/best_hits.csv",
-		immunityDB = config["outdir"] + "/01_orf_homology/prodigal_out.all.nr_expanded.csv",
+		prodigalNR = config["outdir"] + "/01_orf_homology/prodigal_out.all.nr_expanded.csv",
 		immunityHomologs = config["outdir"] + "/01_orf_homology/immunity_proteins/blast_v_hmmer.csv"
 	output:
 		config["outdir"] + "/03_best_hits/best_immunity_protein_candidates.csv"
 	run:
-		immunityDB = pd.read_csv(input.immunityDB)
-		seqLen = immunityDB["seq"].str.len()
-		immunityDB = immunityDB[(seqLen <= 250 ) & (seqLen >= 30 )]
-		immunityDB = immunityDB[immunityDB["allStandardAA"]]
-		bestHits = pd.read_csv(input.bestHits)
-		bestMicrocinHits = bestHits[bestHits["component"] == "microcins.verified"]
-		immunityHomologs = pd.read_csv(input.immunityHomologs)
-		nearestImmunityDF = nearestImmunityProtein(immunityDB, bestMicrocinHits)
-		nearestImmunityDF["tmhmm"] = tmhmmCol(nearestImmunityDF)
-		nearestImmunityDF["homologyHit"] = nearestImmunityDF["pephash"].isin(immunityHomologs["qseqid"])
+
+		immunityDB = pd.read_csv(input.prodigalNR) #inputs all CDS from prodigal non-redundant
+		immunityDB = immunityDB[immunityDB["allStandardAA"]] #ensures all AA are standard 20
+
+		bestHits = pd.read_csv(input.bestHits) #reads in best_hits.csv file
+		bestMicrocinHits = bestHits[bestHits["component"] == "microcins.verified"] #Filters best_hits.csv for only microcins
+		nearestImmunityDF = nearestImmunityProtein(immunityDB, bestMicrocinHits) #function finds all prodigal hits with a matching sample/contig to microcin hits and then filters them to +/- 3 CDS surrounding a microcin hit
+
+		seqLen = nearestImmunityDF["seq"].str.len() #creates an object 'seqLen' that stores all sequence lengths
+		nearestImmunityDF = nearestImmunityDF[(seqLen <= 250 ) & (seqLen >= 30 )] #limits immunityDB to those sequences that are between 30 and 250 AA
+
+		nearestImmunityDF["tmhmm"] = tmhmmCol(nearestImmunityDF) #Adds tmhmm prediction column
+
+		immunityHomologs = pd.read_csv(input.immunityHomologs) #reads in blast_v_hmmer.csv for immunity proteins
+		nearestImmunityDF["homologyHit"] = nearestImmunityDF["pephash"].isin(immunityHomologs["qseqid"]) #adds homology (True/False) hit if the Nearestimmunity protein is in the immunityHomologs
+
 		nearestImmunityDF.to_csv(output[0], index = None)
 
 rule candidate_MFP:
