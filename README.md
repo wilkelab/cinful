@@ -12,7 +12,7 @@ A fully automated pipeline to identify microcins along with their associated imm
 First, make sure to clone this repository:
 
 ```bash
-git clone https://github.com/tijeco/cinful.git
+git clone https://github.com/wilkelab/cinful.git
 ```
 All software dependencies needed to run cinful are available through conda and are specified in `cinful_conda.yml`, the following helper script can be used to generate the cinful conda environment `scripts/build_conda_env.sh`, to run this script, you will need to have conda installed, as well as mamba (which helps speed up installation). To install mamba, use the following command:
 
@@ -20,13 +20,12 @@ All software dependencies needed to run cinful are available through conda and a
 conda install mamba -c conda-forge
 ```
 
-Then simply run
+To build the environment, run
 ```bash
 bash scripts/build_conda_env.sh
 ```
 
-To set up the cinful environment, you can activate the environment with
-
+Once setup is complete, you can activate the environment with
 ```bash
 conda activate cinful
 ```
@@ -35,11 +34,7 @@ conda activate cinful
 
 cinful takes a directory containing genome assemblies as input. All assemblies in the directory must end in `.fna`, if they end in a different extension, cinful will ignore them.
 
-Snakemake is the core workflow management used by cinful, the main snakefile is located under `cinful/Snakefile`, which issues subroutines located in `cinful/rules`. To run cinful on your data set run the following command:
-
-```bash
-snakemake -d <assembly_directory> --threads <core_nums> --snakefile path/to/cinful/Snakefile
-```
+Snakemake is the core workflow management used by cinful, the main snakefile is located under `cinful/Snakefile`, which issues subroutines located in `cinful/rules`.
 
 If installed properly, running `python cinful.py -h` will produce the following output.
 
@@ -59,6 +54,15 @@ optional arguments:
                         parallelization
 ```
 
+# Example usage
+
+There is a test dataset with an _E. coli_ genome assembly to test cinful on under `test/colcinV_Ecoli`, you can run cinful on this dataset by running the following from the initial cinful directory:
+
+```bash
+python cinful/cinful.py -d test/colcinV_Ecoli -o <output_directory> -t <#_of_threads>
+```
+
+
 ## Workflow
 
 The following workflow will be executed.
@@ -75,39 +79,8 @@ Three output directories will be generated in your `assembly_directory` under a 
 * `03_best_hits`
   * The top hits from the homology results will be placed here
 
-# Example usage
-
-There is a test dataset with an _E. coli_ genome assembly to test cinful on under `test/colcinV_Ecoli`, you can run cinful on this dataset by running the following:
-
-```bash
-snakemake -d test/colcinV_Ecoli --snakemake
-```
 # Contributing
-
-<!-- Currently, cinful is executed via directly issuing a snakemake command, what I will do in the future is create a python package that acts as a wrapper for snakemake to ease potential configuration of certain parameters within the workflow. -->
 
 cinful currently exists as a wrapper to a series of snakemake subroutines, so adding functionality to it is as simple as adding additional subroutines. If there are any subroutines that you see are needed, feel free to raise an issue, and I will be glad to guide you through the process of making a pull request to add that feature.
 
 Additionally, since cinful primarily works through snakemake, it can also be used by simply running the snakefiles separately, so if additional configuration is needed, in terms of the types of input files, this can probably be achieved that way.
-
-<!-- Also, the pipeline currently runs end to end, though there may be cases where the user already has data for a certain part of the pipeline and would like to plug that in. Snakemake allows for that to be a possibility, so I will work to make a set of tutorials on how to do that through snakemake, and eventually the cinful python package will have options to do that as well. -->
-
-
-
-
-
-
-
-<!-- ## Microcin homologs
-
-* Filtering by length
-   - Only need to search peptides that have < 150 AA
-* Signal sequence
-   - MSA of putative microcins can be used to evaluate the putative signal sequence based on what is known from the verifed dataset
- -->
-
-
-
-<!-- ## Immunity protein homologs
-* subcelluar localization and transmembrane helix will be predicted as a final filtering step
- -->
