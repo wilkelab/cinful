@@ -59,7 +59,7 @@ optional arguments:
 There is a test dataset with an _E. coli_ genome assembly to test cinful on under `test/colcinV_Ecoli`, you can run cinful on this dataset by running the following from the initial cinful directory:
 
 ```bash
-python cinful/cinful.py -d test/colcinV_Ecoli -o <output_directory> -t <#_of_threads>
+python cinful/cinful.py -d test/colcinV_Ecoli -o <output_directory> -t <threads>
 ```
 
 
