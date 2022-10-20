@@ -1,15 +1,76 @@
 # cinful
 
-
-
 A fully automated pipeline to identify microcins along with their associated immunity proteins and export machinery
-
-
 
 # Installation
 
+There are two methods for installation, one uses pip and should be more user friendly. A backup method is to clone this repository and manually set up a conda environment.
 
-First, make sure to clone this repository:
+## Recommended PyPI (pip) Installation
+
+First you have to install anaconda (I would recommend miniconda), which can be found here: https://docs.conda.io/en/latest/miniconda.html
+
+Once miniconda is installed, run the following commands in order. 
+
+NOTE: Follow the instructions at each step and allow installations to complete before moving on to the next step. Do not paste all of the code at once into your shell.
+
+```bash
+conda create --name <your-env-name> python=3.8.13 pip
+
+conda activate <your-env-name>
+
+conda install mamba -c conda-forge
+
+pip install cinful
+
+cinful_init
+```
+
+## How to use
+
+cinful takes a directory containing genome assemblies as input. All assemblies in the directory must end in `.fna`, if they end in a different extension, cinful will ignore them. 
+
+Nested directories will explored recursively and all `.fna` files analyzed by cinful. Nested directories can be a good way to explore output, as the directory tree will be stored in as `cinful_id` in the output files.
+
+Snakemake is the core workflow management used by cinful, the main snakefile is located under `cinful/Snakefile`, which issues subroutines located in `cinful/rules`.
+
+If installed properly, running `cinful -h` will produce the following output:
+
+```
+cinful
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -d DIRECTORY, --directory DIRECTORY
+                        Must be a directory containing uncompressed FASTA formatted genome assemblies with
+                        .fna extension. Files within nested directories are fine
+  -o OUTDIR, --outDir OUTDIR
+                        This directory will contain all output files. It will be nested under the input
+                        directory.
+  -t THREADS, --threads THREADS
+                        This specifies how many threads to allow snakemake to have access to for
+                        parallelization
+```
+
+## Workflow
+
+The following workflow will be executed.
+![cinful](figures/cinful_workflow.inkscape.svg)
+
+Three output directories will be generated in your `assembly_directory` under a directory called `cinful_out`.
+* `00_dbs`
+  * This is the initial location of the databases of verified microcins, CvaB, and immunity proteins.
+* `01_orf_homology`
+  * Prodigal will generate Open Reading Frame (ORF) predictions for the input assemblies
+  * Those ORFs will be searched against the previously mentioned databases
+* `02_homology_results`
+  * The results from all the homology searches will be merged here
+* `03_best_hits`
+  * The top hits from the homology results will be placed here
+
+## Old Installation Method (not recommended)
+
+Clone this repository:
 
 ```bash
 git clone https://github.com/wilkelab/cinful.git
@@ -30,54 +91,11 @@ Once setup is complete, you can activate the environment with
 conda activate cinful
 ```
 
-# How to use
-
-cinful takes a directory containing genome assemblies as input. All assemblies in the directory must end in `.fna`, if they end in a different extension, cinful will ignore them.
-
-Snakemake is the core workflow management used by cinful, the main snakefile is located under `cinful/Snakefile`, which issues subroutines located in `cinful/rules`.
-
-If installed properly, running `python cinful.py -h` will produce the following output.
-
-```
-cinful
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -d DIRECTORY, --directory DIRECTORY
-                        Must be a directory containing uncompressed FASTA formatted genome assemblies with
-                        .fna extension. Files within nested directories are fine
-  -o OUTDIR, --outDir OUTDIR
-                        This directory will contain all output files. It will be nested under the input
-                        directory.
-  -t THREADS, --threads THREADS
-                        This specifies how many threads to allow snakemake to have access to for
-                        parallelization
-```
-
-# Example usage
-
 There is a test dataset with an _E. coli_ genome assembly to test cinful on under `test/colcinV_Ecoli`, you can run cinful on this dataset by running the following from the initial cinful directory:
 
 ```bash
-python cinful/cinful.py -d test/colcinV_Ecoli -o <output_directory> -t <threads>
+cinful -d <genomes_directory> -o <output_directory> -t <threads>
 ```
-
-
-## Workflow
-
-The following workflow will be executed.
-![cinful](figures/cinful_workflow.inkscape.svg)
-
-Three output directories will be generated in your `assembly_directory` under a directory called `cinfulOut`.
-* `00_dbs`
-  * This is the initial location of the databases of verified microcins, CvaB, and immunity proteins.
-* `01_orf_homology`
-  * Prodigal will generate Open Reading Frame (ORF) predictions for the input assemblies
-  * Those ORFs will be searched against the previously mentioned databases
-* `02_homology_results`
-  * The results from all the homology searches will be merged here
-* `03_best_hits`
-  * The top hits from the homology results will be placed here
 
 # Contributing
 
