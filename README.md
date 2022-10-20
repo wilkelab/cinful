@@ -26,6 +26,10 @@ pip install cinful
 cinful_init
 ```
 
+Once installed, cinful can be called with `cinful` and can be used globally. I am working on a test to verify installation. As a workaround, you are able to download a test genome that contains microcin, MFP, PCAT, and immunity protein from https://github.com/wilkelab/cinful/blob/main/test/.
+
+Once you've downloaded this test file, you can run cinful using instructions below.
+
 ## How to use
 
 cinful takes a directory containing genome assemblies as input. All assemblies in the directory must end in `.fna`, if they end in a different extension, cinful will ignore them. 
@@ -94,7 +98,7 @@ conda activate cinful
 There is a test dataset with an _E. coli_ genome assembly to test cinful on under `test/colcinV_Ecoli`, you can run cinful on this dataset by running the following from the initial cinful directory:
 
 ```bash
-cinful -d <genomes_directory> -o <output_directory> -t <threads>
+python cinful.py -d <genomes_directory> -o <output_directory> -t <threads>
 ```
 
 # Contributing
