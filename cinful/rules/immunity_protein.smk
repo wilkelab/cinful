@@ -1,15 +1,12 @@
 from io import StringIO
 from Bio import SeqIO
 
-threads_max = workflow.cores * 0.75
-if threads_max <1:
-	threads_max = 1
-
 rule makeblastdb_immunity_protein:
 	input:
 		config["outdir"] + "/00_dbs/immunity_proteins.verified.pep"
 	output:
 		config["outdir"] + "/00_dbs/immunity_proteins.verified.pep.phr"
+	threads:threads_max
 	shell:
 		"makeblastdb -dbtype prot -in {input}"
 
@@ -22,7 +19,7 @@ rule blast_immunity_protein:
 		config["outdir"] + "/01_orf_homology/immunity_proteins/blast.txt"
 	threads:threads_max
 	shell:
-		"blastp -db {input.verified_component} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1 -num_threads {threads}"
+		"blastp -num_threads {threads} -db {input.verified_component} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
 
 rule msa_immunity_protein:
 	input:
@@ -38,8 +35,9 @@ rule buildhmm_immunity_protein:
 		config["outdir"] + "/00_dbs/immunity_proteins.verified.aln"
 	output:
 		config["outdir"] + "/00_dbs/immunity_proteins.verified.hmm"
+	threads:threads_max
 	shell:
-		"hmmbuild {output} {input}"
+		"hmmbuild --cpu {threads} {output} {input}"
 
 
 

@@ -3,10 +3,6 @@ from Bio import SeqIO
 from Bio import AlignIO
 import pandas as pd
 
-threads_max = workflow.cores * 0.75
-if threads_max <1:
-	threads_max = 1
-
 def qcCvab(best_hitsPep, best_hitsAln):
 	alignment = AlignIO.read(open(best_hitsAln), "fasta")
 	gappyDict = {"id":[], "nonGap":[], "percentGap":[], "alignment":[]}
@@ -35,8 +31,9 @@ rule makeblastdb_CvaB:
 		config["outdir"] + "/00_dbs/CvaB.verified.pep"
 	output:
 		config["outdir"] + "/00_dbs/CvaB.verified.pep.dmnd"
+	threads:threads_max
 	shell:
-		"diamond makedb --in {input} -d {input}"
+		"diamond makedb --in {input} -d {input} -p {threads}"
 		# "makeblastdb -dbtype prot -in {input}"
 
 rule blast_CvaB:
@@ -64,8 +61,9 @@ rule buildhmm_CvaB:
 		config["outdir"] + "/00_dbs/CvaB.verified.aln"
 	output:
 		config["outdir"] + "/00_dbs/CvaB.verified.hmm"
+	threads:threads_max
 	shell:
-		"hmmbuild {output} {input}"
+		"hmmbuild --cpu {threads} {output} {input}"
 
 rule blast_v_hmmer_CvaB:
 	input:
@@ -79,7 +77,7 @@ rule blast_v_hmmer_CvaB:
 		hmmer_hits, hmm_name = run_hmmsearch(input.input_seqs, input.verifiedHMM)
 		hmmer_hitsHeaders = [hit.name.decode() for hit in hmmer_hits]
 		blastDF["component"] = hmm_name
-		blastDF["hmmerHit"] = blastDF["qseqid"].isin(hmmer_hitsHeaders)#hmmer_hitsHeaders in blastDF["qseqid"]
+		blastDF["hmmerHit"] = blastDF["qseqid"].isin(hmmer_hitsHeaders)
 		blastDF.to_csv(output[0], index = False)
 
 rule best_Cvab_headers:
@@ -96,8 +94,9 @@ rule best_Cvab_fasta:
 		input_seqs = config["outdir"] + "/01_orf_homology/CvaB/filtered_nr.fa"
 	output:
 		config["outdir"] + "/01_orf_homology/CvaB/blast_v_hmmer.fa"
+	threads:threads_max
 	shell:
-		"seqkit grep -f {input.headers} {input.input_seqs} > {output}"
+		"seqkit -j {threads} grep -f {input.headers} {input.input_seqs} > {output}"
 
 rule align_with_verifiedCvab:
 	input:
@@ -105,8 +104,9 @@ rule align_with_verifiedCvab:
 		verified_CvaB=config["outdir"] + "/00_dbs/CvaB.verified.aln"
 	output:
 		config["outdir"] + "/01_orf_homology/CvaB/blast_v_hmmer.with_verified.aln"
+	threads:threads_max
 	shell:
-		"mafft --inputorder --keeplength --add {input.best_CvaB} --auto "
+		"mafft --thread {threads} --inputorder --keeplength --add {input.best_CvaB} --auto "
 		"{input.verified_CvaB} > {output}"
 
 rule filter_CvaB_hits:

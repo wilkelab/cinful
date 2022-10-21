@@ -1,15 +1,12 @@
 from io import StringIO
 from Bio import SeqIO
 
-threads_max = workflow.cores * 0.75
-if threads_max <1:
-	threads_max = 1
-
 rule makeblastdb_microcin:
 	input:
 		config["outdir"] + "/00_dbs/microcins.verified.pep"
 	output:
 		config["outdir"] + "/00_dbs/microcins.verified.pep.phr"
+	threads:threads_max
 	shell:
 		"makeblastdb -dbtype prot -in {input}"
 
@@ -23,7 +20,7 @@ rule blast_microcin:
 		config["outdir"] + "/01_orf_homology/microcins/blast.txt"
 	threads:threads_max
 	shell:
-		"blastp -db {input.verified_component} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1 -num_threads {threads}"
+		"blastp -num_threads {threads} -db {input.verified_component} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
 
 
 rule msa_microcin:
@@ -41,8 +38,9 @@ rule buildhmm_microcin:
 		config["outdir"] + "/00_dbs/microcins.verified.aln"
 	output:
 		config["outdir"] + "/00_dbs/microcins.verified.hmm"
+	threads:threads_max
 	shell:
-		"hmmbuild {output} {input}"
+		"hmmbuild --cpu {threads} {output} {input}"
 
 
 rule signalSeqHMM:

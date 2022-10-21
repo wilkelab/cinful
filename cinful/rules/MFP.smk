@@ -3,10 +3,6 @@ from Bio import SeqIO
 from Bio import AlignIO
 import pandas as pd
 
-threads_max = workflow.cores * 0.75
-if threads_max <1:
-	threads_max = 1
-
 def qcMFP(best_hitsPep, best_hitsAln):
 	alignment = AlignIO.read(open(best_hitsAln), "fasta")
 	gappyDict = {"id":[], "nonGap":[], "percentGap":[], "alignment":[]}
@@ -17,10 +13,6 @@ def qcMFP(best_hitsPep, best_hitsAln):
 		gappyDict["percentGap"].append(percentGap)
 		gappyDict["alignment"].append(str(record.seq))
 	gappyDF = pd.DataFrame.from_dict(gappyDict)
-	# catalytic triad
-#	gappyDF["C34"] = gappyDF["alignment"].astype(str).str[34]
-#	gappyDF["H107"] = gappyDF["alignment"].astype(str).str[107]
-#	gappyDF["D123"] = gappyDF["alignment"].astype(str).str[123]
 	lenDict = {"id":[], "len":[]}
 	for record in SeqIO.parse(best_hitsPep, "fasta"):
 		lenDict["id"].append(record.id)
@@ -35,8 +27,9 @@ rule makeblastdb_MFP:
 		config["outdir"] + "/00_dbs/MFP.verified.pep"
 	output:
 		config["outdir"] + "/00_dbs/MFP.verified.pep.dmnd"
+	threads:threads_max
 	shell:
-		"diamond makedb --in {input} -d {input}"
+		"diamond makedb --in {input} -d {input} -p {threads}"
 
 
 rule blast_MFP:
@@ -63,8 +56,9 @@ rule buildhmm_MFP:
 		config["outdir"] + "/00_dbs/MFP.verified.aln"
 	output:
 		config["outdir"] + "/00_dbs/MFP.verified.hmm"
+	threads:threads_max
 	shell:
-		"hmmbuild {output} {input}"
+		"hmmbuild --cpu {threads} {output} {input}"
 
 rule blast_v_hmmer_MFP:
 	input:
@@ -78,7 +72,7 @@ rule blast_v_hmmer_MFP:
 		hmmer_hits, hmm_name = run_hmmsearch(input.input_seqs, input.verifiedHMM)
 		hmmer_hitsHeaders = [hit.name.decode() for hit in hmmer_hits]
 		blastDF["component"] = hmm_name
-		blastDF["hmmerHit"] = blastDF["qseqid"].isin(hmmer_hitsHeaders) #hmmer_hitsHeaders in blastDF["qseqid"]
+		blastDF["hmmerHit"] = blastDF["qseqid"].isin(hmmer_hitsHeaders)
 		blastDF.to_csv(output[0], index = False)
 
 rule best_MFP_headers:
@@ -95,8 +89,9 @@ rule best_MFP_fasta:
 		input_seqs = config["outdir"] + "/01_orf_homology/MFP/filtered_nr.fa"
 	output:
 		config["outdir"] + "/01_orf_homology/MFP/blast_v_hmmer.fa"
+	threads:threads_max
 	shell:
-		"seqkit grep -f {input.headers} {input.input_seqs} > {output}"
+		"seqkit -j {threads} grep -f {input.headers} {input.input_seqs} > {output}"
 
 rule align_with_verifiedMFP:
 	input:
@@ -104,8 +99,9 @@ rule align_with_verifiedMFP:
 		verified_MFP = config["outdir"] + "/00_dbs/MFP.verified.aln"
 	output:
 		config["outdir"] + "/01_orf_homology/MFP/blast_v_hmmer.with_verified.aln"
+	threads:threads_max
 	shell:
-		"mafft --inputorder --keeplength --add {input.best_MFP} --auto "
+		"mafft --thread {threads} --inputorder --keeplength --add {input.best_MFP} --auto "
 		"{input.verified_MFP} > {output}"
 
 rule filter_MFP_hits:

@@ -4,6 +4,11 @@ from functools import reduce
 import os
 import sys
 
+
+threads_max = workflow.cores * 0.75
+if threads_max <1:
+    threads_max = 1
+
 def load_blast(blastout, hasHeaders=False):
 	if hasHeaders:
 		blastpDF = pd.read_csv(blastout, sep = "\t")
@@ -48,13 +53,6 @@ def hmmsearch(queryFile, hmm):
 	pipeline = pyhmmer.plan7.Pipeline(hmm.alphabet)
 	hits = pipeline.search_hmm(hmm, sequences)
 	return hits
-
-
-
-threads_max = workflow.cores * 0.75
-
-if threads_max <1:
-	threads_max = 1
 
 configfile: srcdir('config.yaml')
 
