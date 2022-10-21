@@ -1,7 +1,7 @@
 # cinful: microcin identification pipeline
 `cinful` reads a directory of genome data and identifies class IIb microcins using a combination of HMM and BLAST. It has functionality that identifies the associated export machinery (MFP & PCAT) and putative immunity protein. Publication of this work is forthcoming and will be cited here.
 
-cinful is developed by the [Wilke lab](https://wilkelab.org/) at the [Department of Integrative Biology](https://integrativebio.utexas.edu/) at The University of Texas at Austin.
+cinful is developed by the [Wilke lab](https://wilkelab.org/) at the [Department of Integrative Biology](https://integrativebio.utexas.edu/) in collaboration with the [Davies lab](https://bwdaviesutaustin.org/) at the [Department of Molecular Biosciences](https://molecularbiosci.utexas.edu/), both at [The University of Texas at Austin](https://www.utexas.edu/).
 
 ## Installation
 There are two methods for installation, one uses pip and should be more user friendly.
@@ -74,6 +74,7 @@ Nested directories will explored recursively and all `.fna` files analyzed by ci
 
 Snakemake is the core workflow management used by cinful, the main snakefile is located under `cinful/Snakefile`, which issues subroutines located in `cinful/rules`.
 
+cinful has been tested on Linux Ubuntu and MacOS.
 
 ## Workflow
 
