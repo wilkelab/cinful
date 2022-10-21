@@ -21,7 +21,7 @@ $ conda install mamba -c conda-forge
 $ pip install cinful
 $ cinful_init
 ```
-### Dependencies installed with `cinful_init`
+#### Dependencies installed with `cinful_init`
 * seqkit=0.15.0
 * mafft=7.475
 * hmmer=3.3.1
@@ -33,7 +33,8 @@ $ cinful_init
 * snakemake=6.2.1
 * prodigal=2.6.3
 * pyhmmer=0.3.0
-PyPI dependencies:
+
+##### PyPI dependencies:
 * pyTMHMM==1.3.2
 * seqhash==1.0.0
 * blake3==0.2.0
@@ -47,14 +48,15 @@ cinful
 optional arguments:
   -h, --help            show this help message and exit
   -d DIRECTORY, --directory DIRECTORY
-                        Must be a directory containing uncompressed FASTA formatted genome assemblies with
-                        .fna extension. Files within nested directories are fine
+                        Must be a directory containing uncompressed FASTA 
+                        formatted genome assemblies with .fna extension. 
+                        Files within nested directories are fine
   -o OUTDIR, --outDir OUTDIR
-                        This directory will contain all output files. It will be nested under the input
-                        directory.
+                        This directory will contain all output files. 
+                        It will be nested under the input directory.
   -t THREADS, --threads THREADS
-                        This specifies how many threads to allow snakemake to have access to for
-                        parallelization
+                        This specifies how many threads to allow snakemake 
+                        to have access to for parallelization
 ```
 
 
@@ -78,16 +80,16 @@ Snakemake is the core workflow management used by cinful, the main snakefile is 
 With `cinful`, the following workflow will be executed.
 ![cinful](figures/cinful_workflow.inkscape.svg)
 
-Three output directories will be generated in your `assembly_directory` under a directory called `cinful_out`.
-* `00_dbs`
-  * This is the initial location of the databases of verified microcins, CvaB, and immunity proteins.
-* `01_orf_homology`
-  * Prodigal will generate Open Reading Frame (ORF) predictions for the input assemblies
-  * Those ORFs will be searched against the previously mentioned databases
-* `02_homology_results`
-  * The results from all the homology searches will be merged here
-* `03_best_hits`
-  * The top hits from the homology results will be placed here
+###### Three output directories will be generated in your `assembly_directory` under a directory called `cinful_out`:
+**00_dbs**
+* This is the initial location of the databases of verified microcins, CvaB, and immunity proteins.
+**01_orf_homology**
+* Prodigal will generate Open Reading Frame (ORF) predictions for the input assemblies
+* Those ORFs will be searched against the previously mentioned databases
+**02_homology_results**
+* The results from all the homology searches will be merged here
+**03_best_hits**
+* The top hits from the homology results will be placed here
 
 ## Running from source (not recommended)
 
