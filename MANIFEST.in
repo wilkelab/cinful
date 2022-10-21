@@ -1,9 +1,11 @@
 # Include all non-python files
 recursive-include cinful/ *
+recursive-include cinful/scripts *
+recursive-include scripts *
+recursive-include cinful/test *
+recursive-include test *
 recursive-exclude cinful/.tests *
 recursive-exclude cinful/.pytest_cache *
 recursive-exclude cinful/.snakemake *
 recursive-exclude cinful/notebooks *
-recursive-exclude cinful/scripts *
 recursive-exclude cinful/tmp *
-
