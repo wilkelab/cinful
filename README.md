@@ -1,44 +1,43 @@
-# cinful
+# cinful: microcin identification pipeline
+`cinful` reads a directory of genome data and identifies class IIb microcins using a combination of HMM and BLAST. It has functionality that identifies the associated export machinery (MFP & PCAT) and putative immunity protein. Publication of this work is forthcoming and will be cited here.
 
-A fully automated pipeline to identify microcins along with their associated immunity proteins and export machinery
+cinful is developed by the [Wilke lab](https://wilkelab.org/) at the [Department of Integrative Biology](https://integrativebio.utexas.edu/) at The University of Texas at Austin.
 
-# Installation
+## Installation
+There are two methods for installation, one uses pip and should be more user friendly.
 
-There are two methods for installation, one uses pip and should be more user friendly. A backup method is to clone this repository and manually set up a conda environment.
+## Installation from PyPI (recommended)
 
-## Recommended PyPI (pip) Installation
+The following includes steps to install dependencies.
 
-First you have to install anaconda (I would recommend miniconda), which can be found here: https://docs.conda.io/en/latest/miniconda.html
-
-Once miniconda is installed, run the following commands in order. 
-
-NOTE: Follow the instructions at each step and allow installations to complete before moving on to the next step. Do not paste all of the code at once into your shell.
-
+### Setup conda environment (includes python and pip):
 ```bash
-conda create --name <your-env-name> python=3.8.13 pip
-
-conda activate <your-env-name>
-
-conda install mamba -c conda-forge
-
-pip install cinful
-
-cinful_init
+$ conda create --name <your-env-name> python=3.8.13 pip
+$ conda activate <your-env-name>
 ```
+### Install dependencies:
+```bash
+$ conda install mamba -c conda-forge
+$ pip install cinful
+$ cinful_init
+```
+### Dependencies installed with `cinful_init`
+* seqkit=0.15.0
+* mafft=7.475
+* hmmer=3.3.1
+* blast=2.9.0
+* diamond=2.0.11
+* pandas=1.2.4
+* numpy=1.19.2
+* biopython=1.76
+* snakemake=6.2.1
+* prodigal=2.6.3
+* pyhmmer=0.3.0
+PyPI dependencies:
+* pyTMHMM==1.3.2
+* seqhash==1.0.0
+* blake3==0.2.0
 
-Once installed, cinful can be called with `cinful` and can be used globally. 
-
-I am working on a test to verify installation. As a workaround, you are able to download a test genome that contains microcin, MFP, PCAT, and immunity protein from https://github.com/wilkelab/cinful/blob/main/test/.
-
-Once you've downloaded this test file, you can run cinful on the directory and compare the output to `cinful_out`, stored here .
-
-## How to use
-
-cinful takes a directory containing genome assemblies as input. All assemblies in the directory must end in `.fna`, if they end in a different extension, cinful will ignore them. 
-
-Nested directories will explored recursively and all `.fna` files analyzed by cinful. Nested directories can be a good way to explore output, as the directory tree will be stored in as `cinful_id` in the output files.
-
-Snakemake is the core workflow management used by cinful, the main snakefile is located under `cinful/Snakefile`, which issues subroutines located in `cinful/rules`.
 
 If installed properly, running `cinful -h` will produce the following output:
 
@@ -58,9 +57,25 @@ optional arguments:
                         parallelization
 ```
 
+
+## Installation test
+
+I am working on a test to verify installation. As a workaround, you are able to download a test genome that contains microcin, MFP, PCAT, and immunity protein from https://github.com/wilkelab/cinful/blob/main/test/.
+
+Once you've downloaded this test file, you can run cinful on the directory and compare the output to `cinful_out`, also stored here.
+
+## Usage notes
+
+cinful takes a directory containing genome assemblies as input. All assemblies in the directory must end in `.fna`. If they end in a different extension, cinful will ignore them. 
+
+Nested directories will explored recursively and all `.fna` files analyzed by cinful. Nested directories can be a good way to explore output, as the directory tree will be stored in as `cinful_id` in the output files.
+
+Snakemake is the core workflow management used by cinful, the main snakefile is located under `cinful/Snakefile`, which issues subroutines located in `cinful/rules`.
+
+
 ## Workflow
 
-The following workflow will be executed.
+With `cinful`, the following workflow will be executed.
 ![cinful](figures/cinful_workflow.inkscape.svg)
 
 Three output directories will be generated in your `assembly_directory` under a directory called `cinful_out`.
@@ -74,7 +89,7 @@ Three output directories will be generated in your `assembly_directory` under a 
 * `03_best_hits`
   * The top hits from the homology results will be placed here
 
-## Old Installation Method (not recommended)
+## Running from source (not recommended)
 
 Clone this repository:
 
@@ -87,20 +102,19 @@ All software dependencies needed to run cinful are available through conda and a
 conda install mamba -c conda-forge
 ```
 
-To build the environment, run
+To build the environment, run:
 ```bash
 bash scripts/build_conda_env.sh
 ```
 
-Once setup is complete, you can activate the environment with
+Once setup is complete, you can activate the environment with:
 ```bash
 conda activate cinful
 ```
 
 There is a test dataset with an _E. coli_ genome assembly to test cinful on under `test/colcinV_Ecoli`, you can run cinful on this dataset by running the following from the initial cinful directory:
-
 ```bash
-python cinful.py -d <genomes_directory> -o <output_directory> -t <threads>
+python path/to/cinful.py -d <genomes_directory> -o <output_directory> -t <threads>
 ```
 
 # Contributing
