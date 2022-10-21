@@ -26,9 +26,11 @@ pip install cinful
 cinful_init
 ```
 
-Once installed, cinful can be called with `cinful` and can be used globally. I am working on a test to verify installation. As a workaround, you are able to download a test genome that contains microcin, MFP, PCAT, and immunity protein from https://github.com/wilkelab/cinful/blob/main/test/.
+Once installed, cinful can be called with `cinful` and can be used globally. 
 
-Once you've downloaded this test file, you can run cinful using instructions below.
+I am working on a test to verify installation. As a workaround, you are able to download a test genome that contains microcin, MFP, PCAT, and immunity protein from https://github.com/wilkelab/cinful/blob/main/test/.
+
+Once you've downloaded this test file, you can run cinful on the directory and compare the output to `cinful_out`, stored here .
 
 ## How to use
 
