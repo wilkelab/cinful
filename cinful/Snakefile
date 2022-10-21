@@ -37,9 +37,9 @@ def run_hmmsearch(queryFile, hmmFile):
 	with pyhmmer.easel.SequenceFile(queryFile) as seq_file:
 		sequences = [ seq.digitize(hmm.alphabet) for seq in seq_file ]
 	pipeline = pyhmmer.plan7.Pipeline(hmm.alphabet)
-	hits = pipeline.search_hmm(hmm, sequences) # Has lots of goodies!
+	hits = pipeline.search_hmm(hmm, sequences)
 
-	return hits , hmm.name.decode() # [hit.name.decode() for hit in hmmerOut]
+	return hits , hmm.name.decode()
 
 def hmmsearch(queryFile, hmm):
 
@@ -58,17 +58,7 @@ if threads_max <1:
 
 configfile: srcdir('config.yaml')
 
-# print("Checking samples")
-# if "SAMPLES" in config:
-# 	if config["SAMPLES"] != []:
-# 		SAMPLES = config["SAMPLES"]
-# elif glob_wildcards("{sample}.fna") != []:
-# 	SAMPLES, = glob_wildcards("{sample}.fna")
-# else:
-# 	sys.exit("No valid FASTA files found, exiting")
 SAMPLES, = glob_wildcards("{sample}.fna")
-# print(SAMPLES)
-# sys.exit("Samples checked")
 
 rule final:
 	input:
