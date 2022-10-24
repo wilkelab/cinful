@@ -48,7 +48,7 @@ rule nonredundant_prodigal:
 	run:
 		hashDict = {}
 		idDict = {}
-		print("INPUT:",input)
+#		print("INPUT:",input)
 		for file in input:
 			sample = file.split("01_orf_homology/prodigal_out/")[1].strip(".faa")
 			with open(file) as handle:
@@ -57,13 +57,16 @@ rule nonredundant_prodigal:
 					pephash = seqhash.seqhash(sequence.strip("*"),dna_type='PROTEIN')
 					hashDict[pephash] = sequence
 					descriptionParts = seq_record.description.split("#")
+					gc_cont = seq_record.description.split("=")[-1]
+					start_codon = seq_record.description.split(";")[2].strip("start_type=")
+					rbs_motif = seq_record.description.split(";")[3].strip("rbs_motif=")
 					start = descriptionParts[1].strip()
 					stop = descriptionParts[2].strip()
 					strand = descriptionParts[3].strip()
 					contig = '_'.join(seq_record.id.split("_")[:-1])
 					allStandardAA = hasAllStandardAA(sequence)
 					seqID = f"{sample}|{contig}|{start}:{stop}:{strand}"
-					idDict[seqID] = [pephash, sample, contig, start, stop, strand, allStandardAA, sequence]
+					idDict[seqID] = [pephash, sample, contig, start, stop, strand, allStandardAA, start_codon, rbs_motif, gc_cont, sequence]
 		with open(output.fasta,"w") as fasta_file:
 			for pephash in hashDict:
 				outRecord = SeqRecord(
@@ -73,7 +76,7 @@ rule nonredundant_prodigal:
 				)
 				SeqIO.write(outRecord, fasta_file, "fasta")
 
-		idDF = pd.DataFrame.from_dict(idDict, orient="index", columns=["pephash","sample","contig","start","stop","strand","allStandardAA","seq"]).reset_index()
+		idDF = pd.DataFrame.from_dict(idDict, orient="index", columns=["pephash","sample","contig","start","stop","strand","allStandardAA","startCodon","RBSmotif","gcContent","seq"]).reset_index()
 		idDF.rename(columns={'index': 'cinful_id'}, inplace = True)
 #		idDF.columns = ["cinful_id","pephash","sample","contig","start","stop","strand","allStandardAA","seq"]
 		idDF.to_csv(output.csv, index = None)
