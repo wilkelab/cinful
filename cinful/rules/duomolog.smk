@@ -83,7 +83,7 @@ rule merged_results:
 	input:
 		blast_v_hmmer = expand("{config[outdir]}/01_orf_homology/{sample}_prodigal/{component}/blast_v_hmmer.csv",
 		                       sample=SAMPLES, component=COMPONENTS),
-		prodigalGFF = "{config[outdir]}/01_orf_homology/{sample}_prodigal/{sample}.gff3"
+#		prodigalGFF = "{config[outdir]}/01_orf_homology/{sample}_prodigal/{sample}.gff3"
 	output:
 		"{config[outdir]}/02_homology_results/{sample}.all_merged.csv"
 	run:
