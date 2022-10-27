@@ -23,8 +23,8 @@ jobs:
         conda install mamba -c conda-forge
     - name: Set up environment
       run: |
-        mamba create  -n cinful
-        mamba env update -n cinful --file cinful_conda.yml
+        mamba create -n cinful
+        mamba env update -n cinful --file cinful/env/cinful_conda.yml
     - name: align_with_verifiedCvab
       run: |
         source activate cinful
