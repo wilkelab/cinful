@@ -9,13 +9,13 @@ with open(os.path.join(this_directory, 'README.md')) as f:
 
 console_scripts = '''
     [console_scripts]
-    cinful = cinful.cinful.cinful:main
-    cinful_init = cinful.cinful.cinful_initialize:main
+    cinful = cinful.cinful:main
+    cinful_init = cinful.cinful_initialize:install
 '''
 
 setup(
     name= 'cinful',
-    version= '1.2.0',
+    version= '1.2.4',
     author= 'Aaron Feller',
     author_email = 'aaronleefeller@gmail.com',
     include_package_data = True,
