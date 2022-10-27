@@ -1,11 +1,9 @@
 name: cinful
-
 channels:
   - defaults
   - anaconda
   - conda-forge
   - bioconda
-
 dependencies:
   - python=3.8.13
   - seqkit=0.15.0
