@@ -1,3 +1,5 @@
+name: cinful
+
 channels:
   - defaults
   - anaconda
@@ -14,7 +16,7 @@ dependencies:
   - pandas=1.2.4
   - numpy=1.19.2
   - biopython=1.76
-  - snakemake=6.2.1
+  - snakemake=6.3.0
   - prodigal=2.6.3
   - pyhmmer=0.3.0
   - pip
