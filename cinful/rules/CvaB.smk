@@ -34,7 +34,6 @@ rule makeblastdb_CvaB:
 	threads:threads_max
 	shell:
 		"diamond makedb --in {input} -d {input} -p {threads}"
-		# "makeblastdb -dbtype prot -in {input}"
 
 rule blast_CvaB:
 	input:
@@ -45,7 +44,6 @@ rule blast_CvaB:
 	threads:threads_max
 	shell:
 		"diamond blastp -d {input.verified_component} -q {input.input_seqs}   --evalue 0.001 -k 1 -o {output} -p {threads}"
-		# "blastp -db {input.verified_component} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
 
 rule msa_CvaB:
 	input:
@@ -117,6 +115,7 @@ rule filter_CvaB_hits:
 	output:
 		preQC=config["outdir"] + "/01_orf_homology/CvaB/preQC.csv",
 		QC=config["outdir"] + "/01_orf_homology/CvaB/QC.csv"
+	threads:threads_max
 	run:
 		preQC_Cvab = qcCvab(input.best_CvaB, input.align_with_verifiedCvab)
 		nr_filteredDF = pd.read_csv(input.nr_filtered_csv)

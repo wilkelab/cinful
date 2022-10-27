@@ -6,8 +6,7 @@ import sys
 
 
 threads_max = workflow.cores * 0.75
-if threads_max <1:
-    threads_max = 1
+
 
 def load_blast(blastout, hasHeaders=False):
 	if hasHeaders:

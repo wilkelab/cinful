@@ -116,6 +116,7 @@ rule bestHitsContigs:
 		config["outdir"] + "/03_best_hits/best_hits.csv"
 	output:
 		config["outdir"] + "/03_best_hits/best_hit_contigs.csv"
+	threads:threads_max
 	run:
 		microcinContigsDF = contigs_wMicrocins(input[0])
 		microcinContigsDF.to_csv(output[0],index = False)
@@ -127,6 +128,7 @@ rule candidate_immunity:
 		immunityHomologs = config["outdir"] + "/01_orf_homology/immunity_proteins/blast_v_hmmer.csv"
 	output:
 		config["outdir"] + "/03_best_hits/best_immunity_protein_candidates.csv"
+	threads:threads_max
 	run:
 
 		immunityDB = pd.read_csv(input.prodigalNR) #inputs all CDS from prodigal non-redundant
@@ -142,7 +144,7 @@ rule candidate_immunity:
 		nearestImmunityDF["tmhmm"] = tmhmmCol(nearestImmunityDF) #Adds tmhmm prediction column
 
 		immunityHomologs = pd.read_csv(input.immunityHomologs) #reads in blast_v_hmmer.csv for immunity proteins
-		nearestImmunityDF["homologyHit"] = nearestImmunityDF["pephash"].isin(immunityHomologs["qseqid"]) #adds homology (True/False) hit if the Nearestimmunity protein is in the immunityHomologs
+		nearestImmunityDF["homologyHit"] = nearestImmunityDF["pephash"].isin(immunityHomologs["qseqid"]) #adds homology (True/False) hit if the nearest immunity protein is in the immunityHomologs
 
 		nearestImmunityDF.to_csv(output[0], index = None)
 
@@ -153,6 +155,7 @@ rule candidate_MFP:
 		prodigalDB = config["outdir"] + "/01_orf_homology/prodigal_out.all.nr_expanded.csv"
 	output:
 		config["outdir"] + "/03_best_hits/best_MFP_candidates.csv"
+	threads:threads_max
 	run:
 		bestHits = pd.read_csv(input.bestHits)
 		CvaBDF = bestHits[bestHits["component"] == "CvaB.verified"]

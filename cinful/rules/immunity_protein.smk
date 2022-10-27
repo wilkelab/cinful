@@ -1,6 +1,7 @@
 from io import StringIO
 from Bio import SeqIO
 
+
 rule makeblastdb_immunity_protein:
 	input:
 		config["outdir"] + "/00_dbs/immunity_proteins.verified.pep"
@@ -38,7 +39,6 @@ rule buildhmm_immunity_protein:
 	threads:threads_max
 	shell:
 		"hmmbuild --cpu {threads} {output} {input}"
-
 
 
 rule blast_v_hmmer_immunity_protein:

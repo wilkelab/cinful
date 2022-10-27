@@ -3,37 +3,12 @@ from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 import json
 import seqhash
-
+from csv import writer
 
 SAMPLES, = glob_wildcards("{sample}.fna")
 if SAMPLES == []:
 	SAMPLES, = glob_wildcards("{config[outdir]}/01_orf_homology/prodigal_out/{sample}.faa")
 
-print("SAMPLES",SAMPLES)
-
-def hmmsearch(queryFile, hmm):
-
-	with pyhmmer.easel.SequenceFile(queryFile) as seq_file:
-		sequences = [ seq.digitize(hmm.alphabet) for seq in seq_file ]
-	pipeline = pyhmmer.plan7.Pipeline(hmm.alphabet)
-	hits = pipeline.search_hmm(hmm, sequences)
-	return hits
-
-def build_hmm(alnFile):
-	abc = pyhmmer.easel.Alphabet.amino()
- 	builder = pyhmmer.plan7.Builder(alphabet=abc)
-
-	with pyhmmer.easel.MSAFile(alnFile) as msa_file:
-		msa_file.set_digital(abc)
-		msa = next(msa_file)
-  # MSA must have a name, otherwise building will fail
-	if msa.name is None:
-		msa.name = b"alignment"
-	builder = pyhmmer.plan7.Builder(abc)
-	background = pyhmmer.plan7.Background(abc)
-	hmm, _, _ = builder.build_msa(msa, background)
-
-	return hmm
 
 def hasAllStandardAA(seq, alphabet="ACDEFGHIKLMNPQRSTVWY",ignore="*"):
 	return (set(seq) - set(alphabet+ignore)) == set()
@@ -45,29 +20,40 @@ rule nonredundant_prodigal:
 	output:
 		fasta=config["outdir"] + "/01_orf_homology/prodigal_out.all.nr.faa",
 		csv=config["outdir"] + "/01_orf_homology/prodigal_out.all.nr_expanded.csv"
+	threads:threads_max
+	message:
+		"Combining Prodigal outputs into fasta and csv files."
 	run:
-		hashDict = {}
 		idDict = {}
-#		print("INPUT:",input)
-		for file in input:
-			sample = file.split("01_orf_homology/prodigal_out/")[1].strip(".faa")
-			with open(file) as handle:
-				for seq_record in SeqIO.parse(handle, "fasta"):
-					sequence = str(seq_record.seq)
-					pephash = seqhash.seqhash(sequence.strip("*"),dna_type='PROTEIN')
-					hashDict[pephash] = sequence
-					descriptionParts = seq_record.description.split("#")
-					gc_cont = seq_record.description.split("=")[-1]
-					start_codon = seq_record.description.split(";")[2].strip("start_type=")
-					rbs_motif = seq_record.description.split(";")[3].strip("rbs_motif=")
-					start = descriptionParts[1].strip()
-					stop = descriptionParts[2].strip()
-					strand = descriptionParts[3].strip()
-					contig = '_'.join(seq_record.id.split("_")[:-1])
-					allStandardAA = hasAllStandardAA(sequence)
-					seqID = f"{sample}|{contig}|{start}:{stop}:{strand}"
-					idDict[seqID] = [pephash, sample, contig, start, stop, strand, allStandardAA, start_codon, rbs_motif, gc_cont, sequence]
-		with open(output.fasta,"w") as fasta_file:
+		hashDict = {}
+		csvDF = pd.DataFrame.from_dict(idDict, orient="index", columns=["pephash","sample","contig","start","stop","strand","allStandardAA","startCodon","RBSmotif","gcContent","seq"]).reset_index()
+		csvDF.rename(columns={'index': 'cinful_id'}, inplace = True)
+		csvDF.to_csv(output.csv, index = None)
+		fastaDF = pd.DataFrame()
+		fastaDF.to_csv(output.fasta, index=False, header=0)
+		with open(output.csv, "a") as csv_file, open(output.fasta, "w") as fasta_file:
+			for file in input:
+					sample = file.split("01_orf_homology/prodigal_out/")[1].strip(".faa")
+					with open(file) as handle:
+						for seq_record in SeqIO.parse(handle, "fasta"):
+							sequence = str(seq_record.seq)
+							pephash = seqhash.seqhash(sequence.strip("*"),dna_type='PROTEIN')
+							hashDict[pephash] = sequence
+
+							descriptionParts = seq_record.description.split("#")
+							gc_content = seq_record.description.split("=")[-1]
+							start_codon = seq_record.description.split(";")[2].strip("start_type=")
+							rbs_motif = seq_record.description.split(";")[3].strip("rbs_motif=")
+							start = descriptionParts[1].strip()
+							stop = descriptionParts[2].strip()
+							strand = descriptionParts[3].strip()
+							contig = '_'.join(seq_record.id.split("_")[:-1])
+							allStandardAA = hasAllStandardAA(sequence)
+							
+							seqID = f"{sample}|{contig}|{start}:{stop}:{strand}"
+							csv_input = [seqID, pephash, sample, contig, start, stop, strand, allStandardAA, start_codon, rbs_motif, gc_content, sequence]
+							csv_writer = writer(csv_file)
+							csv_writer.writerow(csv_input)
 			for pephash in hashDict:
 				outRecord = SeqRecord(
 					Seq(hashDict[pephash]),
@@ -75,11 +61,6 @@ rule nonredundant_prodigal:
 					description=""
 				)
 				SeqIO.write(outRecord, fasta_file, "fasta")
-
-		idDF = pd.DataFrame.from_dict(idDict, orient="index", columns=["pephash","sample","contig","start","stop","strand","allStandardAA","startCodon","RBSmotif","gcContent","seq"]).reset_index()
-		idDF.rename(columns={'index': 'cinful_id'}, inplace = True)
-#		idDF.columns = ["cinful_id","pephash","sample","contig","start","stop","strand","allStandardAA","seq"]
-		idDF.to_csv(output.csv, index = None)
 
 
 rule filter_microcin:
@@ -89,8 +70,6 @@ rule filter_microcin:
 		config["outdir"] + "/01_orf_homology/microcins/filtered_nr.fa"
 	shell:
 		"seqkit seq -m 30 -M 150 {input} | seqkit rmdup -s > {output}"
-
-
 
 rule filter_immunity_protein:
 	input:
@@ -115,5 +94,3 @@ rule filter_MFP:
 		config["outdir"] + "/01_orf_homology/MFP/filtered_nr.fa"
 	shell:
 		"seqkit seq -m 375 -M 450 {input} | seqkit rmdup -s > {output}"
-
-# TODO: add a merge nonredundant step for each component

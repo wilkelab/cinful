@@ -105,7 +105,7 @@ def main():
 
     try:
         sp.check_output(cmd)
-        print("cinful finished succesfuly!\n")
+        print("cinful finished successfully!\n")
         all_hits = Path(workdir)/ outdir / "02_homology_results/all_merged.csv"
         print(f"Now checking that any hits were identified in {all_hits}")
         all_hitsDF = pd.read_csv(all_hits).sort_values(['component','bitscore'],ascending=False)

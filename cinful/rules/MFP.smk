@@ -112,6 +112,7 @@ rule filter_MFP_hits:
 	output:
 		preQC=config["outdir"] + "/01_orf_homology/MFP/preQC.csv",
 		QC=config["outdir"] + "/01_orf_homology/MFP/QC.csv"
+	threads:threads_max
 	run:
 		preQC_MFP = qcMFP(input.best_MFP, input.align_with_verifiedMFP)
 		nr_filteredDF = pd.read_csv(input.nr_filtered_csv)

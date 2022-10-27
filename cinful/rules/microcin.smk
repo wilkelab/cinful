@@ -10,7 +10,6 @@ rule makeblastdb_microcin:
 	shell:
 		"makeblastdb -dbtype prot -in {input}"
 
-
 rule blast_microcin:
 	input:
 		verified_component = config["outdir"] + "/00_dbs/microcins.verified.pep",
@@ -22,7 +21,6 @@ rule blast_microcin:
 	shell:
 		"blastp -num_threads {threads} -db {input.verified_component} -query {input.input_seqs} -outfmt 6 -out {output} -evalue 0.001 -max_target_seqs 1"
 
-
 rule msa_microcin:
 	input:
 		config["outdir"] + "/00_dbs/microcins.verified.pep"
@@ -32,7 +30,6 @@ rule msa_microcin:
 	shell:
 		"mafft --thread {threads} --auto {input} > {output}"
 
-
 rule buildhmm_microcin:
 	input:
 		config["outdir"] + "/00_dbs/microcins.verified.aln"
@@ -41,7 +38,6 @@ rule buildhmm_microcin:
 	threads:threads_max
 	shell:
 		"hmmbuild --cpu {threads} {output} {input}"
-
 
 rule signalSeqHMM:
 	input:
@@ -56,8 +52,6 @@ rule signalSeqHMM:
 		signalSeqHitStr = [hit.name.decode('utf-8') for hit in signalSeqHits]
 		matchDF = pd.DataFrame.from_dict({"signalMatch":signalSeqHitStr})
 		matchDF.to_csv(output[0])
-		# idDF["signalMatch"] = idDF["pephash"].isin(signalSeqHitStr)
-
 
 rule blast_v_hmmer_microcin:
 	input:
@@ -71,5 +65,5 @@ rule blast_v_hmmer_microcin:
 		hmmer_hits, hmm_name = run_hmmsearch(input.input_seqs, input.verifiedHMM)
 		hmmer_hitsHeaders = [hit.name.decode() for hit in hmmer_hits]
 		blastDF["component"] = hmm_name
-		blastDF["hmmerHit"] = blastDF["qseqid"].isin(hmmer_hitsHeaders) #hmmer_hitsHeaders in blastDF["qseqid"]
+		blastDF["hmmerHit"] = blastDF["qseqid"].isin(hmmer_hitsHeaders)
 		blastDF.to_csv(output[0], index = False)
