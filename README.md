@@ -107,7 +107,7 @@ conda install mamba -c conda-forge
 
 To build the environment, run:
 ```bash
-bash scripts/build_conda_env.sh
+bash env/build_conda_env.sh
 ```
 
 Once setup is complete, you can activate the environment with:
