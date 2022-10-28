@@ -175,7 +175,7 @@ jobs:
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/01_orf_homology/prodigal_out/GCF_000026285.1_ASM2628v2_genomic.faa -F -j1 --keep-target-files --allowed-rules prodigal -d .tests/prodigal
+        python -m snakemake cinful_out/01_orf_homology/prodigal_out/colicinV_Ecoli_Shortened_test.faa -F -j1 --keep-target-files --allowed-rules prodigal -d .tests/prodigal
 
     - name: nonredundant_prodigal
       run: |
