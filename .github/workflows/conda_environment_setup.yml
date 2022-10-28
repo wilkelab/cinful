@@ -2,8 +2,8 @@ name: CI
 on: [push]
 
 jobs:
-  build-linux:
-    name: Build Linux
+  test-snakemake-pipeline:
+    name: Test Snakemake Pipeline
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -26,12 +26,6 @@ jobs:
       run: |
         mamba create -n cinful
         mamba env update -n cinful --file cinful/env/cinful_conda.yml
-
-  test-rules:
-    needs: build-linux
-    name: Test Rules
-    runs-on: ubuntu-latest
-    steps:
 
     - name: align_with_verifiedCvab
       run: |
