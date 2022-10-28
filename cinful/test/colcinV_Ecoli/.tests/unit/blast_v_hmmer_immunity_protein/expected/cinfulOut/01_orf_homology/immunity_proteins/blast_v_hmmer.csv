@@ -1,7 +1,0 @@
-qseqid,sseqid,pident,length,mismatch,gapopen,qstart,qend,sstart,send,evalue,bitscore,component,hmmerHit
-v1_PLS_63becd3cbbcde01b07c6bce3e6689b18e896c45e7a0c946065d62b60d0a5a0c1,classIIb_IP:I47_mchS3_tr|Q712P9|Q712P9_ECOLX,30.0,100,50,6,1,94,3,88,0.000576,26.9,immunity_proteins.verified,False
-v1_PLS_f8fd4193656ee341f57c73ad0a4dff01d36a1d308609d7dcf94c8e6d8a57c15b,classIIb_IP:E492_mceB_sp|Q9ZHG0|IM92_KLEPN,25.0,84,53,2,14,97,3,76,5.55e-06,31.2,immunity_proteins.verified,False
-v1_PLS_1afef658708d075380816fa9fb381fb059a783f0934893810d729dd368efe100,classIIa_IP:N_mcnI,41.667,24,14,0,95,118,63,86,0.000639,25.8,immunity_proteins.verified,False
-v1_PLS_bbcbd0de66a76f0895315fdc0206dd929d563ce01545f3ff3c7aa54d09bd6e37,classIIa_IP:S_mcsI,28.571,42,30,0,2,43,7,48,0.000181,28.9,immunity_proteins.verified,False
-v1_PLS_8072b50172e58f96e9d88daf48b48a9e56fd3e43582a011439a5d7635b110896,classIIa_IP:N_mcnI,37.037,27,17,0,8,34,9,35,0.00012,24.3,immunity_proteins.verified,False
-v1_PLS_b54c511fdf97fd8be87ed81d127e42b030ec39db828be5ffbb11834ff7a414a6,classIIa_IP:N_mcnI,37.037,27,17,0,8,34,9,35,6.33e-05,25.0,immunity_proteins.verified,False

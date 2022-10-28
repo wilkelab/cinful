@@ -1,0 +1,2 @@
+microcin_id,contig,microcin_start,microcin_stop,microcin_strand,CvaB_id,CvaB_start,CvaB_stop,CvaB_strand,MFP_id,MFP_start,MFP_stop,MFP_strand
+colicinV_Ecoli_Shortened_test|NC_011747.1|92094:92405:1,NC_011747.1,92094,92405,1,colicinV_Ecoli_Shortened_test|NC_011747.1|92575:94671:-1,92575,94671,-1,colicinV_Ecoli_Shortened_test|NC_011747.1|94664:95938:-1,94664,95938,-1
