@@ -37,184 +37,184 @@ jobs:
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/01_orf_homology/CvaB/blast_v_hmmer.with_verified.aln -F -j1 --keep-target-files --allowed-rules align_with_verifiedCvab -d .tests/align_with_verifiedCvab
+        python -m snakemake cinful/cinful_out/01_orf_homology/CvaB/blast_v_hmmer.with_verified.aln -F -j1 --keep-target-files --allowed-rules align_with_verifiedCvab -d .tests/align_with_verifiedCvab
 
     - name: bestHitsContigs
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/03_best_hits/best_hit_contigs.csv -F -j1 --keep-target-files --allowed-rules bestHitsContigs -d .tests/bestHitsContigs
+        python -m snakemake cinful/cinful_out/03_best_hits/best_hit_contigs.csv -F -j1 --keep-target-files --allowed-rules bestHitsContigs -d .tests/bestHitsContigs
 
     - name: best_Cvab_fasta
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/01_orf_homology/CvaB/blast_v_hmmer.fa -F -j1 --keep-target-files --allowed-rules best_Cvab_fasta -d .tests/best_Cvab_fasta
+        python -m snakemake cinful/cinful_out/01_orf_homology/CvaB/blast_v_hmmer.fa -F -j1 --keep-target-files --allowed-rules best_Cvab_fasta -d .tests/best_Cvab_fasta
 
     - name: best_Cvab_headers
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/01_orf_homology/CvaB/blast_v_hmmer.headers -F -j1 --keep-target-files --allowed-rules best_Cvab_headers -d .tests/best_Cvab_headers
+        python -m snakemake cinful/cinful_out/01_orf_homology/CvaB/blast_v_hmmer.headers -F -j1 --keep-target-files --allowed-rules best_Cvab_headers -d .tests/best_Cvab_headers
 
     - name: best_hits
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/03_best_hits/best_hits.csv -F -j1 --keep-target-files --allowed-rules best_hits -d .tests/best_hits
+        python -m snakemake cinful/cinful_out/03_best_hits/best_hits.csv -F -j1 --keep-target-files --allowed-rules best_hits -d .tests/best_hits
 
     - name: blast_CvaB
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/01_orf_homology/CvaB/blast.txt -F -j1 --keep-target-files --allowed-rules blast_CvaB -d .tests/blast_CvaB
+        python -m snakemake cinful/cinful_out/01_orf_homology/CvaB/blast.txt -F -j1 --keep-target-files --allowed-rules blast_CvaB -d .tests/blast_CvaB
 
     - name: blast_immunity_protein
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/01_orf_homology/immunity_proteins/blast.txt -F -j1 --keep-target-files --allowed-rules blast_immunity_protein -d .tests/blast_immunity_protein
+        python -m snakemake cinful/cinful_out/01_orf_homology/immunity_proteins/blast.txt -F -j1 --keep-target-files --allowed-rules blast_immunity_protein -d .tests/blast_immunity_protein
 
     - name: blast_microcin
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/01_orf_homology/microcins/blast.txt -F -j1 --keep-target-files --allowed-rules blast_microcin -d .tests/blast_microcin
+        python -m snakemake cinful/cinful_out/01_orf_homology/microcins/blast.txt -F -j1 --keep-target-files --allowed-rules blast_microcin -d .tests/blast_microcin
 
     - name: blast_v_hmmer_CvaB
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/01_orf_homology/CvaB/blast_v_hmmer.csv -F -j1 --keep-target-files --allowed-rules blast_v_hmmer_CvaB -d .tests/blast_v_hmmer_CvaB
+        python -m snakemake cinful/cinful_out/01_orf_homology/CvaB/blast_v_hmmer.csv -F -j1 --keep-target-files --allowed-rules blast_v_hmmer_CvaB -d .tests/blast_v_hmmer_CvaB
 
     - name: blast_v_hmmer_immunity_protein
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/01_orf_homology/immunity_proteins/blast_v_hmmer.csv -F -j1 --keep-target-files --allowed-rules blast_v_hmmer_immunity_protein -d .tests/blast_v_hmmer_immunity_protein
+        python -m snakemake cinful/cinful_out/01_orf_homology/immunity_proteins/blast_v_hmmer.csv -F -j1 --keep-target-files --allowed-rules blast_v_hmmer_immunity_protein -d .tests/blast_v_hmmer_immunity_protein
 
     - name: blast_v_hmmer_microcin
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/01_orf_homology/microcins/blast_v_hmmer.csv -F -j1 --keep-target-files --allowed-rules blast_v_hmmer_microcin -d .tests/blast_v_hmmer_microcin
+        python -m snakemake cinful/cinful_out/01_orf_homology/microcins/blast_v_hmmer.csv -F -j1 --keep-target-files --allowed-rules blast_v_hmmer_microcin -d .tests/blast_v_hmmer_microcin
 
     - name: buildhmm_CvaB
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/00_dbs/CvaB.verified.hmm -F -j1 --keep-target-files --allowed-rules buildhmm_CvaB -d .tests/buildhmm_CvaB
+        python -m snakemake cinful/cinful_out/00_dbs/CvaB.verified.hmm -F -j1 --keep-target-files --allowed-rules buildhmm_CvaB -d .tests/buildhmm_CvaB
 
     - name: buildhmm_immunity_protein
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/00_dbs/immunity_proteins.verified.hmm -F -j1 --keep-target-files --allowed-rules buildhmm_immunity_protein -d .tests/buildhmm_immunity_protein
+        python -m snakemake cinful/cinful_out/00_dbs/immunity_proteins.verified.hmm -F -j1 --keep-target-files --allowed-rules buildhmm_immunity_protein -d .tests/buildhmm_immunity_protein
 
     - name: buildhmm_microcin
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/00_dbs/microcins.verified.hmm -F -j1 --keep-target-files --allowed-rules buildhmm_microcin -d .tests/buildhmm_microcin
+        python -m snakemake cinful/cinful_out/00_dbs/microcins.verified.hmm -F -j1 --keep-target-files --allowed-rules buildhmm_microcin -d .tests/buildhmm_microcin
 
     - name: candidate_immunity
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/03_best_hits/best_immunity_protein_candidates.csv -F -j1 --keep-target-files --allowed-rules candidate_immunity -d .tests/candidate_immunity
+        python -m snakemake cinful/cinful_out/03_best_hits/best_immunity_protein_candidates.csv -F -j1 --keep-target-files --allowed-rules candidate_immunity -d .tests/candidate_immunity
 
     - name: filter_CvaB
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/01_orf_homology/CvaB/filtered_nr.fa -F -j1 --keep-target-files --allowed-rules filter_CvaB -d .tests/filter_CvaB
+        python -m snakemake cinful/cinful_out/01_orf_homology/CvaB/filtered_nr.fa -F -j1 --keep-target-files --allowed-rules filter_CvaB -d .tests/filter_CvaB
 
     - name: filter_CvaB_hits
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/01_orf_homology/CvaB/preQC.csv cinful_out/01_orf_homology/CvaB/QC.csv -F -j1 --keep-target-files --allowed-rules filter_CvaB_hits -d .tests/filter_CvaB_hits
+        python -m snakemake cinful/cinful_out/01_orf_homology/CvaB/preQC.csv cinful/cinful_out/01_orf_homology/CvaB/QC.csv -F -j1 --keep-target-files --allowed-rules filter_CvaB_hits -d .tests/filter_CvaB_hits
 
     - name: filter_immunity_protein
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/01_orf_homology/immunity_proteins/filtered_nr.fa -F -j1 --keep-target-files --allowed-rules filter_immunity_protein -d .tests/filter_immunity_protein
+        python -m snakemake cinful/cinful_out/01_orf_homology/immunity_proteins/filtered_nr.fa -F -j1 --keep-target-files --allowed-rules filter_immunity_protein -d .tests/filter_immunity_protein
 
     - name: makeblastdb_CvaB
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/00_dbs/CvaB.verified.pep.dmnd -F -j1 --keep-target-files --allowed-rules makeblastdb_CvaB -d .tests/makeblastdb_CvaB
+        python -m snakemake cinful/cinful_out/00_dbs/CvaB.verified.pep.dmnd -F -j1 --keep-target-files --allowed-rules makeblastdb_CvaB -d .tests/makeblastdb_CvaB
 
     - name: makeblastdb_immunity_protein
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/00_dbs/immunity_proteins.verified.pep.phr -F -j1 --keep-target-files --allowed-rules makeblastdb_immunity_protein -d .tests/makeblastdb_immunity_protein
+        python -m snakemake cinful/cinful_out/00_dbs/immunity_proteins.verified.pep.phr -F -j1 --keep-target-files --allowed-rules makeblastdb_immunity_protein -d .tests/makeblastdb_immunity_protein
 
     - name: makeblastdb_microcin
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/00_dbs/microcins.verified.pep.phr -F -j1 --keep-target-files --allowed-rules makeblastdb_microcin -d .tests/makeblastdb_microcin
+        python -m snakemake cinful/cinful_out/00_dbs/microcins.verified.pep.phr -F -j1 --keep-target-files --allowed-rules makeblastdb_microcin -d .tests/makeblastdb_microcin
 
     - name: msa_CvaB
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/00_dbs/CvaB.verified.aln -F -j1 --keep-target-files --allowed-rules msa_CvaB -d .tests/msa_CvaB
+        python -m snakemake cinful/cinful_out/00_dbs/CvaB.verified.aln -F -j1 --keep-target-files --allowed-rules msa_CvaB -d .tests/msa_CvaB
 
     - name: msa_immunity_protein
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/00_dbs/immunity_proteins.verified.aln -F -j1 --keep-target-files --allowed-rules msa_immunity_protein -d .tests/msa_immunity_protein
+        python -m snakemake cinful/cinful_out/00_dbs/immunity_proteins.verified.aln -F -j1 --keep-target-files --allowed-rules msa_immunity_protein -d .tests/msa_immunity_protein
 
     - name: msa_microcin
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/00_dbs/microcins.verified.aln -F -j1 --keep-target-files --allowed-rules msa_microcin -d .tests/msa_microcin
+        python -m snakemake cinful/cinful_out/00_dbs/microcins.verified.aln -F -j1 --keep-target-files --allowed-rules msa_microcin -d .tests/msa_microcin
 
     - name: prodigal
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/01_orf_homology/prodigal_out/GCF_000026285.1_ASM2628v2_genomic.faa -F -j1 --keep-target-files --allowed-rules prodigal -d .tests/prodigal
+        python -m snakemake cinful/cinful_out/01_orf_homology/prodigal_out/GCF_000026285.1_ASM2628v2_genomic.faa -F -j1 --keep-target-files --allowed-rules prodigal -d .tests/prodigal
 
     - name: nonredundant_prodigal
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/01_orf_homology/prodigal_out.all.nr.faa cinful_out/01_orf_homology/prodigal_out.all.nr_expanded.csv -F -j1 --keep-target-files --allowed-rules nonredundant_prodigal -d .tests/nonredundant_prodigal
+        python -m snakemake cinful/cinful_out/01_orf_homology/prodigal_out.all.nr.faa cinful/cinful_out/01_orf_homology/prodigal_out.all.nr_expanded.csv -F -j1 --keep-target-files --allowed-rules nonredundant_prodigal -d .tests/nonredundant_prodigal
 
     - name: signalSeqHMM
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/01_orf_homology/microcins/signalSeq.hit.csv -F -j1 --keep-target-files --allowed-rules signalSeqHMM -d .tests/signalSeqHMM
+        python -m snakemake cinful/cinful_out/01_orf_homology/microcins/signalSeq.hit.csv -F -j1 --keep-target-files --allowed-rules signalSeqHMM -d .tests/signalSeqHMM
 
     - name: write_CvaB
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/00_dbs/CvaB.verified.pep -F -j1 --keep-target-files --allowed-rules write_CvaB -d .tests/write_CvaB
+        python -m snakemake cinful/cinful_out/00_dbs/CvaB.verified.pep -F -j1 --keep-target-files --allowed-rules write_CvaB -d .tests/write_CvaB
 
     - name: write_immunity_proteins
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/00_dbs/immunity_proteins.verified.pep -F -j1 --keep-target-files --allowed-rules write_immunity_proteins -d .tests/write_immunity_proteins
+        python -m snakemake cinful/cinful_out/00_dbs/immunity_proteins.verified.pep -F -j1 --keep-target-files --allowed-rules write_immunity_proteins -d .tests/write_immunity_proteins
 
     - name: write_microcins
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/00_dbs/microcins.verified.pep -F -j1 --keep-target-files --allowed-rules write_microcins -d .tests/write_microcins
+        python -m snakemake cinful/cinful_out/00_dbs/microcins.verified.pep -F -j1 --keep-target-files --allowed-rules write_microcins -d .tests/write_microcins
 
     - name: merged_results
       run: |
         source activate cinful
         cd cinful
-        python -m snakemake cinful_out/02_homology_results/all_merged.csv -F -j1 --keep-target-files --allowed-rules merged_results -d .tests/merged_results
+        python -m snakemake cinful/cinful_out/02_homology_results/all_merged.csv -F -j1 --keep-target-files --allowed-rules merged_results -d .tests/merged_results
