@@ -15,7 +15,7 @@ console_scripts = '''
 
 setup(
     name= 'cinful',
-    version= '1.2.4',
+    version= '1.2.6',
     author= 'Aaron Feller',
     author_email = 'aaronleefeller@gmail.com',
     include_package_data = True,
