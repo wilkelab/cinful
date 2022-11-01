@@ -1,5 +1,5 @@
 # *cinful*: an in-silico microcin identification pipeline
-*cinful* reads a directory of genome data and identifies class IIb microcins using a combination of HMM and BLAST. It has functionality that identifies the associated export machinery (MFP & PCAT) and putative immunity protein. Publication of this work is forthcoming and will be cited here.
+*cinful* reads a directory of genome data and identifies class II microcins using a combination of HMM and BLAST. It has functionality that identifies the associated export machinery (MFP & PCAT) and putative immunity protein. Publication of this work is forthcoming and will be cited here.
 
 *cinful* is developed by the [Wilke lab](https://wilkelab.org/) at the [Department of Integrative Biology](https://integrativebio.utexas.edu/) in collaboration with the [Davies lab](https://bwdaviesutaustin.org/) at the [Department of Molecular Biosciences](https://molecularbiosci.utexas.edu/), both at [The University of Texas at Austin](https://www.utexas.edu/).
 
