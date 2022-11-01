@@ -1,1 +1,4 @@
 .snakemake
+build
+cinful.egg-info
+dist
