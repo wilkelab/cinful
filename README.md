@@ -81,14 +81,18 @@ Snakemake is the core workflow management used by cinful -- the main snakefile i
 With *cinful*, the following workflow will be executed.
 ![cinful](cinful/figures/dag.svg)
 
-###### Three output directories will be generated in your --directory <assembly_directory> under a directory called cinful_out (or an -outDir of your choosing):
+Three output directories will be generated in your --directory <assembly_directory> under a directory called cinful_out (or an -outDir of your choosing):
+
 **00_dbs**
 * This is the initial location of the databases of verified microcins, CvaB, and immunity proteins.
+
 **01_orf_homology**
 * Prodigal will generate Open Reading Frame (ORF) predictions for the input assemblies
 * Those ORFs will be searched against the previously mentioned databases
+
 **02_homology_results**
 * The results from all the homology searches will be merged here
+
 **03_best_hits**
 * The top hits from the homology results will be placed here
 
