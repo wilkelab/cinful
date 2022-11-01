@@ -2,29 +2,39 @@ from io import StringIO
 from Bio import SeqIO
 from Bio import AlignIO
 import pandas as pd
+import os
 
 def qcCvab(best_hitsPep, best_hitsAln):
-	alignment = AlignIO.read(open(best_hitsAln), "fasta")
-	gappyDict = {"id":[], "nonGap":[], "percentGap":[], "alignment":[]}
-	for record in alignment:
-		percentGap = record.seq.count("-")/len(record.seq)
-		gappyDict["id"].append(record.id)
-		gappyDict["nonGap"].append( len(record.seq) - record.seq.count("-"))
-		gappyDict["percentGap"].append(percentGap)
-		gappyDict["alignment"].append(str(record.seq))
-	gappyDF = pd.DataFrame.from_dict(gappyDict)
-	# catalytic triad
-	gappyDF["C34"] = gappyDF["alignment"].astype(str).str[34]
-	gappyDF["H107"] = gappyDF["alignment"].astype(str).str[107]
-	gappyDF["D123"] = gappyDF["alignment"].astype(str).str[123]
-	lenDict = {"id":[], "len":[]}
-	for record in SeqIO.parse(best_hitsPep, "fasta"):
-		lenDict["id"].append(record.id)
-		lenDict["len"].append(len(record.seq))
-	lenDF = pd.DataFrame.from_dict(lenDict)
-	lenGapDF = gappyDF.merge(lenDF)
-	lenGapDF["percentTrim"] = (lenGapDF["len"]-lenGapDF["nonGap"])/ lenGapDF["len"]
-	return lenGapDF
+	if os.stat(best_hitsAln).st_size==0:
+		gappyDict = {"id":[], "nonGap":[], "percentGap":[], "alignment":[]}
+		gappyDF = pd.DataFrame.from_dict(gappyDict)
+		lenDict = {"id":[], "len":[]}
+		lenDF = pd.DataFrame.from_dict(lenDict)
+		lenGapDF = gappyDF.merge(lenDF)
+		lenGapDF["percentTrim"] = (lenGapDF["len"]-lenGapDF["nonGap"])/ lenGapDF["len"]
+		return lenGapDF
+	else:
+		alignment = AlignIO.read(open(best_hitsAln), "fasta")
+		gappyDict = {"id":[], "nonGap":[], "percentGap":[], "alignment":[]}
+		for record in alignment:
+			percentGap = record.seq.count("-")/len(record.seq)
+			gappyDict["id"].append(record.id)
+			gappyDict["nonGap"].append( len(record.seq) - record.seq.count("-"))
+			gappyDict["percentGap"].append(percentGap)
+			gappyDict["alignment"].append(str(record.seq))
+		gappyDF = pd.DataFrame.from_dict(gappyDict)
+		# catalytic triad
+		gappyDF["C34"] = gappyDF["alignment"].astype(str).str[34]
+		gappyDF["H107"] = gappyDF["alignment"].astype(str).str[107]
+		gappyDF["D123"] = gappyDF["alignment"].astype(str).str[123]
+		lenDict = {"id":[], "len":[]}
+		for record in SeqIO.parse(best_hitsPep, "fasta"):
+			lenDict["id"].append(record.id)
+			lenDict["len"].append(len(record.seq))
+		lenDF = pd.DataFrame.from_dict(lenDict)
+		lenGapDF = gappyDF.merge(lenDF)
+		lenGapDF["percentTrim"] = (lenGapDF["len"]-lenGapDF["nonGap"])/ lenGapDF["len"]
+		return lenGapDF
 
 rule makeblastdb_CvaB:
 	input:
@@ -104,8 +114,13 @@ rule align_with_verifiedCvab:
 		config["outdir"] + "/01_orf_homology/CvaB/blast_v_hmmer.with_verified.aln"
 	threads:threads_max
 	shell:
-		"mafft --thread {threads} --inputorder --keeplength --add {input.best_CvaB} --auto "
-		"{input.verified_CvaB} > {output}"
+		"""
+		if [ -s {input.best_CvaB} ]; then
+			mafft --thread {threads} --inputorder --keeplength --add {input.best_CvaB} --auto {input.verified_CvaB} > {output}
+		else
+			touch {output}
+		fi
+		"""
 
 rule filter_CvaB_hits:
 	input:

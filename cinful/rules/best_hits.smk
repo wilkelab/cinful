@@ -1,6 +1,7 @@
 import pandas as pd
 from Bio import SeqIO
 import pyTMHMM
+import subprocess
 
 SAMPLES, = glob_wildcards("{sample}.fna")
 
@@ -106,10 +107,10 @@ rule best_hits:
 		homologyDF = pd.read_csv(input.merged_homology_results)
 		signalSeqDF = pd.read_csv(input.signalSeq)
 		microcinDF, immunity_proteinDF, CvaBDF, MFPDF = componentDFs(homologyDF)
+		best_hitsDF = bestHits(microcinDF, immunity_proteinDF, CvaBDF, MFPDF)
 		if not microcinDF.empty:
-			best_hitsDF = bestHits(microcinDF, immunity_proteinDF, CvaBDF, MFPDF)
 			best_hitsDF["signalMatch"] = best_hitsDF["pephash"].isin(signalSeqDF["signalMatch"])
-			best_hitsDF.to_csv(output[0], index = False)
+		best_hitsDF.to_csv(output[0], index = False)
 
 rule bestHitsContigs:
 	input:
@@ -130,23 +131,26 @@ rule candidate_immunity:
 		config["outdir"] + "/03_best_hits/best_immunity_protein_candidates.csv"
 	threads:threads_max
 	run:
-
 		immunityDB = pd.read_csv(input.prodigalNR) #inputs all CDS from prodigal non-redundant
 		immunityDB = immunityDB[immunityDB["allStandardAA"]] #ensures all AA are standard 20
 
 		bestHits = pd.read_csv(input.bestHits) #reads in best_hits.csv file
 		bestMicrocinHits = bestHits[bestHits["component"] == "microcins.verified"] #Filters best_hits.csv for only microcins
-		nearestImmunityDF = nearestImmunityProtein(immunityDB, bestMicrocinHits) #function finds all prodigal hits with a matching sample/contig to microcin hits and then filters them to +/- 3 CDS surrounding a microcin hit
+		if not bestMicrocinHits.empty:
 
-		seqLen = nearestImmunityDF["seq"].str.len() #creates an object 'seqLen' that stores all sequence lengths
-		nearestImmunityDF = nearestImmunityDF[(seqLen <= 250 ) & (seqLen >= 30 )] #limits immunityDB to those sequences that are between 30 and 250 AA
+			nearestImmunityDF = nearestImmunityProtein(immunityDB, bestMicrocinHits) #function finds all prodigal hits with a matching sample/contig to microcin hits and then filters them to +/- 3 CDS surrounding a microcin hit
 
-		nearestImmunityDF["tmhmm"] = tmhmmCol(nearestImmunityDF) #Adds tmhmm prediction column
+			seqLen = nearestImmunityDF["seq"].str.len() #creates an object 'seqLen' that stores all sequence lengths
+			nearestImmunityDF = nearestImmunityDF[(seqLen <= 250 ) & (seqLen >= 30 )] #limits immunityDB to those sequences that are between 30 and 250 AA
 
-		immunityHomologs = pd.read_csv(input.immunityHomologs) #reads in blast_v_hmmer.csv for immunity proteins
-		nearestImmunityDF["homologyHit"] = nearestImmunityDF["pephash"].isin(immunityHomologs["qseqid"]) #adds homology (True/False) hit if the nearest immunity protein is in the immunityHomologs
+			nearestImmunityDF["tmhmm"] = tmhmmCol(nearestImmunityDF) #Adds tmhmm prediction column
 
-		nearestImmunityDF.to_csv(output[0], index = None)
+			immunityHomologs = pd.read_csv(input.immunityHomologs) #reads in blast_v_hmmer.csv for immunity proteins
+			nearestImmunityDF["homologyHit"] = nearestImmunityDF["pephash"].isin(immunityHomologs["qseqid"]) #adds homology (True/False) hit if the nearest immunity protein is in the immunityHomologs
+
+			nearestImmunityDF.to_csv(output[0], index = None)
+		else:
+			subprocess.run(["touch", output[0]])
 
 rule candidate_MFP:
 	input:
@@ -159,6 +163,9 @@ rule candidate_MFP:
 	run:
 		bestHits = pd.read_csv(input.bestHits)
 		CvaBDF = bestHits[bestHits["component"] == "CvaB.verified"]
-		prodigalDF = pd.read_csv(input.prodigalDB)
-		best_MFP_candidates = cvab_mfp_neighbor(CvaBDF, prodigalDF, input.mfp_hmm)
-		best_MFP_candidates.to_csv(output[0], index = None)
+		if not CvaBDF.empty:
+			prodigalDF = pd.read_csv(input.prodigalDB)
+			best_MFP_candidates = cvab_mfp_neighbor(CvaBDF, prodigalDF, input.mfp_hmm)
+			best_MFP_candidates.to_csv(output[0], index = None)
+		else:
+			subprocess.run(["touch", output[0]])
