@@ -79,7 +79,7 @@ Snakemake is the core workflow management used by cinful -- the main snakefile i
 ## Workflow
 
 With *cinful*, the following workflow will be executed.
-![cinful](cinful/figures/cinful_workflow.inkscape.svg)
+![cinful](cinful/figures/dag.svg)
 
 ###### Three output directories will be generated in your --directory <assembly_directory> under a directory called cinful_out (or an -outDir of your choosing):
 **00_dbs**
