@@ -46,7 +46,9 @@ optional arguments:
 ## Installation test
 
 Run cinful on the cinful/test directory as such
+```bash
 $ cinful -d path/to/cinful/test -o <name_your_test>
+```
 
 ## Usage notes
 
