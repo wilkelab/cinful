@@ -1,4 +1,4 @@
 #!/bin/sh
 
-mamba create -n cinful
-mamba env update -n cinful --file cinful_conda.yml
+conda create --name cinful python=3.8.13 pip
+conda env update -n cinful --file cinful_conda.yml
