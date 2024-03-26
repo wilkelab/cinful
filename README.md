@@ -89,7 +89,8 @@ All software dependencies needed to run *cinful* are available through conda and
 
 To build the environment, run:
 ```bash
-bash env/build_conda_env.sh
+$ conda create --name cinful python=3.8.13 pip
+$ conda env update -n cinful --file path/to/cinful/env/cinful_conda.yml
 ```
 
 Once setup is complete, you can activate the environment with:
