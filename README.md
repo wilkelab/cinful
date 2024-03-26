@@ -6,7 +6,7 @@
 ## Installation
 There are two methods for installation; one uses pip and should be more user friendly.
 
-## Installation from PyPI (recommended)
+## Installation from PyPI
 
 The following includes steps to install dependencies.
 
@@ -17,28 +17,11 @@ $ conda activate <your-env-name>
 ```
 ### Install other dependencies:
 ```bash
-$ conda install mamba -c conda-forge
+$ conda activate <environment_name>
 $ pip install cinful
-$ cinful_init
+$ conda install seqkit=0.15.0 mafft=7.475 hmmer=3.3.1 blast=2.9.0 diamond=2.0.11 pandas=1.2.4 numpy=1.24.4 biopython=1.76 snakemake=6.3.0 prodigal=2.6.3 pyhmmer=0.3.0
+$ pip install pyTMHMM==1.3.2 seqhash==1.0.0 blake3==0.2.0
 ```
-#### Dependencies installed with $ cinful_init
-* seqkit=0.15.0
-* mafft=7.475
-* hmmer=3.3.1
-* blast=2.9.0
-* diamond=2.0.11
-* pandas=1.2.4
-* numpy=1.19.2
-* biopython=1.76
-* snakemake=6.3.0
-* prodigal=2.6.3
-* pyhmmer=0.3.0
-
-##### PyPI dependencies:
-* pyTMHMM==1.3.2
-* seqhash==1.0.0
-* blake3==0.2.0
-
 
 If installed properly, running `cinful -h` will produce the following output:
 
@@ -62,9 +45,10 @@ optional arguments:
 
 ## Installation test
 
-I am working on a test to verify installation. As a workaround, you are able to download a test genome that contains microcin, MFP, PCAT, and immunity protein from https://github.com/wilkelab/cinful/blob/main/test/.
-
-Once you've downloaded the test file, you can run *cinful* on the contents and compare the output to the results stored in the directory cinful_out.
+Run cinful on the cinful/test directory as such
+```bash
+$ cinful -d path/to/cinful/test -o <name_your_test>
+```
 
 ## Usage notes
 
@@ -105,13 +89,10 @@ git clone https://github.com/wilkelab/cinful.git
 ```
 All software dependencies needed to run *cinful* are available through conda and are specified in `cinful_conda.yml`, the following helper script can be used to generate the *cinful* conda environment `scripts/build_conda_env.sh`, to run this script, you will need to have conda installed, as well as mamba (which helps speed up installation). To install mamba, use the following command:
 
-```bash
-conda install mamba -c conda-forge
-```
-
 To build the environment, run:
 ```bash
-bash env/build_conda_env.sh
+$ conda create --name cinful python=3.8.13 pip
+$ conda env update -n cinful --file path/to/cinful/env/cinful_conda.yml
 ```
 
 Once setup is complete, you can activate the environment with:
