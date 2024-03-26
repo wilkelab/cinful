@@ -18,14 +18,10 @@ jobs:
         # $CONDA is an environment variable pointing to the root of the miniconda directory
         echo $CONDA/bin >> $GITHUB_PATH
 
-    - name: Install dependencies
-      run: |
-        conda install mamba -c conda-forge
-
     - name: Set up environment
       run: |
-        mamba create -n cinful
-        mamba env update -n cinful --file cinful/env/cinful_conda.yml
+        conda create -n cinful python=3.8.13 pip
+        conda env update -n cinful --file cinful/env/cinful_conda.yml
 
     - name: align_with_verifiedCvab
       run: |
