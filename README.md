@@ -18,9 +18,9 @@ $ conda activate <your-env-name>
 ### Install other dependencies:
 ```bash
 $ conda activate <environment_name>
-$ pip install cinful
+$ pip install cinful cython==3.0.10
 $ conda install seqkit=0.15.0 mafft=7.475 hmmer=3.3.1 blast=2.9.0 diamond=2.0.11 pandas=1.2.4 numpy=1.24.4 biopython=1.76 snakemake=6.3.0 prodigal=2.6.3 pyhmmer=0.3.0
-$ pip install pyTMHMM==1.3.2 seqhash==1.0.0 blake3==0.2.0
+$ pip install pyTMHMM==1.3.6 seqhash==1.0.0 blake3==0.2.0
 ```
 
 If installed properly, running `cinful -h` will produce the following output:
